@@ -4,11 +4,13 @@ The Gazetteer class is a geographic dictionary or index for financial markets su
 It allows the identification and location of exchanges, trading platforms, regulated or non-regulated markets and trade reporting facilities. 
 
 Gazetteer provides four lightweight, standalone identification classes: Country, Currency, MarketId and City.
-Country, Currency, and MarketId implement the ISO standards: ISO 3166-1 for country identification, ISO 4217 for currencies and
+Country, Currency, and MarketId implement the ISO standards: ISO 3166-1 for country identification, ISO 4217 for currencies, and
 ISO 10383 for market identification. The City class employs a small subset of IATA codes for city identification,
 and positional information (latitude/longtitude) for geolocation and distance.
  
-See Countries  - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
+See: 
+
+    Countries  - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
     Currencies - https://en.wikipedia.org/wiki/ISO_4217 
     MICs       - https://en.wikipedia.org/wiki/Market_Identifier_Code 
     Cities     - https://en.wikipedia.org/wiki/IATA_airport_code 
@@ -17,6 +19,9 @@ The code compiles under c++11, c++14, c++17 and c++20, and has no external depen
 
 The following code:
 
+    Gazetteer g;
+    MarketId market;
+    
     market.setMarketId( "XNYS" ); 
 
     std::cout << "market    : " << market << std::endl;
