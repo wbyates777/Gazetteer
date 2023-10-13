@@ -44,7 +44,7 @@ operator>>( std::istream& istr, MarketId& c )
 std::string
 MarketId::name( void ) const 
 {
-	return m_fullMicNames[m_mic];
+	return m_fullMicNames[m_fromISO[m_mic]];
 }
 
 
