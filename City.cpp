@@ -42,25 +42,25 @@ operator>>( std::istream& istr, City& c )
 std::string
 City::name( void ) const 
 {
-	return m_fullCityNames[m_city];	
+	return m_fullCityNames[m_fromISO[m_city]];	
 }
 
 bool
 City::capital( void ) const
 {
-	return m_capital[m_city];
+	return m_capital[m_fromISO[m_city]];
 }
 
 float
 City::lon( void ) const
 {
-	return m_position[m_city][1];
+	return m_position[m_fromISO[m_city]][1];
 }
 
 float
 City::lat( void ) const
 {
-	return m_position[m_city][0];
+	return m_position[m_fromISO[m_city]][0];
 }
 
 
