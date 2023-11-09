@@ -15,7 +15,7 @@ See:
     MICs       - https://en.wikipedia.org/wiki/Market_Identifier_Code 
     Cities     - https://en.wikipedia.org/wiki/IATA_airport_code 
     
-The code compiles under c++11, c++14, c++17 and c++20, and has no external dependencies.
+The code compiles under c++11, c++14, c++17 and c++20, and only depends on STL.
 
 The following code:
 
