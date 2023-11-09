@@ -20,18 +20,25 @@ The code compiles under c++11, c++14, c++17 and c++20, and has no external depen
 The following code:
 
     Gazetteer g;
-    MarketId market;
+    MarketId m;
     
     market.setMarketId( "XNYS" ); 
 
-    std::cout << "market    : " << market << std::endl;
-    std::cout << "name      : " << market.name() << std::endl;
-    std::cout << "id        : " << short(market) << std::endl; 
-    std::cout << "currency  : " << g.ccy(market).name() << " (" << g.ccy(market) << ")" << std::endl;
-    std::cout << "city      : " << g.city(market).name() << " (" << g.city(market) << ")" << std::endl; 
-    std::cout << "country   : " << g.country(market).name() << " (" << g.country(market) << ")" << std::endl;
-    std::cout << "region    : " << g.regionName(g.region(market)) << std::endl; 
-    std::cout << "subregion : " << g.subRegionName(g.subRegion(market)) << std::endl << std::endl;
+    std::cout << "market    : " << m << std::endl;
+    std::cout << "name      : " << m.name() << std::endl;
+    std::cout << "id        : " << short(m) << std::endl; 
+    std::cout << "currency  : " << g.ccy(m).name() << " (" << g.ccy(market) << ")" << std::endl;
+    std::cout << "city      : " << g.city(m).name() << " (" << g.city(market) << ")" << std::endl; 
+    std::cout << "country   : " << g.country(m).name() << " (" << g.country(market) << ")" << std::endl;
+    std::cout << "region    : " << g.regionName(g.region(m)) << std::endl; 
+    std::cout << "subregion : " << g.subRegionName(g.subRegion(m)) << std::endl << std::endl;
+
+    City x, y;
+    
+    x.setCity( "LON" );
+    y.setCity( "NYC" );
+
+    std::cout << "The distance between " << x.name() << " and " << y.name() << " is " << City::dist(x,y) / 1000.0 << " km" << std::endl << std::endl;
 
 produces the output:
 
@@ -43,5 +50,7 @@ produces the output:
     country   : United States (USA)
     region    : Americas
     subregion : Northern America
+
+    The distance between London and New York is 5579.26 km
 
 
