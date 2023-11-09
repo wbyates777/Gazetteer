@@ -22,7 +22,7 @@ The following code:
     Gazetteer g;
     MarketId m;
     
-    market.setMarketId( "XNYS" ); 
+    m.setMarketId( "XNYS" ); 
 
     std::cout << "market    : " << m << std::endl;
     std::cout << "name      : " << m.name() << std::endl;
