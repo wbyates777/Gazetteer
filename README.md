@@ -27,9 +27,9 @@ The following code:
     std::cout << "market    : " << m << std::endl;
     std::cout << "name      : " << m.name() << std::endl;
     std::cout << "id        : " << short(m) << std::endl; 
-    std::cout << "currency  : " << g.ccy(m).name() << " (" << g.ccy(market) << ")" << std::endl;
-    std::cout << "city      : " << g.city(m).name() << " (" << g.city(market) << ")" << std::endl; 
-    std::cout << "country   : " << g.country(m).name() << " (" << g.country(market) << ")" << std::endl;
+    std::cout << "currency  : " << g.ccy(m).name() << " (" << g.ccy(m) << ")" << std::endl;
+    std::cout << "city      : " << g.city(m).name() << " (" << g.city(m) << ")" << std::endl; 
+    std::cout << "country   : " << g.country(m).name() << " (" << g.country(m) << ")" << std::endl;
     std::cout << "region    : " << g.regionName(g.region(m)) << std::endl; 
     std::cout << "subregion : " << g.subRegionName(g.subRegion(m)) << std::endl << std::endl;
 
