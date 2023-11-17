@@ -1053,7 +1053,7 @@ static const short a_ZWD[2] = { 1, Country::ZWE };
 static const short a_ZWL[2] = { 1, Country::ZWE };
 
 // priniciple Currency to Countries
-const short * Gazetteer::m_ccy2cids[Currency::NUMCURRENCY] = { 
+const short * const  Gazetteer::m_ccy2cids[Currency::NUMCURRENCY] = { 
 a_NOCURRENCY,
 a_ADP, a_AED, a_AFA, a_AFN, a_ALL, a_AMD, a_ANG, a_AOA, a_AON, a_AOR, 
 a_ARS, a_ATS, a_AUD, a_AWG, a_AZM, a_AZN, a_BAD, a_BAM, a_BBD, a_BDT, 
@@ -1340,7 +1340,7 @@ static const short b_ZMB[2] = { 1, Currency::ZMW };
 static const short b_ZWE[2] = { 1, Currency::ZWL };
 
 // Country to Currencies
-const short * Gazetteer::m_cid2ccys[Country::NUMCOUNTRY] = { 
+const short * const  Gazetteer::m_cid2ccys[Country::NUMCOUNTRY] = { 
 b_NOCOUNTRY,
 b_ABW, b_AFG, b_AGO, b_AIA, b_ALA, b_ALB, b_AND, b_ARE, b_ARG, b_ARM, 
 b_ASM, b_ATA, b_ATF, b_ATG, b_AUS, b_AUT, b_AZE, b_BDI, b_BEL, b_BEN, 
@@ -1628,7 +1628,7 @@ static const short c_ZMB[2] = { 1, City::LUN };
 static const short c_ZWE[3] = { 2, City::HRE, City::VFA };
 
 // Country to Cities
-const short * Gazetteer::m_cid2ctys[Country::NUMCOUNTRY] = { 
+const short * const  Gazetteer::m_cid2ctys[Country::NUMCOUNTRY] = { 
 c_NOCOUNTRY,
 c_ABW, c_AFG, c_AGO, c_AIA, c_ALA, c_ALB, c_AND, c_ARE, c_ARG, c_ARM, 
 c_ASM, c_ATA, c_ATF, c_ATG, c_AUS, c_AUT, c_AZE, c_BDI, c_BEL, c_BEN, 
@@ -2164,7 +2164,7 @@ static const short d_ZAZ[2] = { 1, MarketId::IBER };
 static const short d_ZRH[40] = { 39, MarketId::BXDA, MarketId::CBOE, MarketId::CSAG, MarketId::CSOT, MarketId::CSZH, MarketId::DOTS, MarketId::EBSC, MarketId::EBSS, MarketId::EUCH, MarketId::EURM, MarketId::EUSC, MarketId::EUSP, MarketId::KMUX, MarketId::ROSR, MarketId::RULE, MarketId::STOX, MarketId::UBSC, MarketId::UBSF, MarketId::UBSG, MarketId::UBST, MarketId::VLEX, MarketId::XBTR, MarketId::XDLP, MarketId::XICB, MarketId::XQMH, MarketId::XQOD, MarketId::XREP, MarketId::XROT, MarketId::XSCU, MarketId::XSDX, MarketId::XSEB, MarketId::XSLS, MarketId::XSTV, MarketId::XSTX, MarketId::XSWM, MarketId::XSWO, MarketId::XSWX, MarketId::XVTX, MarketId::ZKBX };
 
 // City to Markets
-const short * Gazetteer::m_cty2mics[City::NUMCITY] = { 
+const short * const  Gazetteer::m_cty2mics[City::NUMCITY] = { 
 d_NOCITY,
 d_AB0, d_ABJ, d_ABV, d_ABZ, d_ACC, d_AD0, d_ADB, d_ADD, d_AEP, d_AKL, 
 d_AL0, d_ALA, d_ALB, d_ALG, d_ALY, d_AMD, d_AMM, d_AMS, d_ANC, d_ANP, 
@@ -2230,7 +2230,7 @@ static const short e_Americas[58] = { 57, Country::ABW, Country::AIA, Country::A
 static const short e_Asia[52] = { 51, Country::AFG, Country::ARE, Country::ARM, Country::AZE, Country::BGD, Country::BHR, Country::BRN, Country::BTN, Country::CHN, Country::CYP, Country::GEO, Country::HKG, Country::IDN, Country::IND, Country::IRN, Country::IRQ, Country::ISR, Country::JOR, Country::JPN, Country::KAZ, Country::KGZ, Country::KHM, Country::KOR, Country::KWT, Country::LAO, Country::LBN, Country::LKA, Country::MAC, Country::MDV, Country::MMR, Country::MNG, Country::MYS, Country::NPL, Country::OMN, Country::PAK, Country::PHL, Country::PRK, Country::PSE, Country::QAT, Country::SAU, Country::SGP, Country::SYR, Country::THA, Country::TJK, Country::TKM, Country::TLS, Country::TUR, Country::TWN, Country::UZB, Country::VNM, Country::YEM };
 static const short e_Europe[52] = { 51, Country::ALA, Country::ALB, Country::AND, Country::AUT, Country::BEL, Country::BGR, Country::BIH, Country::BLR, Country::CHE, Country::CZE, Country::DEU, Country::DNK, Country::ESP, Country::EST, Country::FIN, Country::FRA, Country::FRO, Country::GBR, Country::GGY, Country::GIB, Country::GRC, Country::HRV, Country::HUN, Country::IMN, Country::IRL, Country::ISL, Country::ITA, Country::JEY, Country::LIE, Country::LTU, Country::LUX, Country::LVA, Country::MCO, Country::MDA, Country::MKD, Country::MLT, Country::MNE, Country::NLD, Country::NOR, Country::POL, Country::PRT, Country::ROU, Country::RUS, Country::SJM, Country::SMR, Country::SRB, Country::SVK, Country::SVN, Country::SWE, Country::UKR, Country::VAT };
 
-const short *Gazetteer::m_reg2cid[7] = { e_NoRegion, e_AntarcticRegion, e_Africa, e_Oceania, e_Americas, e_Asia, e_Europe,  }; 
+const short * const Gazetteer::m_reg2cid[7] = { e_NoRegion, e_AntarcticRegion, e_Africa, e_Oceania, e_Americas, e_Asia, e_Europe,  }; 
 
 static const short f_NoSubregion[2] = { 1, Country::NOCOUNTRY };
 static const short f_AntarcticSubregion[5] = { 4, Country::ATA, Country::ATF, Country::BVT, Country::HMD };
@@ -2257,7 +2257,7 @@ static const short f_EasternEurope[11] = { 10, Country::BGR, Country::BLR, Count
 static const short f_NorthernEurope[17] = { 16, Country::ALA, Country::DNK, Country::EST, Country::FIN, Country::FRO, Country::GBR, Country::GGY, Country::IMN, Country::IRL, Country::ISL, Country::JEY, Country::LTU, Country::LVA, Country::NOR, Country::SJM, Country::SWE };
 static const short f_WesternEurope[10] = { 9, Country::AUT, Country::BEL, Country::CHE, Country::DEU, Country::FRA, Country::LIE, Country::LUX, Country::MCO, Country::NLD };
 
-const short *Gazetteer::m_subreg2cid[24] = {
+const short * const Gazetteer::m_subreg2cid[24] = {
 f_NoSubregion, f_AntarcticSubregion, f_SouthAmerica, f_WesternAfrica, f_CentralAmerica, f_EasternAfrica, f_NorthernAfrica, f_MiddleAfrica, f_SouthernAfrica, f_NorthernAmerica, 
 f_Caribbean, f_EasternAsia, f_SouthernAsia, f_SouthEasternAsia, f_SouthernEurope, f_AustraliaNewZealand, f_Melanesia, f_Micronesia, f_Polynesia, f_CentralAsia, 
 f_WesternAsia, f_EasternEurope, f_NorthernEurope, f_WesternEurope,  };
@@ -2270,7 +2270,7 @@ static const short g_Americas[5] = { 4, Gazetteer::SouthAmerica, Gazetteer::Cent
 static const short g_Asia[6] = { 5, Gazetteer::EasternAsia, Gazetteer::SouthernAsia, Gazetteer::SouthEasternAsia, Gazetteer::CentralAsia, Gazetteer::WesternAsia };
 static const short g_Europe[5] = { 4, Gazetteer::SouthernEurope, Gazetteer::EasternEurope, Gazetteer::NorthernEurope, Gazetteer::WesternEurope };
 
-const short *Gazetteer::m_reg2subreg[7] = { g_NoRegion, g_AntarcticRegion, g_Africa, g_Oceania, g_Americas, g_Asia, g_Europe };
+const short * const Gazetteer::m_reg2subreg[7] = { g_NoRegion, g_AntarcticRegion, g_Africa, g_Oceania, g_Americas, g_Asia, g_Europe };
 
 const unsigned char Gazetteer::m_region[Country::NUMCOUNTRY] = { NOREGION,
 	Americas, Asia, Africa, Americas, Europe, Europe, Europe, Asia, Americas, Asia, 

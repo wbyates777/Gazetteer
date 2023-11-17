@@ -87,7 +87,7 @@ public:
 	Country
 	country( const City& cty ) const;
 
-    Country // needs more testing
+    Country 
 	country( const Currency& c ) const;
     
 	std::vector<Country>
@@ -193,14 +193,14 @@ private:
 	static const short m_mic2cty[MarketId::NUMMARKETID];
     static const short m_ccy2cid[Currency::NUMCURRENCY];
     
-	static const short *m_ccy2cids[Currency::NUMCURRENCY];
-    static const short *m_cid2ccys[Country::NUMCOUNTRY];
-    static const short *m_cid2ctys[Country::NUMCOUNTRY];
-    static const short *m_cty2mics[City::NUMCITY];
+	static const short * const m_ccy2cids[Currency::NUMCURRENCY];
+    static const short * const m_cid2ccys[Country::NUMCOUNTRY];
+    static const short * const m_cid2ctys[Country::NUMCOUNTRY];
+    static const short * const m_cty2mics[City::NUMCITY];
     
-	static const short *m_reg2cid[7];
-	static const short *m_subreg2cid[24];
-    static const short *m_reg2subreg[7];
+	static const short * const m_reg2cid[7];
+	static const short * const m_subreg2cid[24];
+    static const short * const m_reg2subreg[7];
     
     static const unsigned char m_region[Country::NUMCOUNTRY];
 	static const unsigned char m_subregion[Country::NUMCOUNTRY];
