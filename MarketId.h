@@ -394,7 +394,7 @@ private:
 	static const char * const m_micNames[NUMMARKETID];
 	static const char * const m_fullMicNames[NUMMARKETID];
 	static const short        m_toISO[NUMMARKETID];
-    static const short        m_fromISO[NUMMARKETID]; 
+    static const short        m_fromISO[MAXMARKETID]; 
     static const short        m_searchPoints[27];    
 };
 
