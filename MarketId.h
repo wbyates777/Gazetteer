@@ -8,24 +8,26 @@
  Copyright (c) W.B. Yates. All rights reserved 
  History: Supports most of ISO market identification code (MIC) list (ISO 10383). Useful for describing origin of trades.
  
- **** Updated 10/10/2023 ****
+ **** Updated 29/11/2023 ****
  
  "This International Standard (ISO 10383) specifies a universal method of identifying exchanges, 
  trading platforms and regulated or non-regulated markets as sources of prices and related information 
  in order to facilitate automated processing"
- 
  
  "The MIC list is published on the second Monday of the month (or the following business day if it falls on a public holiday 
  in the country of the ISO 10383 Registration Authority (RA)." 
 
  https://www.iso20022.org/market-identifier-codes
  
- We have added capital cities; their mic ends in a zero to distinguish them from ISO mic codes.
- Trades that cannot be attributed to an existing markets can use these identifiers
+ The MIC list used here was last updated 10/10/2023. 
+ 
+ We have added country mics; their mic is the country 3 code followed by a zero to distinguish them from ISO mic codes.
+ Trades that cannot be attributed to an existing market can use these identifiers
 
  Note: mics 24EX, 3579, 360T and 4AXE are not legal C++ enumerations as they begin with a numeric character
  these mics have been  prefixed with an 'A' so that they become A24EX, A3579, A360T and A4AXE
  this also ensures that they occur at begining of MarketIdCode as numerical ascii characters preceed alphabetical ones 
+ this ensures the binary chop search works properly
  
  Example
  
@@ -41,8 +43,9 @@
  std::cout << short(z) << std::endl; 
  exit(1);
  
- 
  */
+
+
 #ifndef __MARKETID_H__
 #define __MARKETID_H__
 
@@ -347,7 +350,7 @@ public:
         XWBO = 2831, XWCE = 2832, XWEE = 2833, XXSC = 2834, XXX0 = 2835, XXXX = 2836, XYIE = 2837, XYKT = 2838, XZAG = 2839, XZAM = 2840, 
         XZAP = 2841, XZCE = 2842, XZIM = 2843, YEM0 = 2844, YKNA = 2845, YLDX = 2846, ZAF0 = 2847, ZAPA = 2848, ZARX = 2849, ZBUL = 2850, 
         ZERO = 2851, ZFXM = 2852, ZKBX = 2853, ZMB0 = 2854, ZOBX = 2855, ZODM = 2856, ZWE0 = 2857, 
-        MAXMARKETID = 2858, NUMMARKETID = 2858
+        MAXMARKETID = 2858, NUMMARKETID = 2858 
     };
 	
     

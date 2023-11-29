@@ -5,7 +5,7 @@ It allows the identification and location of exchanges, trading platforms, regul
 
 Gazetteer provides four lightweight, standalone identification classes: Country, Currency, MarketId and City.
 Country, Currency, and MarketId implement the ISO standards: ISO 3166-1 for country identification, ISO 4217 for currencies, and
-ISO 10383 for market identification. The City class employs a small subset of IATA codes for city identification,
+ISO 10383 for market identification. The City class employs IATA codes for city identification,
 and positional information (latitude/longtitude) for geolocation and distance.
  
 See: 
@@ -15,7 +15,7 @@ See:
     MICs       - https://en.wikipedia.org/wiki/Market_Identifier_Code 
     Cities     - https://en.wikipedia.org/wiki/IATA_airport_code 
     
-The code compiles under c++11, c++14, c++17 and c++20, and only depends on STL.
+The code has been compiled and tested under c++11, c++14, c++17 and c++20, and depends soley on STL
 
 The following code:
 
@@ -34,7 +34,7 @@ The following code:
     std::cout << "subregion : " << g.subRegionName(g.subRegion(m)) << std::endl << std::endl;
 
     City x, y;
-    
+
     x.setCity( "LON" );
     y.setCity( "NYC" );
 
@@ -51,6 +51,4 @@ produces the output:
     region    : Americas
     subregion : Northern America
 
-    The distance between London and New York is 5579.26 km
-
-
+    The distance between London and New York is 5579.86 km

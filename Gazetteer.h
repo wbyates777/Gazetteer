@@ -8,7 +8,7 @@
  Copyright (c) W.B. Yates. All rights reserved.
  History:  A geographic dictionary or index 
  
- **** Updated 10/10/2023 ****
+ **** Updated 29/11/2023 ****
  
  Examples
  
@@ -54,7 +54,6 @@
 
 #include <vector>
 #include <string>
-#include <iostream>
 
 
 class Gazetteer 
@@ -182,9 +181,7 @@ public:
     
     SubRegion
 	subRegion( const MarketId& mic  ) const;
-    
-
-	
+    	
 private:
 
 	static const short m_cty2cid[City::NUMCITY];

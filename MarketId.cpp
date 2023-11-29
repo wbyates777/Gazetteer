@@ -8,7 +8,7 @@
  Copyright (c) W.B. Yates. All rights reserved 
  History: Supports most of ISO 10383 market identification code (MIC) list. Useful for describing origin of trades
  
- **** Updated 10/10/2023 ****
+ **** Updated 29/11/2023 ****
  
  */
 
@@ -1270,8 +1270,9 @@ const short MarketId::m_fromISO[MAXMARKETID] = {
     2820, 2821, 2822, 2823, 2824, 2825, 2826, 2827, 2828, 2829, 
     2830, 2831, 2832, 2833, 2834, 2835, 2836, 2837, 2838, 2839, 
     2840, 2841, 2842, 2843, 2844, 2845, 2846, 2847, 2848, 2849, 
-    2850, 2851, 2852, 2853, 2854, 2855, 2856, 2857, 
+    2850, 2851, 2852, 2853, 2854, 2855, 2856, 2857
 };
+
 //
 
 
