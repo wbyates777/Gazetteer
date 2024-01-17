@@ -62,8 +62,8 @@ main(int argc, const char * argv[])
     std::cout << Country("GBR").name() << ", " << g.capital(Country::GBR).name() << ", " << g.ccy(Country::GBR) << std::endl;     
     std::cout << Country(Country::CHE).name() << ", " << g.capital("CHE").name() << ", " << g.ccys(Country::CHE) << std::endl << std::endl;
     
-    std::cout << "Spanish cities " << g.city(Country::ESP) << std::endl << std::endl;
-    std::cout << "Spanish markets " <<  g.market(Country::ESP) << std::endl << std::endl;
+    std::cout << "Spanish cities " << g.cities(Country::ESP) << std::endl << std::endl;
+    std::cout << "Spanish markets " <<  g.markets(Country::ESP) << std::endl << std::endl;
     
     City x;
     x.setCity( "LON" );
