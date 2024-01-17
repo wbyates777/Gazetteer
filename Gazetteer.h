@@ -8,7 +8,7 @@
  Copyright (c) W.B. Yates. All rights reserved.
  History:  A geographic dictionary or index 
  
- **** Updated 29/11/2023 ****
+ **** Updated 16/01/2024 ****
  
  Examples
  
@@ -20,12 +20,14 @@
  std::cout << Country("GBR").name() << ", " << g.capital(Country::GBR).name() << ", " << g.ccy(Country::GBR) << std::endl;     
  std::cout << Country(Country::CHE).name() << ", " << g.capital("CHE").name() << ", " << g.ccys(Country::CHE) << std::endl;
  
- std::cout << "Spanish cities " << g.city(Country::ESP) << std::endl << std::endl;
- std::cout << "Spanish markets " <<  g.market(Country::ESP) << std::endl << std::endl;
+ std::cout << "Spanish cities " << g.cities(Country::ESP) << std::endl << std::endl;
+ std::cout << "Spanish markets " <<  g.markets(Country::ESP) << std::endl << std::endl;
  
  std::vector<City> rs =  g.cities(std::string("D.*"));
  for (int i= 0; i < rs.size(); ++i)
+ {
     std::cout << rs[i].name() << std::endl;
+ }
  
  exit(1);
  
@@ -64,7 +66,7 @@ public:
     // we have renamed Antarctica here as AntarcticRegion  to prevent a clash with Antarctica the country
 	enum Region  : short { NOREGION = 0, AntarcticRegion = 1, Africa = 2, Oceania = 9, Americas = 19, Asia = 142, Europe = 150 };
 	
-    // we have renamed Antarctica here as AntarcticSubregion to prevent a clash with with Antarctica the country and Region enum
+    // we have renamed Antarctica here as AntarcticSubregion to prevent a clash with with Antarctica the country and region enum
 	enum SubRegion  : short { NOSUBREGION = 0,
 		AntarcticSubregion  = 1, SouthAmerica = 5, WesternAfrica = 11, CentralAmerica = 13, EasternAfrica = 14, 
 		NorthernAfrica = 15, MiddleAfrica = 17, SouthernAfrica = 18, NorthernAmerica = 21, Caribbean = 29, 
@@ -99,17 +101,17 @@ public:
     //
     // Currencies
     //
-    Currency // the main/principle ccy for this market
+    Currency // the main/principal ccy for this market
 	ccy( const MarketId& mic ) const { return ccy( country( mic ) ); }
 
-    Currency // the main/principle ccy for this city
+    Currency // the main/principal ccy for this city
 	ccy( const City& cty ) const { return ccy( country( cty ) ); }
     
-	Currency // the main/principle ccy for this country
+	Currency // the main/principal ccy for this country
 	ccy( const Country& cid ) const;
     
     std::vector<Currency> // all the ccys for this country
-	ccys( const Country& cid ) const; // needs more testing
+	ccys( const Country& cid ) const; 
     
     
     //
@@ -122,16 +124,16 @@ public:
 	city( const MarketId& mic ) const;
 	
     std::vector<City>
-	city( const Country& cid ) const; 
+	cities( const Country& cid ) const; 
     
     std::vector<City>
     cities( const std::string& regex_pattern ) const;
     
     std::vector<MarketId>
-	market( const City& cty ) const;
+	markets( const City& cty ) const;
     	
 	std::vector<MarketId>
-	market( const Country& cid ) const; 
+	markets( const Country& cid ) const; 
 
     
     //
@@ -142,7 +144,6 @@ public:
 
     std::string
     regionName( const Region rid ) const;
-    
     
     std::vector<Region> // all regions;
     region( void ) const;
@@ -163,7 +164,7 @@ public:
 	std::vector<Country>
 	subRegion( const SubRegion rid ) const;
     
-    std::string // slow
+    std::string 
     subRegionName( const SubRegion rid ) const;
     
     std::vector<SubRegion> // all sub regions; 
@@ -171,7 +172,6 @@ public:
     
     std::vector<SubRegion> // all sub regions of region rid
 	subRegion( const Region rid ) const;
-    
     
 	SubRegion
 	subRegion( const Country& cid ) const;
