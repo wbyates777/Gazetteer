@@ -8,7 +8,7 @@
  Copyright (c) W.B. Yates. All rights reserved.
  History: Supports some of the IATA airport/city code list 	   
  
- **** Updated 29/11/2023 ****
+ **** Updated 16/01/2024 ****
  
  */
 
@@ -16,7 +16,7 @@
 #include "City.h"
 #endif
 
-#include <assert.h>
+#include <cassert>
 
 	
 std::ostream&
@@ -39,39 +39,14 @@ operator>>( std::istream& istr, City& c )
 //
 //
 
-std::string
-City::name( void ) const 
-{
-	return m_fullCityNames[m_fromISO[m_city]];	
-}
-
-bool
-City::capital( void ) const
-{
-	return m_capital[m_fromISO[m_city]];
-}
-
-float
-City::lon( void ) const
-{
-	return m_position[m_fromISO[m_city]][1];
-}
-
-float
-City::lat( void ) const
-{
-	return m_position[m_fromISO[m_city]][0];
-}
-
-
 // this speeds up setCity quite a bit
 const short City::m_searchPoints[] = {
-1, 132, 275, 401, 469, 525, 582, 663, 740, 796, 891, 971, 1082, 1250, 1301, 1362, 1474, 1487, 1554, 1719, 1815, 1871, 1917, 1945, 1955, 2032, 2051, 
+1, 132, 275, 401, 469, 525, 582, 663, 740, 796, 891, 971, 1082, 1250, 1301, 1362, 1474, 1487, 1554, 1720, 1816, 1872, 1918, 1946, 1956, 2033, 2051, 
 };
-
 
 bool
 City::setCity( const std::string& str )
+// https://en.wikipedia.org/wiki/Binary_search_algorithm
 {	
     if (str.size() != 3)
 	{
@@ -90,15 +65,14 @@ City::setCity( const std::string& str )
     
 	int low   = m_searchPoints[index]; 
 	int high  = m_searchPoints[index + 1]; 
+    int i;
     
 	while (low < high) 
 	{
         int mid = low + ((high - low) >> 1);
         const char * const cty = m_cityNames[mid];
         
-        int i = 1;
-        
-        for (; i < 3; ++i)
+        for (i = 1; i < 3; ++i)
         {
             const char &a = str[i];
             const char &b = cty[i];
@@ -127,6 +101,107 @@ City::setCity( const std::string& str )
 	return false;
 }
 
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
+/* Vincenty Inverse Solution of Geodesics on the Ellipsoid (c) Chris Veness 2002-2011             */
+/*                                                                                                */
+/* from: Vincenty inverse formula - T Vincenty, "Direct and Inverse Solutions of Geodesics on the */
+/*       Ellipsoid with application of nested equations", Survey Review, vol XXII no 176, 1975    */
+/*       http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf                                             */
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
+
+// http://www.movable-type.co.uk/scripts/latlong-vincenty.html
+// https://en.wikipedia.org/wiki/Great-circle_distance
+// https://en.wikipedia.org/wiki/Vincenty%27s_formulae
+
+// Table taken from GMT project. Radii in metres 
+//   Name,          Date,  Eq. rad,    Pole rad,         Flattening
+// { "WGS_84",      1984,  6378137.0,  6356752.31424518, 1.0/298.257223563 },
+// { "OSU91A",      1991,  6378136.3,  6356751.61633668, 1.0/298.25722 },
+// { "OSU86F",      1986,  6378136.2,  6356751.51667196, 1.0/298.25722 },
+// { "Engelis",     1985,  6378136.05, 6356751.32272154, 1.0/298.2566 },
+// { "SGS_85",      1985,  6378136.0,  6356751.30156878, 1.0/298.257 },
+// { "TOPEX",       1990,  6378136.3,  6356751.60056294, 1.0/298.257 },
+// { "MERIT_83",    1983,  6378137.0,  6356752.29821597, 1.0/298.257 },
+// { "GRS_80",      1980,  6378137.0,  6356752.31414036, 1.0/298.257222101 },
+// { "Hughes_1980", 1980,  6378273.0,  6356889.44820259, 1.0/298.2794 },
+
+float
+City::dist( float lat1, float lon1, float lat2, float lon2 ) 
+/**
+* Calculates geodetic distance in metres between two points specified by latitude/longitude using 
+* Vincenty inverse formula for ellipsoids
+*/
+{
+   const double D2R = (M_PI / 180.0); 
+   // const double R2D = (180.0 / M_PI); 
+   
+   // { "WGS_84",  1984,  6378137.0, 6356752.31424518,  1.0/298.257223563 },
+   double a = 6378137.0;           // ellipsoid equatorial radius;    
+   double b = 6356752.31424518;    // ellipsoid polar radius;   
+   double f = 1.0 / 298.257223563; // ellipsoid flattening;  
+   
+   double L = (lon2 - lon1) * D2R;
+   double U1 = std::atan((1.0 - f) * std::tan(lat1 * D2R));
+   double U2 = std::atan((1.0 - f) * std::tan(lat2 * D2R));
+   double sinU1 = std::sin(U1), cosU1 = std::cos(U1);
+   double sinU2 = std::sin(U2), cosU2 = std::cos(U2);
+   
+   double lambda = L, lambdaP;
+   double cosSqAlpha;
+   double sigma;
+   double sinSigma;
+   double cosSigma;
+   double cos2SigmaM;
+   double sinLambda;
+   double cosLambda;
+   
+   int iterLimit = 5000;
+   
+   do 
+   {
+       sinLambda = std::sin(lambda);
+       cosLambda = std::cos(lambda);
+       
+       sinSigma = std::sqrt( (cosU2 * sinLambda) * (cosU2 * sinLambda) + 
+                             ((cosU1 * sinU2) - (sinU1 * cosU2 * cosLambda)) * ((cosU1 * sinU2) - (sinU1 * cosU2 * cosLambda)) );
+       
+       if (sinSigma == 0)
+           return 0;  // co-incident points
+       
+       cosSigma = (sinU1 * sinU2) + (cosU1 * cosU2 * cosLambda);
+       sigma = std::atan2(sinSigma, cosSigma);
+       
+       double sinAlpha = (cosU1 * cosU2 * sinLambda) / sinSigma;
+       cosSqAlpha = 1.0 - sinAlpha * sinAlpha;
+       cos2SigmaM = cosSigma - ((2.0 * sinU1 * sinU2) / cosSqAlpha); 
+       
+       if (std::isnan(cos2SigmaM))  
+           cos2SigmaM = 0;  // equatorial line: cosSqAlpha=0 (§6)
+       
+       double C = f / (16.0 * cosSqAlpha * (4.0 + f * (4.0 - (3.0 * cosSqAlpha))));
+       lambdaP = lambda;
+       lambda = L + (1.0 - C) * f * sinAlpha *
+       (sigma + (C * sinSigma * (cos2SigmaM + C * cosSigma * (-1.0 + 2.0 * cos2SigmaM * cos2SigmaM))));    
+   } 
+   while ((std::fabs(lambda - lambdaP) > 1E-12) && (--iterLimit > 0));
+   
+   if (iterLimit == 0)
+       return -1.0;  // formula failed to converge
+   
+   double uSq = cosSqAlpha * (a * a - b * b) / (b * b);
+   double A = 1.0 + uSq / 16384.0 * (4096.0 + uSq * (-768.0 + uSq * (320.0 - 175.0 * uSq)));
+   double B = uSq / (1024.0 * (256.0 + uSq * (-128.0 + uSq * (74.0 - 47.0 * uSq))));
+   double deltaSigma = B * sinSigma * (cos2SigmaM + B / 4.0 * (cosSigma * (-1.0 + 2.0 * cos2SigmaM * cos2SigmaM) -
+                       B / 6.0 * cos2SigmaM * (-3.0 + 4.0 * sinSigma * sinSigma) * (-3.0 + 4.0 * cos2SigmaM * cos2SigmaM)));
+   double s = b * A * (sigma - deltaSigma);
+   
+   return s;
+   
+   // note: to return initial/final bearings in addition to distance, use something like:
+   // double fwdAz = std::atan2(cosU2 * sinLambda,  cosU1 * sinU2 - sinU1 * cosU2 * cosLambda);
+   // double revAz = std::atan2(cosU1 * sinLambda, -sinU1 * cosU2 + cosU1 * sinU2 * cosLambda);
+   // return Pair<double,double>( fwdAz * R2D, revAz * R2D );
+}
 
 
 
@@ -301,258 +376,254 @@ const char * const City::m_cityNames[NUMCITY] = { "NOCITY",
     "SLL", "SLP", "SLS", "SLU", "SLZ", "SM0", "SMA", "SMF", "SMI", "SMX", 
     "SNA", "SNC", "SNN", "SNS", "SOF", "SOG", "SOI", "SON", "SOT", "SOU", 
     "SPC", "SPI", "SPK", "SPN", "SPS", "SPU", "SPY", "SRA", "SRB", "SRL", 
-    "SRQ", "SRZ", "SSA", "SSG", "SSH", "SSL", "ST0", "STL", "STN", "STO", 
-    "STP", "STR", "STS", "STT", "STV", "STX", "SUB", "SUF", "SUL", "SUM", 
-    "SUN", "SUV", "SUX", "SVD", "SVG", "SVL", "SVO", "SVQ", "SVX", "SW0", 
-    "SWF", "SWP", "SWS", "SXB", "SXF", "SXL", "SXM", "SXR", "SYD", "SYR", 
-    "SYY", "SZB", "SZD", "SZF", "SZG", "SZK", "SZX", "SZZ", "TAB", "TAK", 
-    "TAM", "TAO", "TAS", "TAY", "TBS", "TBU", "TCA", "TCB", "TCI", "TCL", 
-    "TCU", "TED", "TEM", "TEQ", "TER", "TEU", "TEX", "TF0", "TFN", "TFS", 
-    "TGD", "TGU", "TGV", "TGZ", "THE", "THF", "THR", "TIA", "TIF", "TIJ", 
-    "TIP", "TIS", "TIV", "TK0", "TKA", "TKS", "TKU", "TLH", "TLL", "TLS", 
-    "TLV", "TMP", "TMS", "TMW", "TMZ", "TNA", "TNG", "TNR", "TOD", "TOL", 
-    "TOS", "TOU", "TOV", "TOY", "TPA", "TPE", "TPR", "TPS", "TRD", "TRF", 
-    "TRI", "TRN", "TRO", "TRS", "TRV", "TRW", "TRZ", "TSA", "TSB", "TSE", 
-    "TSF", "TSN", "TSV", "TTN", "TUC", "TUK", "TUL", "TUN", "TUP", "TUS", 
-    "TUU", "TVC", "TVF", "TVL", "TWB", "TWF", "TWU", "TXK", "TXL", "TYN", 
-    "TYO", "TYR", "TYS", "TZX", "UAH", "UAK", "UAP", "UBA", "UBJ", "UBP", 
-    "UCA", "UCT", "UDE", "UDI", "UDJ", "UDR", "UEE", "UET", "UFA", "UGC", 
-    "UGO", "UHE", "UII", "UIN", "UIO", "UIP", "UIT", "UKB", "UKI", "UKY", 
-    "ULB", "ULD", "ULN", "ULU", "UMD", "UME", "UMR", "UNI", "UNK", "UNT", 
-    "UPG", "UPL", "UPN", "UPP", "URB", "URC", "URG", "URM", "URZ", "USH", 
-    "USN", "UTC", "UTH", "UTN", "UTP", "UTT", "UUD", "UVE", "UVF", "UVL", 
-    "VA0", "VAA", "VAN", "VAP", "VAR", "VAS", "VBS", "VBY", "VCE", "VCP", 
-    "VDA", "VDE", "VDZ", "VEL", "VER", "VFA", "VGO", "VID", "VIE", "VIJ", 
-    "VIS", "VIT", "VIX", "VKO", "VLC", "VLD", "VLI", "VLL", "VLN", "VLU", 
-    "VN0", "VNO", "VNS", "VOG", "VPS", "VRA", "VRB", "VRK", "VRN", "VSA", 
-    "VST", "VTE", "VVO", "VXO", "VYD", "VZ0", "WAS", "WAW", "WDH", "WEI", 
-    "WEL", "WGA", "WHK", "WHM", "WIC", "WIE", "WLB", "WLG", "WLS", "WMB", 
-    "WNS", "WOL", "WP0", "WRE", "WRG", "WRL", "WRO", "WUH", "WUN", "WUX", 
-    "WVB", "WYA", "WYN", "WYS", "XCH", "XIY", "XLB", "XMH", "XMN", "XPK", 
-    "XRY", "XSI", "XSP", "XXX", "YAK", "YAO", "YAT", "YBE", "YCB", "YDF", 
-    "YEA", "YEG", "YEV", "YFA", "YFB", "YFC", "YFO", "YGL", "YGW", "YGX", 
-    "YHM", "YHR", "YHZ", "YIF", "YIH", "YKA", "YKM", "YKS", "YLR", "YLW", 
-    "YMM", "YMQ", "YMX", "YNB", "YOK", "YOP", "YOW", "YPN", "YPR", "YQB", 
-    "YQD", "YQG", "YQM", "YQR", "YQT", "YQX", "YRB", "YSJ", "YSM", "YSR", 
-    "YTH", "YTO", "YTZ", "YUD", "YUL", "YUM", "YUX", "YVB", "YVO", "YVP", 
-    "YVQ", "YVR", "YWG", "YWK", "YXD", "YXE", "YXJ", "YXN", "YXS", "YXT", 
-    "YXU", "YXY", "YYC", "YYD", "YYJ", "YYQ", "YYR", "YYT", "YYZ", "YZF", 
-    "YZP", "ZAD", "ZAG", "ZAZ", "ZBO", "ZCL", "ZDJ", "ZIH", "ZJK", "ZKE", 
-    "ZLO", "ZND", "ZNE", "ZQN", "ZRH", "ZSA", "ZSS", "ZTH", "ZTM", "ZYL" 
+    "SRQ", "SRZ", "SSA", "SSG", "SSH", "SSL", "ST0", "STI", "STL", "STN", 
+    "STO", "STP", "STR", "STS", "STT", "STV", "STX", "SUB", "SUF", "SUL", 
+    "SUM", "SUN", "SUV", "SUX", "SVD", "SVG", "SVL", "SVO", "SVQ", "SVX", 
+    "SW0", "SWF", "SWP", "SWS", "SXB", "SXF", "SXL", "SXM", "SXR", "SYD", 
+    "SYR", "SYY", "SZB", "SZD", "SZF", "SZG", "SZK", "SZX", "SZZ", "TAB", 
+    "TAK", "TAM", "TAO", "TAS", "TAY", "TBS", "TBU", "TCA", "TCB", "TCI", 
+    "TCL", "TCU", "TED", "TEM", "TEQ", "TER", "TEU", "TEX", "TF0", "TFN", 
+    "TFS", "TGD", "TGU", "TGV", "TGZ", "THE", "THF", "THR", "TIA", "TIF", 
+    "TIJ", "TIP", "TIS", "TIV", "TK0", "TKA", "TKS", "TKU", "TLH", "TLL", 
+    "TLS", "TLV", "TMP", "TMS", "TMW", "TMZ", "TNA", "TNG", "TNR", "TOD", 
+    "TOL", "TOS", "TOU", "TOV", "TOY", "TPA", "TPE", "TPR", "TPS", "TRD", 
+    "TRF", "TRI", "TRN", "TRO", "TRS", "TRV", "TRW", "TRZ", "TSA", "TSB", 
+    "TSE", "TSF", "TSN", "TSV", "TTN", "TUC", "TUK", "TUL", "TUN", "TUP", 
+    "TUS", "TUU", "TVC", "TVF", "TVL", "TWB", "TWF", "TWU", "TXK", "TXL", 
+    "TYN", "TYO", "TYR", "TYS", "TZX", "UAH", "UAK", "UAP", "UBA", "UBJ", 
+    "UBP", "UCA", "UCT", "UDE", "UDI", "UDJ", "UDR", "UEE", "UET", "UFA", 
+    "UGC", "UGO", "UHE", "UII", "UIN", "UIO", "UIP", "UIT", "UKB", "UKI", 
+    "UKY", "ULB", "ULD", "ULN", "ULU", "UMD", "UME", "UMR", "UNI", "UNK", 
+    "UNT", "UPG", "UPL", "UPN", "UPP", "URB", "URC", "URG", "URM", "URZ", 
+    "USH", "USN", "UTC", "UTH", "UTN", "UTP", "UTT", "UUD", "UVE", "UVF", 
+    "UVL", "VA0", "VAA", "VAN", "VAP", "VAR", "VAS", "VBS", "VBY", "VCE", 
+    "VCP", "VDA", "VDE", "VDZ", "VEL", "VER", "VFA", "VGO", "VID", "VIE", 
+    "VIJ", "VIS", "VIT", "VIX", "VKO", "VLC", "VLD", "VLI", "VLL", "VLN", 
+    "VLU", "VN0", "VNO", "VNS", "VOG", "VPS", "VRA", "VRB", "VRK", "VRN", 
+    "VSA", "VST", "VTE", "VVO", "VXO", "VYD", "VZ0", "WAS", "WAW", "WDH", 
+    "WEI", "WEL", "WGA", "WHK", "WHM", "WIC", "WIE", "WLB", "WLG", "WLS", 
+    "WMB", "WNS", "WOL", "WP0", "WRE", "WRG", "WRL", "WRO", "WUH", "WUN", 
+    "WUX", "WVB", "WYA", "WYN", "WYS", "XCH", "XIY", "XLB", "XMH", "XMN", 
+    "XPK", "XRY", "XSI", "XSP", "XXX", "YAK", "YAO", "YAT", "YBE", "YCB", 
+    "YDF", "YEA", "YEG", "YEV", "YFA", "YFB", "YFC", "YFO", "YGL", "YGW", 
+    "YGX", "YHM", "YHR", "YHZ", "YIF", "YIH", "YKA", "YKM", "YKS", "YLR", 
+    "YLW", "YMM", "YMQ", "YMX", "YNB", "YOK", "YOP", "YOW", "YPN", "YPR", 
+    "YQB", "YQD", "YQG", "YQM", "YQR", "YQT", "YQX", "YRB", "YSJ", "YSM", 
+    "YSR", "YTH", "YTO", "YTZ", "YUD", "YUL", "YUM", "YUX", "YVB", "YVO", 
+    "YVP", "YVQ", "YVR", "YWG", "YWK", "YXD", "YXE", "YXJ", "YXN", "YXS", 
+    "YXT", "YXU", "YXY", "YYC", "YYD", "YYJ", "YYQ", "YYR", "YYT", "YYZ", 
+    "YZF", "YZP", "ZAD", "ZAG", "ZAZ", "ZBO", "ZCL", "ZIH", "ZJK", "ZKE", 
+    "ZLO", "ZND", "ZNE", "ZQN", "ZRH", "ZSA", "ZSS", "ZTH", "ZTM", "ZYL"
 };
 
-
-// IATA city name (which corresponds to the IATA airport code for that city)
 const char * const City::m_fullCityNames[NUMCITY] = { "No City",
-    "Al Arish", "Annaba", "Aalborg", "Al Ain", "Aarhus", "Altay", "Aabenraa", "Abadan", "Allentown", "Abilene", 
-    "Abidjan", "Bamaga", "Albuquerque", "Aberdeen", "Abu Simbel", "Abuja", "Albury", "Albany", "Aberdeen", "Acapulco", 
-    "Accra", "Lanzarote", "Altenrhein", "Alderney", "Nantucket", "Waco", "Eureka", "Atlantic City", "Adana", "Izmir", 
-    "Addis Ababa", "Aden", "Adiyaman", "Amman", "Adelaide", "Kodiak", "Alldays", "San Andres", "Abeche", "Buenos Aires", 
-    "Sochi", "Alesund", "Agadir", "Augsburg", "Malaga", "Augusta", "Aguascalientes", "Aggeneys", "Khamis Mushait", "Athens", 
-    "Alghero Sassari", "Al Hoceima", "Ajaccio", "Jouf", "Anjouan", "Aracaju", "Agades", "Auckland", "King Salmon", "Akrotiri", 
-    "Almaty", "Albany", "Alicante", "Alta", "Algiers", "Albany", "Alexander Bay", "Waterloo", "Aleppo", "Andorra la Vella", 
-    "Walla Walla", "Alexandria", "Amarillo", "Ahmedabad", "Amman", "Amsterdam", "Anniston", "Anchorage", "Ankara", "Annapolis", 
-    "Antwerp", "Saint Johns", "Ancona", "Aomori", "Karpathos", "Altoona", "Naples", "Apia", "Aqaba", "Ann Arbor", 
-    "Arkhangelsk", "Arusha", "Stockholm", "Ashgabat", "Aspen", "Jamestown", "Amami", "Yamoussoukro", "Asmara", "Alice Springs", 
-    "Kayseri", "Asuncion", "Aswan", "Athens", "Atlanta", "Athens", "Amritsar", "Appleton", "Watertown", "Assiut", 
-    "Oranjestad", "Abu Rudeis", "Augusta", "Abu Dhabi", "Aurillac", "Austin", "Asheville", "Wilkes Barre", "The Valley", "Altus", 
-    "Akita", "Aylesbury", "Ayers Rock", "Ayr", "Antalya", "Aiyura", "Ayawasi", "Amazon Bay", "Kalamazoo", "Mexico City", 
+    "Al Arish", "Annaba", "Aalborg", "Al Ain", "Aarhus", "Altay", "Aabenraa", "Abadan", "Allentown (PA)", "Abilene (TX)", 
+    "Abidjan", "Bamaga", "Albuquerque (NM)", "Aberdeen (SD)", "Abu Simbel", "Abuja", "Albury", "Albany (NY)", "Aberdeen", "Acapulco", 
+    "Accra", "Lanzarote", "Altenrhein", "Alderney", "Nantucket (MA)", "Waco (TX)", "Eureka (CA)", "Atlantic City (NJ)", "Adana", "Izmir", 
+    "Addis Ababa", "Aden", "Adiyaman", "Amman", "Adelaide", "Kodiak (AK)", "Alldays", "San Andres", "Abeche", "Buenos Aires", 
+    "Sochi", "Alesund", "Agadir", "Augsburg", "Malaga", "Augusta (GA)", "Aguascalientes", "Aggeneys", "Khamis Mushait", "Athens (GA)", 
+    "Alghero Sassari", "Al Hoceima", "Ajaccio", "Jouf", "Anjouan", "Aracaju", "Agades", "Auckland", "King Salmon (AK)", "Akrotiri", 
+    "Almaty", "Albany (GA)", "Alicante", "Alta", "Algiers", "Albany", "Alexander Bay", "Waterloo (IA)", "Aleppo", "Andorra la Vella", 
+    "Walla Walla (WA)", "Alexandria", "Amarillo (TX)", "Ahmedabad", "Amman", "Amsterdam", "Anniston (AL)", "Anchorage (AK)", "Ankara", "Annapolis (MD)", 
+    "Antwerp", "Saint Johns", "Ancona", "Aomori", "Karpathos", "Altoona (PA)", "Naples (FL)", "Apia", "Aqaba", "Ann Arbor (MI)", 
+    "Arkhangelsk", "Arusha", "Stockholm", "Ashgabat", "Aspen (CO)", "Jamestown", "Amami", "Yamoussoukro", "Asmara", "Alice Springs", 
+    "Kayseri", "Asuncion", "Aswan", "Athens", "Atlanta (GA)", "Athens (OH)", "Amritsar", "Appleton (WI)", "Watertown (SD)", "Assiut", 
+    "Oranjestad", "Abu Rudeis", "Augusta (ME)", "Abu Dhabi", "Aurillac", "Austin (TX)", "Asheville (NC)", "Wilkes Barre (PA)", "The Valley", "Altus (OK)", 
+    "Akita", "Aylesbury", "Ayers Rock", "Ayr", "Antalya", "Aiyura", "Ayawasi", "Amazon Bay", "Kalamazoo (MI)", "Mexico City", 
     "Samana", "Manama", "Baku", "Barranquilla", "Bhubaneswar", "Basse-Terre", "Berberati", "Bucharest", "Bambari", "Barcelona", 
-    "Jinka", "Boca Raton", "Belmopan", "Bermuda", "Bundaberg", "Hartford", "Bandung", "Baroda", "Bridgeport", "Brindisi", 
-    "Bardufoss", "Benbecula", "Belgrade", "Benton Harbor", "Belem", "Benghazi", "Newcastle", "Berlin", "Brest", "Bethel", 
-    "Beira", "Beirut", "Bradford", "Bakersfield", "Bloemfontein", "Buffalo Range", "Belfast", "Bucaramanga", "Bangui", "Bridgetown", 
-    "Johnson City", "Bergen", "Bangor", "Bangassou", "Baghdad", "Bergamo", "Bullhead City", "Belfast", "Blenheim", "Birmingham", 
-    "Bhopal", "Broken Hill", "Bahawalpur", "Birmingham", "Bastia", "Billings", "Bilbao", "Biarritz", "Bismarck", "Bria", 
-    "Bemidji", "Banjul", "Bujumbura", "Beijing", "Bodrum", "Leon", "Badajoz", "Kota Kinabalu", "Bangkok", "Cleveland", 
-    "Bamako", "Beckley", "Brookings", "Barcelona", "Bluefield", "Bellingham", "Blackpool", "Billund", "Bologna", "Bangalore", 
-    "Blackwater", "Blantyre", "Stockholm", "Broome", "Bloomington", "Bloomington", "Brampton Island", "Nashville", "Brisbane", "Bonn", 
-    "Ballina", "Bronnoysund", "Bannu", "Banja Luka", "Bora Bora", "Bordeaux", "Bogota", "Bournemouth", "Boise", "Bourgas", 
-    "Mumbai", "Kralendijk", "Bodo", "Boston", "Bobo", "Beaumont", "Brunswick", "Aguadilla", "San Carlos de Bariloche", "Brainerd", 
-    "Bremen", "Bari", "Burlington", "Bern", "Barra", "Bristol", "Brussels", "Brasilia", "Basel", "Basra", 
-    "Butte", "Baton Rouge", "Bratislava", "Bintulu", "Montpelier", "Budapest", "Buenos Aires", "Buffalo", "Benguela", "Bucharest", 
-    "Bulawayo", "Burbank", "Boa Vista", "Baltimore", "Bandar Seri Begawan", "Burnie", "Bissau", "Borrego Springs", "Bouake", "Bayreuth", 
-    "Belize City", "Barisal", "Bozeman", "Brazzaville", "Cabinda", "Columbia", "Cagliari", "Cairo", "Akron", "Campbeltown", 
-    "Guangzhou", "Casablanca", "Cayenne", "Cochabamba", "Cambridge", "Canberra", "Cottbus", "Calicut", "West Island", "Concord", 
-    "Caracas", "Calcutta", "Chub Cay", "Cedar City", "Paris", "Cordova", "Cebu City", "Crescent City", "Ceduna", "Ciudad Obregon", 
-    "Cannes", "Cessnock", "Clermont Ferrand", "Cienfuegos", "Donegal", "Coffs Harbour", "Corfu", "Craig", "Cuiaba", "Sao Paulo", 
-    "Jakarta", "Cologne", "Zhengzhou", "Chittagong", "Changchun", "Campo Grande", "Ciudad Guayana", "Chattanooga", "Christchurch", "Chaoyang", 
-    "Chicago", "Charlottesville", "Chania", "Mount Pleasant", "Rome", "Chico", "Cedar Rapids", "Chipata", "Canouan", "Coimbatore", 
-    "Calama", "Chitral", "Ciudad Juarez", "Clarksburg", "Chongqing", "Conakry", "Carlsbad", "Cleveland", "Cluj-Napoca", "College Station", 
-    "Port Angeles", "Cali", "Colima", "Charlotte", "Calvi", "Colombo", "Ciudad Del Carmen", "Chambery", "Columbus", "Champaign", 
-    "Casablanca", "Clermont", "Hancock", "Constanta", "Belo Horizonte", "Corrientes", "Cairns", "Chiang Mai", "Cody", "Cochin", 
-    "Concord", "Porto Novo", "Cordoba", "Colorado Springs", "Coober Pedy", "Copenhagen", "Casper", "Cape Town", "Myrtle Beach", "Carnot", 
-    "Jacksonville", "Corpus Christi", "Charleston", "Columbus", "Casino", "Carson City", "Castaway", "Catania", "Cartagena", "Cooktown", 
-    "Sapporo", "Chengdu", "Culiacan", "Cancun", "Willemstad", "Chihuahua", "Cincinnati", "Ciudad Victoria", "Carnarvon", "Coventry", 
-    "Wausau", "Curitiba", "Cardiff", "Kiritimati", "Charters Towers", "Cheyenne", "Cuyo", "Chichen Itza", "Constantine", "Cozumel", 
-    "Daytona Beach", "Dhaka", "Dallas", "Damascus", "Danville", "Dar es Salaam", "Dayton", "Dubbo", "Dubuque", "Dubrovnik", 
-    "Dalby", "Washington", "Roseau", "Daydream Island", "Decatur", "New Delhi", "Denver", "Detroit", "Dallas", "Dhahran", 
-    "Dothan", "Dili", "Jambi", "Djerba", "Jayapura", "Daloa", "Dunk Island", "Dakar", "Douala", "Dalian", 
-    "Dillingham", "Duluth", "Dalaman", "Disneyland Paris", "Moscow", "Bangkok", "Dammam", "Dundee", "Dnipropetrovsk", "Dinard", 
-    "Denizli", "Dodoma", "Doha", "Melville Hall", "Dover", "Devonport", "Bali", "Derby", "Durango", "Dresden", 
-    "Darwin", "Sheffield", "Dera Ismail Khan", "Des Moines", "Dortmund", "Detroit", "Detroit", "Dublin", "Dunedin", "Dubois", 
-    "Durban", "Duesseldorf", "Dutch Harbor", "Devils Lake", "Dubai", "Dysart", "Dushanbe", "Mamoudzou", "Esch-sur-Alzette", "Mulhouse", 
-    "San Sebastian", "Wenatchee", "Eau Claire", "Ebene", "Elba Island", "Entebbe", "Esbjerg", "Saint Etienne", "Edinburgh", "Emerald", 
-    "Bergerac", "Vail", "Egilsstadir", "Eindhoven", "Road Town", "Elkhart", "Elko", "North Eleuthera", "Ellisras", "Elmira", 
-    "El Paso", "East London", "Ely", "Nottingham", "Emerald", "El Minya", "Kenai", "Nancy", "Enontekioe", "Ecatepec", 
-    "Esperance", "Erzincan", "Erfurt", "Erie", "Windhoek", "Erzurum", "Espoo", "Ankara", "Escanaba", "Alexandria", 
-    "Brighton", "El Salvador", "Elat", "Metz", "Eugene", "El Aaiun", "Evenes", "Yerevan", "Evansville", "New Bern", 
-    "Jersey City", "Exeter", "Key West", "Buenos Aires", "Torshavn", "Fairbanks", "Faro", "Fargo", "Fresno", "Fort Bragg", 
-    "Lumbumbashi", "Oslo", "Foster City", "Kalispell", "Rome", "Fort de France", "Friedrichshafen", "Fes", "Frankfort", "Fort Huachuca", 
-    "Fair Isle", "Kinshasa", "Fujairah", "Karlsruhe-Baden", "Kisangani", "Franklin", "Fukushima", "Flagstaff", "Fort Lauderdale", "Florianopolis", 
-    "Florence", "Florence", "Farmington", "Osnabrueck", "Fort Myers", "Freetown", "Funchal", "Nimes", "Pyongyang", "Flint", 
-    "Fort Dodge", "Topeka", "Fortaleza", "Foula", "Freeport", "Frankfurt", "Fort Riley", "Frejus", "Floro", "Bishkek", 
-    "Francistown", "Figari", "Sioux Falls", "Fort Smith", "Saint Pierre", "Fuerteventura", "Fukuoka", "Funafuti", "Futuna", "Fort Wayne", 
-    "Fayetteville", "Gadsden", "Yamagata", "Guwahati", "Gaborone", "GIFT City", "Gilette", "Saint Peter Port", "George Town", "Grand Canyon", 
-    "Guadalajara", "Gdansk", "Cockburn Town", "Glendive", "Spokane", "Georgetown", "Geraldton", "Geelong", "Griffith", "Grand Forks", 
-    "Longview", "Glasgow", "Gandhinagar", "Governors Harbour", "Gibraltar", "Rio de Janeiro", "Gilgit", "Jijel", "Grand Junction", "Great Keppel Island", 
-    "Glasgow", "Greenville", "Gladstone", "Grenoble", "Saint Georges", "Ghent", "Gainesville", "Genoa", "Nuuk", "Goa", 
-    "Nizhny Novgorod", "Groton", "Goondiwindi", "Gothenburg", "Garoua", "Gove", "Gorna", "Araxos", "Gulfport", "Grand Rapids", 
-    "Grindsted", "Green Bay", "George", "Gerona", "Groningen", "Grand Rapids", "Sao Paulo", "Jaen", "Graz", "King Edward Point", 
-    "Guadalcanal", "Greensboro", "Greenville", "Groote Eylandt", "Great Falls", "Guettin", "Mount Cook", "Guatemala City", "Gunnison", "Hagatna", 
-    "Geneva", "Greenwich", "Gwadar", "Gweru", "Westerland", "Galway", "Baku", "Guayaquil", "Goiania", "Gympie", 
-    "Gaza City", "Gaziantep", "Hachijo Jima", "The Hague", "Moroni", "Hannover", "Hamburg", "Hanoi", "Whitsunday Resort", "Harrisburg", 
-    "Haugesund", "Havana", "Hobart", "Alexandria", "Hyderabad", "Steamboat Springs", "Hatyai", "Helsinki", "Heraklion", "Athens", 
-    "Haifa", "Hammerfest", "Hangchow", "Korhogo", "Hilton Head Island", "Frankfurt", "Hibbing", "Lake Havasu City", "Hiroshima", "Honiara", 
-    "Hayman Island", "Hakodate", "Hong Kong", "Jackson", "Phuket", "Hickory", "Lanseria", "Ulanhot", "Helena", "Jakarta", 
-    "Hamilton", "Hamilton", "Home Hill", "Hermosillo", "Morioka", "Tokyo", "Hoonah", "Hinchinbrook Island", "Honolulu", "Haines", 
-    "Holguin", "Homer", "Huron", "Hof", "Horta", "Houston", "White Plains", "Harbin", "Harare", "Hurghada", 
-    "Kharkov", "Harlingen", "Horsens", "Huntsville", "Chita", "Hamilton Island", "Huntington", "Terre Haute", "Huahine", "Hue", 
-    "Huatulco", "Humberside", "Hervey Bay", "New Haven", "Havre", "Hwange National Park", "Hyannis", "Hyderabad", "Hydaburg", "Washington", 
-    "Niagara Falls", "Houston", "Ibiza", "Incheon", "Wichita", "Idaho Falls", "Indore", "Kyiv", "Innisfail", "Ingham", 
-    "Iguazu", "Jacksonville", "Irkutsk", "Killeen", "Wilmington", "Iliamna", "Wilmington", "Ile des Pins", "Islay", "Zilina", 
-    "Indianapolis", "Nis", "International Falls", "Innsbruck", "Yaren", "Inverness", "Douglas", "Ile Ouen", "Easter Island", "Imperial", 
-    "Williamsport", "Iquitos", "Lockhart River", "Birao", "Mount Isa", "Islamabad", "Ishigaki", "Williston", "Kingston", "Long Island", 
-    "Istanbul", "Ithaca", "Osaka", "Hilo", "Alofi", "Invercargill", "Ivalo", "Bagdogra", "Chandigarh", "Belgaum", 
-    "Jammu", "Ranchi", "Jamshedpur", "Inyokern", "Izmir", "Jalalabad", "Jackson Hole", "Jandakot", "Jaffna", "Jacobabad", 
-    "Jaipur", "Jacmel", "Jalapa", "Jambol", "Jackson", "Jacquinot Bay", "Jauja", "Jacksonville", "Jonesboro", "Joacaba", 
-    "Julia Creek", "Jacobina", "Juiz De Fora", "Jodhpur", "Jingdezhen", "Jeddah", "Jeremie", "Jefferson City", "Saint Helier", "New York", 
-    "Jamnagar", "Jagdalpur", "Jiayuguan", "Jian", "Johor Bahru", "Helsingborg", "Jinghong", "Kapalua West", "Shute Harbour", "Jamestown", 
+    "Jinka", "Boca Raton (FL)", "Belmopan", "Bermuda", "Bundaberg", "Hartford (CT)", "Bandung", "Baroda", "Bridgeport (CT)", "Brindisi", 
+    "Bardufoss", "Benbecula", "Belgrade", "Benton Harbor (MI)", "Belem", "Benghazi", "Newcastle", "Berlin", "Brest", "Bethel (AK)", 
+    "Beira", "Beirut", "Bradford (PA)", "Bakersfield (CA)", "Bloemfontein", "Buffalo Range", "Belfast", "Bucaramanga", "Bangui", "Bridgetown", 
+    "Johnson City (NY)", "Bergen", "Bangor (ME)", "Bangassou", "Baghdad", "Bergamo", "Bullhead City (NV)", "Belfast", "Blenheim", "Birmingham (AL)", 
+    "Bhopal", "Broken Hill", "Bahawalpur", "Birmingham", "Bastia", "Billings (MT)", "Bilbao", "Biarritz", "Bismarck (ND)", "Bria", 
+    "Bemidji (MN)", "Banjul", "Bujumbura", "Beijing", "Bodrum", "Leon", "Badajoz", "Kota Kinabalu", "Bangkok", "Cleveland (OH)", 
+    "Bamako", "Beckley (WV)", "Brookings (SD)", "Barcelona", "Bluefield (WV)", "Bellingham (WA)", "Blackpool", "Billund", "Bologna", "Bangalore", 
+    "Blackwater", "Blantyre", "Stockholm", "Broome", "Bloomington (IN)", "Bloomington (IL)", "Brampton Island", "Nashville (TN)", "Brisbane", "Bonn", 
+    "Ballina", "Bronnoysund", "Bannu", "Banja Luka", "Bora Bora", "Bordeaux", "Bogota", "Bournemouth", "Boise (ID)", "Bourgas", 
+    "Mumbai", "Kralendijk", "Bodo", "Boston (MA)", "Bobo", "Beaumont (TX)", "Brunswick (GA)", "Aguadilla", "San Carlos de Bariloche", "Brainerd (MN)", 
+    "Bremen", "Bari", "Burlington (IA)", "Bern", "Barra", "Bristol", "Brussels", "Brasilia", "Basel", "Basra", 
+    "Butte (MT)", "Baton Rouge (LA)", "Bratislava", "Bintulu", "Burlington (VT)", "Budapest", "Buenos Aires", "Buffalo (NY)", "Benguela", "Bucharest", 
+    "Bulawayo", "Burbank (CA)", "Boa Vista", "Baltimore (MD)", "Bandar Seri Begawan", "Burnie", "Bissau", "Borrego Springs (CA)", "Bouake", "Bayreuth", 
+    "Belize City", "Barisal", "Bozeman (MT)", "Brazzaville", "Cabinda", "Columbia (SC)", "Cagliari", "Cairo", "Akron (OH)", "Campbeltown", 
+    "Guangzhou", "Casablanca", "Cayenne", "Cochabamba", "Cambridge", "Canberra", "Cottbus", "Calicut", "West Island", "Concord (CA)", 
+    "Caracas", "Calcutta", "Chub Cay", "Cedar City (UT)", "Paris", "Cordova (AK)", "Cebu City", "Crescent City (CA)", "Ceduna", "Ciudad Obregon", 
+    "Cannes", "Cessnock", "Clermont Ferrand", "Cienfuegos", "Donegal", "Coffs Harbour", "Corfu", "Craig (AK)", "Cuiaba", "Sao Paulo", 
+    "Jakarta", "Cologne", "Zhengzhou", "Chittagong", "Changchun", "Campo Grande", "Ciudad Guayana", "Chattanooga (TN)", "Christchurch", "Chaoyang", 
+    "Chicago (IL)", "Charlottesville (VA)", "Chania", "Charleston (SC)", "Rome", "Chico (CA)", "Cedar Rapids (IA)", "Chipata", "Canouan", "Coimbatore", 
+    "Calama", "Chitral", "Ciudad Juarez", "Clarksburg (WV)", "Chongqing", "Conakry", "Carlsbad (CA)", "Cleveland (OH)", "Cluj-Napoca", "College Station (TX)", 
+    "Port Angeles (WA)", "Cali", "Colima", "Charlotte (NC)", "Calvi", "Colombo", "Ciudad Del Carmen", "Chambery", "Columbus (OH)", "Champaign (IL)", 
+    "Casablanca", "Clermont", "Hancock (MI)", "Constanta", "Belo Horizonte", "Corrientes", "Cairns", "Chiang Mai", "Cody (WY)", "Cochin", 
+    "Concord (NH)", "Porto Novo", "Cordoba", "Colorado Springs (CO)", "Coober Pedy", "Copenhagen", "Casper (WY)", "Cape Town", "Myrtle Beach (SC)", "Carnot", 
+    "Jacksonville (FL)", "Corpus Christi (TX)", "Charleston (WV)", "Columbus (GA)", "Casino", "Carson City (NV)", "Castaway", "Catania", "Cartagena", "Cooktown", 
+    "Sapporo", "Chengdu", "Culiacan", "Cancun", "Willemstad", "Chihuahua", "Cincinnati (OH)", "Ciudad Victoria", "Carnarvon", "Coventry", 
+    "Wausau (WI)", "Curitiba", "Cardiff", "Kiritimati", "Charters Towers", "Cheyenne (WY)", "Cuyo", "Chichen Itza", "Constantine", "Cozumel", 
+    "Daytona Beach (FL)", "Dhaka", "Dallas (TX)", "Damascus", "Danville (VA)", "Dar es Salaam", "Dayton (OH)", "Dubbo", "Dubuque (IA)", "Dubrovnik", 
+    "Dalby", "Washington (DC)", "Roseau", "Daydream Island", "Decatur (IL)", "New Delhi", "Denver (CO)", "Detroit (MI)", "Dallas (TX)", "Dhahran", 
+    "Dothan (AL)", "Dili", "Jambi", "Djerba", "Jayapura", "Daloa", "Dunk Island", "Dakar", "Douala", "Dalian", 
+    "Dillingham (AK)", "Duluth (MN)", "Dalaman", "Disneyland Paris", "Moscow", "Bangkok", "Dammam", "Dundee", "Dnipropetrovsk", "Dinard", 
+    "Denizli", "Dodoma", "Doha", "Melville Hall", "Dover (DE)", "Devonport", "Bali", "Derby", "Durango (CO)", "Dresden", 
+    "Darwin", "Sheffield", "Dera Ismail Khan", "Des Moines (IA)", "Dortmund", "Detroit (MI)", "Detroit (MI)", "Dublin", "Dunedin", "Dubois (PA)", 
+    "Durban", "Duesseldorf", "Dutch Harbor (AK)", "Devils Lake (ND)", "Dubai", "Dysart", "Dushanbe", "Mamoudzou", "Esch-sur-Alzette", "Mulhouse", 
+    "San Sebastian", "Wenatchee (WA)", "Eau Claire (WI)", "Ebene", "Elba Island", "Entebbe", "Esbjerg", "Saint Etienne", "Edinburgh", "Emerald", 
+    "Bergerac", "Vail (CO)", "Egilsstadir", "Eindhoven", "Road Town", "Elkhart (IN)", "Elko (NV)", "North Eleuthera", "Ellisras", "Elmira (NY)", 
+    "El Paso (TX)", "East London", "Ely (NV)", "Nottingham", "Emerald", "El Minya", "Kenai (AK)", "Nancy", "Enontekioe", "Ecatepec", 
+    "Esperance", "Erzincan", "Erfurt", "Erie (PA)", "Windhoek", "Erzurum", "Espoo", "Ankara", "Escanaba (MI)", "Alexandria (LA)", 
+    "Brighton", "El Salvador", "Elat", "Metz", "Eugene (OR)", "El Aaiun", "Evenes", "Yerevan", "Evansville (IN)", "New Bern (NC)", 
+    "Jersey City (NJ)", "Exeter", "Key West (FL)", "Buenos Aires", "Torshavn", "Fairbanks (AK)", "Faro", "Fargo (ND)", "Fresno (CA)", "Fort Bragg (NC)", 
+    "Lumbumbashi", "Oslo", "Foster City", "Kalispell (MT)", "Rome", "Fort de France", "Friedrichshafen", "Fes", "Frankfort (KS)", "Fort Huachuca (AZ)", 
+    "Fair Isle", "Kinshasa", "Fujairah", "Karlsruhe-Baden", "Kisangani", "Franklin (PA)", "Fukushima", "Flagstaff (AZ)", "Fort Lauderdale (FL)", "Florianopolis", 
+    "Florence (SC)", "Florence", "Farmington (NM)", "Osnabrueck", "Fort Myers (FL)", "Freetown", "Funchal", "Nimes", "Pyongyang", "Flint (MI)", 
+    "Fort Dodge (IA)", "Topeka (KS)", "Fortaleza", "Foula", "Freeport", "Frankfurt", "Fort Riley (KS)", "Frejus", "Floro", "Bishkek", 
+    "Francistown", "Figari", "Sioux Falls (SD)", "Fort Smith (AR)", "Saint Pierre", "Fuerteventura", "Fukuoka", "Funafuti", "Futuna", "Fort Wayne (IN)", 
+    "Fayetteville (AR)", "Gadsden (AL)", "Yamagata", "Guwahati", "Gaborone", "GIFT City", "Gilette (WY)", "Saint Peter Port", "George Town", "Grand Canyon (AZ)", 
+    "Guadalajara", "Gdansk", "Cockburn Town", "Glendive (MT)", "Spokane (WA)", "Georgetown", "Geraldton", "Geelong", "Griffith", "Grand Forks (ND)", 
+    "Longview (TX)", "Glasgow (MT)", "Gandhinagar", "Governors Harbour", "Gibraltar", "Rio de Janeiro", "Gilgit", "Jijel", "Grand Junction (CO)", "Great Keppel Island", 
+    "Glasgow", "Greenville (MS)", "Gladstone", "Grenoble", "Saint Georges", "Ghent", "Gainesville (FL)", "Genoa", "Nuuk", "Goa", 
+    "Nizhny Novgorod", "Groton (CT)", "Goondiwindi", "Gothenburg", "Garoua", "Gove", "Gorna", "Araxos", "Gulfport (MS)", "Grand Rapids (MN)", 
+    "Grindsted", "Green Bay (WI)", "George", "Gerona", "Groningen", "Grand Rapids (MI)", "Sao Paulo", "Jaen", "Graz", "King Edward Point", 
+    "Guadalcanal", "Greensboro (NC)", "Greenville (SC)", "Groote Eylandt", "Great Falls (MT)", "Guettin", "Mount Cook", "Guatemala City", "Gunnison (CO)", "Hagatna", 
+    "Geneva", "Greenwich (CT)", "Gwadar", "Gweru", "Westerland", "Galway", "Baku", "Guayaquil", "Goiania", "Gympie", 
+    "Gaza", "Gaziantep", "Hachijo Jima", "The Hague", "Moroni", "Hannover", "Hamburg", "Hanoi", "Whitsunday Resort", "Harrisburg (PA)", 
+    "Haugesund", "Havana", "Hobart", "Alexandria", "Hyderabad", "Steamboat Springs (CO)", "Hatyai", "Helsinki", "Heraklion", "Athens", 
+    "Haifa", "Hammerfest", "Hangchow", "Korhogo", "Hilton Head Island (SC)", "Frankfurt", "Hibbing (MN)", "Lake Havasu City (AZ)", "Hiroshima", "Honiara", 
+    "Hayman Island", "Hakodate", "Hong Kong", "Jackson (MS)", "Phuket", "Hickory (NC)", "Lanseria", "Ulanhot", "Helena (MT)", "Jakarta", 
+    "Hamilton", "Hamilton", "Home Hill", "Hermosillo", "Morioka", "Tokyo", "Hoonah (AK)", "Hinchinbrook Island", "Honolulu (HI)", "Haines (AK)", 
+    "Holguin", "Homer (AK)", "Huron (SD)", "Hof", "Horta", "Houston (TX)", "White Plains (NY)", "Harbin", "Harare", "Hurghada", 
+    "Kharkov", "Harlingen (TX)", "Horsens", "Huntsville (AL)", "Chita", "Hamilton Island", "Huntington (WV)", "Terre Haute (IN)", "Huahine", "Hue", 
+    "Huatulco", "Humberside", "Hervey Bay", "New Haven (CT)", "Havre (MT)", "Hwange National Park", "Hyannis (MA)", "Hyderabad", "Hydaburg (AK)", "Washington (DC)", 
+    "Niagara Falls (NY)", "Houston (TX)", "Ibiza", "Incheon", "Wichita (KS)", "Idaho Falls (ID)", "Indore", "Kyiv", "Innisfail", "Ingham", 
+    "Iguazu", "Jacksonville (IL)", "Irkutsk", "Killeen (TX)", "Wilmington (DE)", "Iliamna (AK)", "Wilmington (NC)", "Ile des Pins", "Islay", "Zilina", 
+    "Indianapolis (IN)", "Nis", "International Falls (MN)", "Innsbruck", "Yaren", "Inverness", "Douglas", "Ile Ouen", "Easter Island", "Imperial (CA)", 
+    "Williamsport (PA)", "Iquitos", "Lockhart River", "Birao", "Mount Isa", "Islamabad", "Ishigaki", "Williston (ND)", "Kingston (NC)", "Long Island (NY)", 
+    "Istanbul", "Ithaca (NY)", "Osaka", "Hilo (HI)", "Alofi", "Invercargill", "Ivalo", "Bagdogra", "Chandigarh", "Belgaum", 
+    "Jammu", "Ranchi", "Jamshedpur", "Inyokern (CA)", "Izmir", "Jalalabad", "Jackson Hole (WY)", "Jandakot", "Jaffna", "Jacobabad", 
+    "Jaipur", "Jacmel", "Jalapa", "Jambol", "Jackson (MS)", "Jacquinot Bay", "Jauja", "Jacksonville (FL)", "Jonesboro (AR)", "Joacaba", 
+    "Julia Creek", "Jacobina", "Juiz De Fora", "Jodhpur", "Jingdezhen", "Jeddah", "Jeremie", "Jefferson City (MO)", "Saint Helier", "New York (NY)", 
+    "Jamnagar", "Jagdalpur", "Jiayuguan", "Jian", "Johor Bahru", "Helsingborg", "Jinghong", "Kapalua West (HI)", "Shute Harbour", "Jamestown (NY)", 
     "Djibouti City", "Jijiga", "Jilin", "Jimma", "Jinja", "Jipijapa", "Jiri", "Jiujiang", "Jiwani", "Juanjui", 
-    "Jinjiang", "Jonkoping", "Chios", "Janakpur", "Jakarta", "Jacksonville", "Joplin", "Jalandhar", "Jales", "Jamba", 
-    "Mykonos", "Jomsom", "Jamestown", "Jiamusi", "Januaria", "Johannesburg", "Jining", "Junin", "Juneau", "Naxos", 
-    "Jinzhou", "Joensuu", "Joinville", "Jolo", "Johnston Island", "Jos", "Joao Pessoa", "Jaque", "Jorhat", "Kilimanjaro", 
-    "Jerusalem", "Jaisalmer", "Skiathos", "Jose de San Martin", "Jessore", "Johnstown", "Jatai", "Thira", "Juba", "Juist", 
-    "Jujuy", "Juliaca", "Jumla", "Jundah", "Juticalpa", "Upernavik", "Janesville", "Jwaneng", "Jackson", "Jyvaskyla", 
-    "Kajaani", "Kano", "Kuusamo", "Kabul", "Kyiv", "Streaky Bay", "Coffman Cove", "Collinsville", "Kuching", "Kahramanmaras", 
+    "Jinjiang", "Jonkoping", "Chios", "Janakpur", "Jakarta", "Jacksonville (TX)", "Joplin (MO)", "Jalandhar", "Jales", "Jamba", 
+    "Mykonos", "Jomsom", "Jamestown (ND)", "Jiamusi", "Januaria", "Johannesburg", "Jining", "Junin", "Juneau (AK)", "Naxos", 
+    "Jinzhou", "Joensuu", "Joinville", "Jolo", "Johnston Island (UM)", "Jos", "Joao Pessoa", "Jaque", "Jorhat", "Kilimanjaro", 
+    "Jerusalem", "Jaisalmer", "Skiathos", "Jose De San Martin", "Jerusalem", "Johnstown (PA)", "Jatai", "Thira", "Juba", "Juist", 
+    "Jujuy", "Juliaca", "Jumla", "Jundah", "Juticalpa", "Upernavik", "Janesville (WI)", "Jwaneng", "Jackson (MI)", "Jyvaskyla", 
+    "Kajaani", "Kano", "Kuusamo", "Kabul", "Kyiv", "Streaky Bay", "Coffman Cove (AK)", "Collinsville", "Kuching", "Kahramanmaras", 
     "Kochi", "Khuzdar", "Skardu", "Reykjavik", "Kiel", "Kemi", "Kingscote", "Kaliningrad", "Kalgoorlie", "Kigali", 
     "Kos", "Kaohsiung", "Karachi", "Kauhajoki", "Chabarovsk", "Kristianstad", "Niigata", "Kirkuk", "Kimberley", "Kingston", 
-    "Kerry", "Chisinau", "Kitwe", "Osaka", "Kirkenes", "Kampala", "Kalmar", "Klagenfurt", "Klawock", "Kalamata", 
-    "Kleinsee", "Miyazaki", "Kumamoto", "Keetmanshoop", "Komatsu", "Medan", "King Island", "Kanpur", "Kununurra", "Kona", 
+    "Kerry", "Chisinau", "Kitwe", "Osaka", "Kirkenes", "Kampala", "Kalmar", "Klagenfurt", "Klawock (AK)", "Kalamata", 
+    "Kleinsee", "Miyazaki", "Kumamoto", "Keetmanshoop", "Komatsu", "Medan", "King Island", "Kanpur", "Kununurra", "Kona (HI)", 
     "Kirkwall", "Kagoshima", "Kokkola", "Karumba", "Krakow", "Kiruna", "Karup", "Kristiansand", "Khartoum", "Karlstad", 
-    "Kassala", "Kristiansund", "Karratha", "Thorne Bay", "Kathmandu", "Ketchikan", "Katherine", "Kittila", "Kuantan", "Samara", 
+    "Kassala", "Kristiansund", "Karratha", "Thorne Bay (AK)", "Kathmandu", "Ketchikan (AK)", "Katherine", "Kittila", "Kuantan", "Samara", 
     "Kushiro", "Kuala Lumpur", "Kuopio", "Kavala", "Kuwait City", "Guilin", "Kowanyama", "Konya", "Kars", "Kazan", 
-    "Luanda", "Lae", "Lafayette", "Lannion", "Lansing", "La Paz", "Laramie", "Las Vegas", "Lawton", "Los Angeles", 
-    "Leeds", "Lubbock", "Latrobe", "Paris", "Albi", "Lambarene", "Labuan", "Libreville", "Larnaca", "La Coruna", 
-    "Lake Charles", "London", "Lindeman Island", "Lourdes", "Lidkoeping", "Londonderry", "Learmouth", "Lebanon", "Saint Petersburg", "Almeria", 
-    "Leipzig", "Labe", "Lands End", "Leinster", "Lexington", "Lelystad", "Lafayette", "Lome", "New York", "Long Beach", 
-    "Liege", "Langkawi", "London", "Lahore", "London", "Vaduz", "Lifou", "Limoges", "Lihue", "Long Island", 
-    "Lille", "Lima", "Milan", "Lisala", "Lisbon", "Little Rock", "Ljubljana", "Lakselv", "Lucknow", "Lulea", 
-    "Lilongwe", "Los Mochis", "Lampedusa", "Klamath Falls", "Lincoln", "Leonora", "Lancaster", "Lanai City", "Linz", "London", 
-    "Lagos", "Las Palmas", "La Paz", "Liverpool", "Lappeenranta", "Laredo", "Longreach", "Jacksonville", "La Rochelle", "Casa de Campo", 
-    "Lorient", "La Crosse", "Sumburgh ", "Launceston", "Lismore", "Losinj", "London", "Loreto", "Lucerne", "Luederitz", 
-    "Lugano", "Lusikisiki", "Luxi", "Lusaka", "Luxembourg", "Leuven", "Laverton", "Greenbrier", "Lerwick", "Lvov", 
-    "Lewiston", "Lewistown", "Luxor", "Lynchburg", "Lyons", "Faisalabad", "Longyearbyen", "Lyon", "Lydd", "Lazaro Cardenas", 
-    "Lizard Island", "Madras", "Madrid", "Midland", "Mahon", "Majuro", "Manchester", "Manaus", "Maracaibo", "Maupiti", 
-    "Mayaguez", "Mombasa", "Maryborough", "Montego Bay", "Mkambati", "Saginaw", "Maribor", "Makati City", "Merced", "Kansas City", 
-    "Mount McKinley", "Monaco", "Macon", "Orlando", "Macapa", "Muscat", "Mason City", "Sunshine Coast", "Maceio", "Manado", 
-    "Medellin", "Mandalay", "Mar del Plata", "Harrisburg", "Chicago", "Midway Atoll", "Mendoza", "Madinah", "Mare", "Meridian", 
-    "Melbourne", "Memphis", "Medan", "Mexico City", "Messina", "McAllen", "Moanda", "Muzaffarabad", "Macao", "Milford Sound", 
-    "Manguna", "Maradi", "Medford", "Mfuwe", "Managua", "Mount Gambier", "Maringa", "Margate", "Montgomery", "Mogadishu", 
-    "Morgantown", "Mitchell", "Marsh Harbour", "Mariehamn", "Manchester", "Miami", "Merida", "Mikkeli", "Milan", "Merimbula", 
-    "Monastir", "Man", "Moenjodaro", "Mouila", "Majunga", "Jackson", "Mytilene", "Murcia", "Milwaukee", "Muskegon", 
-    "Kaunakakai", "Jackson", "Meekatharra", "Mackay", "Valletta", "Melbourne", "Male", "Mulhouse", "Moline", "Morelia", 
-    "Miles City", "Monroe", "Monrovia", "Malatya", "Malmo", "Teesside", "Mount Magnet", "Matsumoto", "Murmansk", "Middlemount", 
-    "Malmo", "Miyako Jima", "Brades", "Manila", "Mobile", "Modesto", "Minot", "Moranbah", "Moscow", "Moorea", 
-    "Katima Mulilo", "Sindhri", "Montpellier", "Maputo", "Mildura", "Mardin", "Nelspruit", "Moundou", "Marquette", "Martinsburg", 
-    "Marseille", "Port Louis", "Mineralnye Vody", "Monterey", "Moree", "Kent", "Muscle Shoals", "Madison", "Missula", "Minneapolis", 
-    "Minsk", "Mus", "Maastricht", "Maseru", "New Orleans", "Marathon", "Montrose", "Maitland", "Metlakatla", "Mattoon", 
-    "Manzini", "Minatitlan", "Monterrey", "Maun", "Munich", "Kamuela", "Marsa Matruh", "Multan", "Mill Valley", "Mvengue", 
-    "Montevideo", "Maroua", "Marthas Vineyard", "Masvingo", "Mianwali", "Moses Lake", "Mexicali", "Milan", "Moruya", "Malindi", 
-    "Matsuyama", "Mysore", "Myrtle Beach", "Miri", "Mzamba", "Makung", "Metz", "Mazatlan", "Mossel Bay", "Narrabri", 
+    "Luanda", "Lae", "Lafayette (IN)", "Lannion", "Lansing (MI)", "La Paz", "Laramie (WY)", "Las Vegas (NV)", "Lawton (OK)", "Los Angeles (CA)", 
+    "Leeds", "Lubbock (TX)", "Latrobe (PA)", "Paris", "Albi", "Lambarene", "Labuan", "Libreville", "Larnaca", "La Coruna", 
+    "Lake Charles (LA)", "London", "Lindeman Island", "Lourdes", "Lidkoeping", "Londonderry", "Learmouth", "Lebanon (NH)", "Saint Petersburg", "Almeria", 
+    "Leipzig", "Labe", "Lands End", "Leinster", "Lexington (KY)", "Lelystad", "Lafayette (LA)", "Lome", "New York (NY)", "Long Beach (CA)", 
+    "Liege", "Langkawi", "London", "Lahore", "London", "Vaduz", "Lifou", "Limoges", "Lihue (HI)", "Long Island (AK)", 
+    "Lille", "Lima", "Milan", "Lisala", "Lisbon", "Little Rock (AR)", "Ljubljana", "Lakselv", "Lucknow", "Lulea", 
+    "Lilongwe", "Los Mochis", "Lampedusa", "Klamath Falls (OR)", "Lincoln (NE)", "Leonora", "Lancaster (PA)", "Lanai City (HI)", "Linz", "London", 
+    "Lagos", "Las Palmas", "La Paz", "Liverpool", "Lappeenranta", "Laredo (TX)", "Longreach", "Jacksonville (AR)", "La Rochelle", "Casa de Campo", 
+    "Lorient", "La Crosse (WI)", "Sumburgh ", "Launceston", "Lismore", "Losinj", "London", "Loreto", "Lucerne", "Luederitz", 
+    "Lugano", "Lusikisiki", "Luxi", "Lusaka", "Luxembourg", "Leuven", "Laverton", "Greenbrier (WV)", "Lerwick", "Lvov", 
+    "Lewiston (ID)", "Lewistown (MT)", "Luxor", "Lynchburg (VA)", "Lyons (KS)", "Faisalabad", "Longyearbyen", "Lyon", "Lydd", "Lazaro Cardenas", 
+    "Lizard Island", "Madras", "Madrid", "Midland (TX)", "Mahon", "Majuro", "Manchester", "Manaus t", "Maracaibo", "Maupiti", 
+    "Mayaguez", "Mombasa", "Maryborough", "Montego Bay", "Mkambati", "Saginaw (MI)", "Maribor", "Makati City", "Merced (CA)", "Kansas City (MO)", 
+    "Mount McKinley (AK)", "Monaco", "Macon (GA)", "Orlando (FL)", "Macapa", "Muscat", "Mason City (IA)", "Sunshine Coast", "Maceio", "Manado", 
+    "Medellin", "Mandalay", "Mar del Plata", "Harrisburg (PA)", "Chicago (IL)", "Midway Atoll", "Mendoza", "Madinah", "Mare", "Meridian (MS)", 
+    "Melbourne", "Memphis (TN)", "Medan", "Mexico City", "Messina", "McAllen (TX)", "Moanda", "Muzaffarabad", "Macao", "Milford Sound", 
+    "Manguna", "Maradi", "Medford (OR)", "Mfuwe", "Managua", "Mount Gambier", "Maringa", "Margate", "Montgomery (AL)", "Mogadishu", 
+    "Morgantown (WV)", "Mitchell (SD)", "Marsh Harbour", "Mariehamn", "Manchester (NH)", "Miami (FL)", "Merida", "Mikkeli", "Milan", "Merimbula", 
+    "Monastir", "Man", "Moenjodaro", "Mouila", "Majunga", "Jackson (MN)", "Mytilene", "Murcia", "Milwaukee (WI)", "Muskegon (MI)", 
+    "Kaunakakai (HI)", "Jackson (TN)", "Meekatharra", "Mackay", "Valletta", "Melbourne (FL)", "Male", "Mulhouse", "Moline (IL)", "Morelia", 
+    "Miles City (MT)", "Monroe (LA)", "Monrovia", "Malatya", "Malmo", "Teesside", "Mount Magnet", "Matsumoto", "Murmansk", "Middlemount", 
+    "Malmo", "Miyako Jima", "Brades", "Manila", "Mobile (AL)", "Modesto (CA)", "Minot (ND)", "Moranbah", "Moscow", "Moorea", 
+    "Katima Mulilo", "Sindhri", "Montpellier", "Maputo", "Mildura", "Mardin", "Nelspruit", "Moundou", "Marquette (MI)", "Martinsburg (WV)", 
+    "Marseille", "Port Louis", "Mineralnye Vody", "Monterey (CA)", "Moree", "Kent", "Muscle Shoals (AL)", "Madison (WI)", "Missula (MT)", "Minneapolis (MN)", 
+    "Minsk", "Mus", "Maastricht", "Maseru", "New Orleans (LA)", "Marathon (FL)", "Montrose (CO)", "Maitland", "Metlakatla (AK)", "Mattoon (IL)", 
+    "Manzini", "Minatitlan", "Monterrey", "Maun", "Munich", "Kamuela (HI)", "Marsa Matruh", "Multan", "Mill Valley (CA)", "Mvengue", 
+    "Montevideo", "Maroua", "Marthas Vineyard (MA)", "Masvingo", "Mianwali", "Moses Lake (WA)", "Mexicali", "Milan", "Moruya", "Malindi", 
+    "Matsuyama", "Mysore", "Myrtle Beach (SC)", "Miri", "Mzamba", "Makung", "Metz", "Mazatlan", "Mossel Bay", "Narrabri", 
     "Nagpur", "Nakhichevan", "Nadi", "Naples", "Nassau", "Natal", "Beijing", "Nairobi", "Nice", "Newcastle", 
     "Newcastle", "Annecy", "Nouadhibou", "N Djamena", "Rundu", "Nevis", "Ngaoundere", "Nagoya", "Nagasaki", "Nicosia", 
-    "Niamey", "Jacksonville", "Nouakchott", "Diego Garcia", "N Dola", "Nuevo Laredo", "Kingston", "Nelspruit", "Mexico City", "Nikolaev", 
+    "Niamey", "Jacksonville (FL)", "Nouakchott", "Diego Garcia", "N Dola", "Nuevo Laredo", "Kingston", "Nelspruit", "Mexico City", "Nikolaev", 
     "Nanning", "Knock", "Mactan Island", "Noumea", "Newquay", "Narrandera", "Norrkoping", "Tokyo", "Noosa", "Nelson", 
-    "Scone", "Nakhon Si Thammarat", "Nantes", "Newcastle", "Monterrey", "Pilanesberg", "Nuremberg", "Norwich", "New York", "Jacksonville", 
-    "Orange", "Jacksonville", "Oakland", "Oaxaca", "Oldenburg", "Ouadda", "Cordoba", "Odense", "Odessa", "Kahului", 
-    "Ohrid", "Kohat", "Oita", "Okinawa", "Oklahoma City", "Sapporo", "Okayama", "Mokuti", "Olbia", "Wolf Point", 
-    "Olympia", "Olympic Dam", "Omaha", "Oranjemund", "Nome", "Urmia", "Mostar", "Ondangwa", "Ontario", "Gold Coast", 
-    "Cooma", "Porto", "Oerebro", "Chicago", "Norfolk", "Worcester", "Cork", "Orlando", "Oran", "Orpheus Island", 
-    "Paris", "Osaka", "Oshkosh", "Osijek", "Oslo", "Mosul", "North Bend", "Bucharest", "Kotzebue", "Ouagadougou", 
-    "Oujda", "Oudtshoorn", "Out Skerries", "Oulu", "Zouerate", "Novosibirsk", "Oviedo", "Owensboro", "Bissau", "Oxnard", 
-    "Ouarzazate", "Panama City", "Paderborn", "Paducah", "Port au Prince", "Paris", "Patna", "Puebla", "Thimphu", "West Palm Beach", 
-    "Paramaribo", "Paraburdoo", "Plettenberg Bay", "Pasig City", "Princeton", "Ponta Delgada", "Pendelton", "Portland", "Perugia", "Pereira", 
-    "Beijing", "Penang", "Perth", "Peshawar", "Panama City", "Paphos", "Page", "Perpignan", "Greenville", "Port Harcourt", 
-    "Port Hedland", "Newport News", "Philadelphia", "Phalaborwa", "Phoenix", "Peoria", "Laurel", "Pocatello", "Glasgow", "Pierre", 
-    "Poitiers", "Pittsburgh", "Panjgur", "Parkersburg", "Selibi Phikwe", "Plattsburgh", "Pellston", "Port Lincoln", "Port Elizabeth", "Palmdale", 
+    "Scone", "Nakhon Si Thammarat", "Nantes", "Newcastle", "Monterrey", "Pilanesberg", "Nuremberg", "Norwich", "New York (NY)", "Jacksonville (FL)", 
+    "Orange", "Jacksonville (NC)", "Oakland (CA)", "Oaxaca", "Oldenburg", "Ouadda", "Cordoba", "Odense", "Odessa", "Kahului (HI)", 
+    "Ohrid", "Kohat", "Oita", "Okinawa", "Oklahoma City (OK)", "Sapporo", "Okayama", "Mokuti", "Olbia", "Wolf Point (MT)", 
+    "Olympia (WA)", "Olympic Dam", "Omaha (NE)", "Oranjemund", "Nome (AK)", "Urmia", "Mostar", "Ondangwa", "Ontario (CA)", "Gold Coast", 
+    "Cooma", "Porto", "Oerebro", "Chicago (IL)", "Norfolk (VA)", "Worcester (MA)", "Cork", "Orlando (FL)", "Oran", "Orpheus Island", 
+    "Paris", "Osaka", "Oshkosh (WI)", "Osijek", "Oslo", "Mosul", "North Bend (OR)", "Bucharest", "Kotzebue (AK)", "Ouagadougou", 
+    "Oujda", "Oudtshoorn", "Out Skerries", "Oulu", "Zouerate", "Novosibirsk", "Oviedo", "Owensboro (KY)", "Bissau", "Oxnard (CA)", 
+    "Ouarzazate", "Panama City", "Paderborn", "Paducah (KY)", "Port au Prince", "Paris", "Patna", "Puebla", "Thimphu", "West Palm Beach (FL)", 
+    "Paramaribo", "Paraburdoo", "Plettenberg Bay", "Pasig City", "Princeton (NJ)", "Ponta Delgada", "Pendelton (OR)", "Portland (OR)", "Perugia", "Pereira", 
+    "Beijing", "Penang", "Perth", "Peshawar", "Panama City (FL)", "Paphos", "Page (AZ)", "Perpignan", "Greenville (NC)", "Port Harcourt", 
+    "Port Hedland", "Newport News (VA)", "Philadelphia (PA)", "Phalaborwa", "Phoenix (AZ)", "Peoria (IL)", "Laurel (MS)", "Pocatello (ID)", "Glasgow", "Pierre (SD)", 
+    "Poitiers", "Pittsburgh (PA)", "Panjgur", "Parkersburg (WV)", "Selibi Phikwe", "Plattsburgh (NY)", "Pellston (MI)", "Port Lincoln", "Port Elizabeth", "Palmdale (CA)", 
     "Palma", "Palermo", "Palmerston North", "Margarita", "Palmas", "Adamstown", "Phnom Penh", "Palikir", "Pantelleria", "Pune", 
-    "Pointe Noire", "Pensacola", "Porto Alegre", "Port Gentil", "Port Moresby", "Puerto Plata", "Pori", "Port of Spain", "Poughkeepsie", "Poznan", 
-    "Pago Pago", "Proserpine", "Papeete", "Presque Isle", "Port Macquarie", "Prague", "Pristina", "Pretoria", "Nablus", "Pisa", 
-    "Pasco", "Port Said", "Ponce", "Petersburg", "Pasni", "Palm Springs", "Pescara", "Stanley", "Pietersburg", "Portland", 
-    "Basse-Terre", "Panama City", "Pueblo", "Pau", "Port Augusta", "Punta Cana", "Punta Arenas", "Busan", "Pullman", "Pula", 
-    "Providence", "Shanghai", "Porto Velho", "Preveza", "Puerto Vallarta", "Portland", "Puerto Escondido", "Porto Santo", "Jeypore", "Pattaya", 
+    "Pointe Noire", "Pensacola (FL)", "Porto Alegre", "Port Gentil", "Port Moresby", "Puerto Plata", "Pori", "Port of Spain", "Poughkeepsie (NY)", "Poznan", 
+    "Pago Pago", "Proserpine", "Papeete", "Presque Isle (ME)", "Port Macquarie", "Prague", "Pristina", "Pretoria", "Nablus", "Pisa", 
+    "Pasco (WA)", "Port Said", "Ponce", "Petersburg (AK)", "Pasni", "Palm Springs (CA)", "Pescara", "Stanley", "Polokwane", "Portland", 
+    "Basse-Terre", "Panama City", "Pueblo (CO)", "Pau", "Port Augusta", "Punta Cana", "Punta Arenas", "Busan", "Pullman (WA)", "Pula", 
+    "Providence (RI)", "Shanghai", "Porto Velho", "Preveza", "Puerto Vallarta", "Portland (ME)", "Puerto Escondido", "Porto Santo", "Jeypore", "Pattaya", 
     "Pietermaritzburg", "Zhob", "Puerto Ordaz", "Chiba City", "Duesseldorf", "Montenegro", "Biella", "Limassol", "Mirpur", "Mbabane", 
     "Anand", "Novi Sad", "Padua", "Singapore", "Sabadell", "Tallinn", "Randers", "Praia", "Rajkot", "Marrakesh", 
-    "Rapid City", "Avarua", "Rawalakot", "Regensburg", "Rabat", "Rio Branco", "Richards Bay", "Redding", "Reading", "Redmond", 
-    "Raleigh", "Rodez", "Recife", "Reggio Calabria", "Reykjavik", "Reus", "Rockford", "Raiatea", "Rangiroa", "Yangon", 
-    "Rhinelander", "Rhodos", "Richmond", "Rio de Janeiro", "Riga", "Rizhao", "Rijeka", "Rockland", "Rock Springs", "Ras al Khaymah", 
-    "Reykjavik", "Arlit", "Marsa Alam", "Rimini", "Ronneby", "Roanne", "Ronne", "Reno", "Rennes", "Roanoke", 
-    "Monrovia", "Rochester", "Rockhampton", "Rome", "Ngerulmud", "Rosario", "Rotorua", "Ruse", "Rostov", "Rodrigues Island", 
-    "Santa Rosa", "Rock Sound", "Rochester", "Fort Myers", "Roatan", "Rotterdam", "Riyadh", "Saint Denis", "Rostov", "Rovaniemi", 
-    "Rocky Mount", "Rawalpindi", "Rahim Yar Khan", "Santa Fe", "Sanaa", "San Salvador", "San Diego", "Sao Paulo", "San Pedro Sula", "San Antonio", 
-    "Savannah", "Istanbul", "Salisbury", "Santa Barbara", "Gustavia", "Saint Brieuc", "South Bend", "San Luis Obispo", "Springbok", "Sibu", 
-    "Salisbury", "Sibiu", "Prudhoe Bay", "State College", "Scottsdale", "Stockton", "Santiago", "Saarbruecken", "Santiago de Compostela", "Santiago", 
-    "Louisville", "Santa Rosa", "Sendai", "Sundsvall", "Santo Domingo", "Santander", "Sado Shima", "Saidu Sharif", "Rio de Janeiro", "Sidney", 
-    "Seattle", "Sebha", "Seoul", "Southend", "Siwa", "Victoria", "Sfax", "Marigot", "Kangerlussuaq", "Santa Fe", 
-    "San Francisco", "Sonderborg", "Springfield", "Ho Chi Minh City", "Saint George", "Skagway", "s-Hertogenbosch", "Shanghai", "Shenandoah Valley", "Shenyang", 
-    "Sharjah", "Sheridan", "Shreveport", "Silkeborg", "Sal", "Singapore", "Simferopol", "Sishen", "Sitka", "Singleton", 
-    "San Jose", "Los Cabos", "San Jose", "Sarajevo", "San Jose", "San Angelo", "San Juan", "Seinajoki", "Shimonoseki", "Basseterre", 
-    "Samarkand", "Thessaloniki", "Skopje", "Skrydstrup", "Saint Catherine", "Saransk", "Sukkur", "Salta", "Salt Lake City", "Salem", 
-    "Salalah", "San Luis Potosi", "Silistra", "Castries", "Sao Luis", "San Marino City", "Santa Maria", "Sacramento", "Samos", "Santa Maria", 
-    "Orange County", "Salinas", "Limerick", "Salinas", "Sofia", "Sogndal", "South Molle Island", "Santo", "Sodankylae", "Southampton", 
-    "Santa Cruz de la Palma", "Springfield", "Sapporo", "Capital Hill", "Wichita Falls", "Split", "San Pedro", "Santa Rosa", "Santa Rosa", "Santa Rosalia", 
-    "Sarasota", "Santa Cruz de la Sierra", "Salvador", "Malabo", "Sharm El Sheikh", "Santa Rosalia", "Stamford", "Saint Louis", "London", "Stockholm", 
-    "Saint Paul", "Stuttgart", "Santa Rosa", "Charlotte Amalie", "Surat", "Saint Croix", "Surabaya", "Lamezia Terme", "Sui", "Agana", 
-    "Sun Valley", "Suva", "Sioux City", "Kingstown", "Stavanger", "Savonlinna", "Moscow", "Sevilla", "Yekaterinburg", "Schwerin", 
-    "Newburgh", "Swakopmund", "Swansea", "Strasbourg", "Berlin", "Sligo", "Philipsburg", "Srinagar", "Sydney", "Syracuse", 
-    "Stornoway", "Kuala Lumpur", "Sheffield", "Samsun", "Salzburg", "Skukuza", "Shenzhen", "Stettin", "Scarborough", "Takamatsu", 
-    "Tampico", "Qingdao", "Tashkent", "Taipei", "Tbilisi", "Nukualofa", "Tennant Creek", "Treasure Cay", "Tenerife", "Tuscaloosa", 
-    "Thaba Nchu", "Thisted", "Temora", "Tekirdag", "Terceira", "Te Anau", "Telluride", "Port aux Francais", "Los Rodeos", "Tenerife", 
-    "Podgorica", "Tegucigalpa", "Targovishte", "Tuxtla Gutierrez", "Teresina", "Berlin", "Tehran", "Tirana", "Taif", "Tijuana", 
-    "Tripoli", "Thursday Island", "Tivat", "Nukunonu", "Talkeetna", "Tokushima", "Turku", "Tallahassee", "Tallinn", "Toulouse", 
-    "Tel Aviv", "Tampere", "Sao Tome", "Tamworth", "Termez", "Jinan", "Tangier", "Antananarivo", "Tioman", "Toledo", 
-    "Tromso", "Touho", "Tortola", "Toyama", "Tampa", "Taipei", "Tom Price", "Trapani", "Trondheim", "Oslo", 
-    "Blountville", "Turin", "Taree", "Trieste", "Thiruvananthapuram", "Tarawa", "Tiruchirappalli", "Taipei", "Tsumeb", "Astana", 
-    "Treviso", "Tianjin", "Townsville", "Trenton", "Tucuman", "Turbat", "Tulsa", "Tunis", "Tulepo", "Tucson", 
-    "Tabuk", "Traverse City", "Thief River Falls", "Lake Tahoe", "Toowoomba", "Twin Falls", "Tawau", "Texarkana", "Berlin", "Taiyuan", 
-    "Tokyo", "Tyler", "Knoxville", "Trabzon", "Ua Huka", "Narsarsuaq", "Ua Pou", "Uberaba", "Ube", "Ubon Ratchathani", 
-    "Utica", "Ukhta", "Uden", "Uberlandia", "Uzhgorod", "Udaipur", "Queenstown", "Quetta", "Ufa", "Urgench", 
-    "Uige", "Uherske Hradiste", "Utila", "Quincy", "Quito", "Quimper", "Jaluit Island", "Kobe", "Ukiah", "Kyoto", 
-    "Ulei", "Ulundi", "Ulan Bator", "Gulu", "Uummannaq", "Umea", "Woomera", "Union Island", "Unalakleet", "Unst", 
-    "Ujung Pandang", "Upala", "Uruapan", "Upolu Point", "Urubupunga", "Urumqi", "Uruguaiana", "Uriman", "Uruzgan", "Ushuaia", 
-    "Ulsan", "Utrecht", "Udon Thani", "Upington", "Utapao", "Umtata", "Ulan-Ude", "Oyem", "Vieux Fort", "Kharga", 
-    "Vatican City", "Vaasa", "Van", "Valparaiso", "Varna", "Sivas", "Brescia", "Visby", "Venice", "Sao Paulo", 
-    "Elat", "Valverde", "Valdez", "Vernal", "Veracruz", "Victoria Falls", "Vigo", "Vidin", "Vienna", "Virgin Gorda", 
-    "Visalia", "Vitoria", "Vitoria", "Moscow", "Valencia", "Valdosta", "Port Vila", "Valladolid", "Valencia", "Velikiye Luki", 
-    "Vienna", "Vilnius", "Varanasi", "Volgograd", "Fort Walton Beach", "Varadero", "Vero Beach", "Varkaus", "Verona", "Villahermosa", 
-    "Vasteras", "Vientiane", "Vladivostok", "Vaxjo", "Vryheid", "Varazdin", "Washington", "Warsaw", "Windhoek", "Weipa", 
-    "Welkom", "Wagga", "Whakatane", "Wickham", "Wick", "Wiesbaden", "Labouchere Bay", "Wellington", "Mata Utu", "Warrnambool", 
-    "Nawab Shah", "Wollongong", "Winter Park", "Whangarei", "Wrangell", "Worland", "Wroclaw", "Wuhan", "Wiluna", "Wuxi", 
-    "Walvis Bay", "Whyalla", "Wyndham", "West Yellowstone", "Flying Fish Cove", "Xian", "Lac Brochet", "Manihi", "Xiamen", "Pukatawagan", 
-    "Jerez de la Frontera", "South Indian Lake", "Singapore", "No City", "Yakutat", "Yaounde", "Attawapiskat", "Uranium City", "Cambridge Bay", "Deer Lake", 
-    "Edmonton", "Edmonton", "Inuvik", "Fort Albany", "Iqaluit", "Fredericton", "Flin Flon", "La Grande", "Kuujjuarapik", "Gillam", 
-    "Hamilton", "Harrington Harbour", "Halifax", "Saint Augustin", "Yichang", "Kamloops", "Yakima", "Yakutsk", "Leaf Rapids", "Kelowna", 
-    "Fort McMurray", "Montreal", "Montreal", "Yanbu", "Yokohama", "Rainbow Lake", "Ottawa", "Port Menier", "Prince Rupert", "Quebec", 
-    "The Pas", "Windsor", "Moncton", "Regina", "Thunder Bay", "Gander", "Resolute Bay", "Saint John", "Fort Smith", "Nanisivik", 
-    "Thompson", "Toronto", "Toronto", "Umiujaq", "Montreal", "Yuma", "Hall Beach", "Bonaventure", "Val-dOr", "Kuujjuaq", 
-    "Norman Wells", "Vancouver", "Winnipeg", "Wabush", "Edmonton", "Saskatoon", "Fort Saint John", "Whale Cove", "Prince George", "Terrace", 
-    "London", "Whitehorse", "Calgary", "Smithers", "Victoria", "Churchill", "Goose Bay", "Saint Johns", "Mississauga", "Yellowknife", 
-    "Sandspit", "Zadar", "Zagreb", "Zaragoza", "Bowen", "Zacatecas", "Bern", "Ixtapa", "Hong Kong", "Kashechewan", 
+    "Rapid City (SD)", "Avarua", "Rawalakot", "Regensburg", "Rabat", "Rio Branco", "Richards Bay", "Redding (CA)", "Reading (PA)", "Redmond (OR)", 
+    "Raleigh (NC)", "Rodez", "Recife", "Reggio Calabria", "Reykjavik", "Reus", "Rockford (IL)", "Raiatea", "Rangiroa", "Yangon", 
+    "Rhinelander (WI)", "Rhodos", "Richmond (VA)", "Rio de Janeiro", "Riga", "Rizhao", "Rijeka", "Rockland (ME)", "Rock Springs (WY)", "Ras al Khaymah", 
+    "Reykjavik", "Arlit", "Marsa Alam", "Rimini", "Ronneby", "Roanne", "Ronne", "Reno (NV)", "Rennes", "Roanoke (VA)", 
+    "Monrovia", "Rochester (NY)", "Rockhampton", "Rome", "Ngerulmud", "Rosario", "Rotorua", "Ruse", "Rostov", "Rodrigues Island", 
+    "Santa Rosa", "Rock Sound", "Rochester (MN)", "Fort Myers (FL)", "Roatan", "Rotterdam", "Riyadh", "Saint Denis", "Rostov", "Rovaniemi", 
+    "Rocky Mount (NC)", "Rawalpindi", "Rahim Yar Khan", "Santa Fe (NM)", "Sanaa", "San Salvador", "San Diego (CA)", "Sao Paulo", "San Pedro Sula", "San Antonio (TX)", 
+    "Savannah (GA)", "Istanbul", "Salisbury", "Santa Barbara (CA)", "Gustavia", "Saint Brieuc", "South Bend (IN)", "San Luis Obispo (CA)", "Springbok", "Sibu", 
+    "Salisbury (MD)", "Sibiu", "Prudhoe Bay (AK)", "State College (PA)", "Scottsdale (AZ)", "Stockton (CA)", "Santiago de Chile", "Saarbruecken", "Santiago de Compostela", "Santiago", 
+    "Louisville (KY)", "Santa Rosa", "Sendai", "Sundsvall", "Santo Domingo", "Santander", "Sado Shima", "Saidu Sharif", "Rio de Janeiro", "Sidney (MT)", 
+    "Seattle (WA)", "Sebha", "Seoul", "Southend", "Siwa", "Victoria", "Sfax", "Marigot", "Kangerlussuaq", "Santa Fe", 
+    "San Francisco (CA)", "Sonderborg", "Springfield (MO)", "Ho Chi Minh City", "Saint George (UT)", "Skagway (AK)", "s-Hertogenbosch", "Shanghai", "Shenandoah Valley (VA)", "Shenyang", 
+    "Sharjah", "Sheridan (WY)", "Shreveport (LA)", "Silkeborg", "Sal", "Singapore", "Simferopol", "Sishen", "Sitka (AK)", "Singleton", 
+    "San Jose (CA)", "Los Cabos", "San Jose", "Sarajevo", "San Jose", "San Angelo (TX)", "San Juan", "Seinajoki", "Shimonoseki", "Basseterre", 
+    "Samarkand", "Thessaloniki", "Skopje", "Skrydstrup", "Saint Catherine", "Saransk", "Sukkur", "Salta", "Salt Lake City (UT)", "Salem (OR)", 
+    "Salalah", "San Luis Potosi", "Silistra", "Castries", "Sao Luis", "San Marino City", "Santa Maria", "Sacramento (CA)", "Samos", "Santa Maria (CA)", 
+    "Santa Ana (CA)", "Salinas", "Limerick", "Salinas (CA)", "Sofia", "Sogndal", "South Molle Island", "Santo", "Sodankylae", "Southampton", 
+    "Santa Cruz de la Palma", "Springfield (IL)", "Sapporo", "Capital Hill", "Wichita Falls (TX)", "Split", "San Pedro", "Santa Rosa", "Santa Rosa", "Santa Rosalia", 
+    "Sarasota (FL)", "Santa Cruz de la Sierra", "Salvador", "Malabo", "Sharm El Sheikh", "Santa Rosalia", "Stamford (CT)", "Santiago de Chile", "Saint Louis (MO)", "London", 
+    "Stockholm", "Saint Paul (MN)", "Stuttgart", "Santa Rosa (CA)", "Charlotte Amalie", "Surat", "Saint Croix (VI)", "Surabaya", "Lamezia Terme", "Sui", 
+    "Agana", "Sun Valley (ID)", "Suva", "Sioux City (IA)", "Kingstown", "Stavanger", "Savonlinna", "Moscow", "Sevilla", "Yekaterinburg", 
+    "Schwerin", "Newburgh (NY)", "Swakopmund", "Swansea", "Strasbourg", "Berlin", "Sligo", "Philipsburg", "Srinagar", "Sydney", 
+    "Syracuse (NY)", "Stornoway", "Kuala Lumpur", "Sheffield", "Samsun", "Salzburg", "Skukuza", "Shenzhen", "Stettin", "Scarborough", 
+    "Takamatsu", "Tampico", "Qingdao", "Tashkent", "Taipei", "Tbilisi", "Nukualofa", "Tennant Creek", "Treasure Cay", "Tenerife", 
+    "Tuscaloosa (AL)", "Thaba Nchu", "Thisted", "Temora", "Tekirdag", "Terceira", "Te Anau", "Telluride (CO)", "Port aux Francais", "Tenerife", 
+    "Tenerife", "Podgorica", "Tegucigalpa", "Targovishte", "Tuxtla Gutierrez", "Teresina", "Berlin", "Tehran", "Tirana", "Taif", 
+    "Tijuana", "Tripoli", "Thursday Island", "Tivat", "Nukunonu", "Talkeetna (AK)", "Tokushima", "Turku", "Tallahassee (FL)", "Tallinn", 
+    "Toulouse", "Tel Aviv", "Tampere", "Sao Tome", "Tamworth", "Termez", "Jinan", "Tangier", "Antananarivo", "Tioman", 
+    "Toledo (OH)", "Tromso", "Touho", "Tortola", "Toyama", "Tampa (FL)", "Taipei", "Tom Price", "Trapani", "Trondheim", 
+    "Oslo", "Blountville (TN)", "Turin", "Taree", "Trieste", "Thiruvananthapuram", "Tarawa", "Tiruchirappalli", "Taipei", "Tsumeb", 
+    "Astana", "Treviso", "Tianjin", "Townsville", "Trenton (NJ)", "Tucuman", "Turbat", "Tulsa (OK)", "Tunis", "Tulepo (MS)", 
+    "Tucson (AZ)", "Tabuk", "Traverse City (MI)", "Thief River Falls (MN)", "Lake Tahoe (CA)", "Toowoomba", "Twin Falls (ID)", "Tawau", "Texarkana (AR)", "Berlin", 
+    "Taiyuan", "Tokyo", "Tyler (TX)", "Knoxville (TN)", "Trabzon", "Ua Huka", "Narsarsuaq", "Ua Pou", "Uberaba", "Ube", 
+    "Ubon Ratchathani", "Utica (NY)", "Ukhta", "Uden", "Uberlandia", "Uzhgorod", "Udaipur", "Queenstown", "Quetta", "Ufa", 
+    "Urgench", "Uige", "Uherske Hradiste", "Utila", "Quincy (IL)", "Quito", "Quimper", "Jaluit Island", "Kobe", "Ukiah (CA)", 
+    "Kyoto", "Ulei", "Ulundi", "Ulan Bator", "Gulu", "Uummannaq", "Umea", "Woomera", "Union Island", "Unalakleet (AK)", 
+    "Unst", "Ujung Pandang", "Upala", "Uruapan", "Upolu Point (HI)", "Urubupunga", "Urumqi", "Uruguaiana", "Uriman", "Uruzgan", 
+    "Ushuaia", "Ulsan", "Utrecht", "Udon Thani", "Upington", "Utapao", "Umtata", "Ulan-Ude", "Oyem", "Vieux Fort", 
+    "Kharga", "Vatican City", "Vaasa", "Van", "Valparaiso", "Varna", "Sivas", "Brescia", "Visby", "Venice", 
+    "Sao Paulo", "Elat", "Valverde", "Valdez (AK)", "Vernal (UT)", "Veracruz", "Victoria Falls", "Vigo", "Vidin", "Vienna", 
+    "Virgin Gorda", "Visalia (CA)", "Vitoria", "Vitoria", "Moscow", "Valencia", "Valdosta (GA)", "Port Vila", "Valladolid", "Valencia", 
+    "Velikiye Luki", "Vienna (VA)", "Vilnius", "Varanasi", "Volgograd", "Fort Walton Beach (FL)", "Varadero", "Vero Beach (FL)", "Varkaus", "Verona", 
+    "Villahermosa", "Vasteras", "Vientiane", "Vladivostok", "Vaxjo", "Vryheid", "Varazdin", "Washington (DC)", "Warsaw", "Windhoek", 
+    "Weipa", "Welkom", "Wagga", "Whakatane", "Wickham", "Wick", "Wiesbaden", "Labouchere Bay (AK)", "Wellington", "Mata Utu", 
+    "Warrnambool", "Nawab Shah", "Wollongong", "Winter Park (FL)", "Whangarei", "Wrangell (AK)", "Worland (WY)", "Wroclaw", "Wuhan", "Wiluna", 
+    "Wuxi", "Walvis Bay", "Whyalla", "Wyndham", "West Yellowstone (MT)", "Flying Fish Cove", "Xian - Xianyang", "Lac Brochet", "Manihi", "Xiamen", 
+    "Pukatawagan", "Jerez de la Frontera", "South Indian Lake", "Singapore", "No City", "Yakutat (AK)", "Yaounde", "Attawapiskat", "Uranium City", "Cambridge Bay", 
+    "Deer Lake", "Edmonton", "Edmonton", "Inuvik", "Fort Albany", "Iqaluit", "Fredericton", "Flin Flon", "La Grande", "Kuujjuarapik", 
+    "Gillam", "Hamilton", "Harrington Harbour", "Halifax", "Saint Augustin", "Yichang", "Kamloops", "Yakima (WA)", "Yakutsk", "Leaf Rapids", 
+    "Kelowna", "Fort McMurray", "Montreal", "Montreal", "Yanbu", "Yokohama", "Rainbow Lake", "Ottawa", "Port Menier", "Prince Rupert", 
+    "Quebec", "The Pas", "Windsor", "Moncton", "Regina", "Thunder Bay", "Gander", "Resolute Bay", "Saint John", "Fort Smith", 
+    "Nanisivik", "Thompson", "Toronto", "Toronto", "Umiujaq", "Montreal", "Yuma (AZ)", "Hall Beach", "Bonaventure", "Val-dOr", 
+    "Kuujjuaq", "Norman Wells", "Vancouver", "Winnipeg", "Wabush", "Edmonton", "Saskatoon", "Fort Saint John", "Whale Cove", "Prince George", 
+    "Terrace", "London", "Whitehorse", "Calgary", "Smithers", "Victoria", "Churchill", "Goose Bay", "Saint Johns", "Mississauga", 
+    "Yellowknife", "Sandspit", "Zadar", "Zagreb", "Zaragoza", "Bowen", "Zacatecas", "Ixtapa", "Hong Kong", "Kashechewan", 
     "Manzanillo", "Zinder", "Newman", "Queenstown", "Zurich", "San Salvador", "Sassandra", "Zakynthos", "Shamattawa", "Sylhet"
 };
 
-
-// convert the alphabetical index for a 3 letter currency to the numeric code  
 const short City::m_toISO[NUMCITY] = { NOCITY,
     AAC, AAE, AAL, AAN, AAR, AAT, AB0, ABD, ABE, ABI, 
     ABJ, ABM, ABQ, ABR, ABS, ABV, ABX, ABY, ABZ, ACA, 
@@ -721,43 +792,43 @@ const short City::m_toISO[NUMCITY] = { NOCITY,
     SLL, SLP, SLS, SLU, SLZ, SM0, SMA, SMF, SMI, SMX, 
     SNA, SNC, SNN, SNS, SOF, SOG, SOI, SON, SOT, SOU, 
     SPC, SPI, SPK, SPN, SPS, SPU, SPY, SRA, SRB, SRL, 
-    SRQ, SRZ, SSA, SSG, SSH, SSL, ST0, STL, STN, STO, 
-    STP, STR, STS, STT, STV, STX, SUB, SUF, SUL, SUM, 
-    SUN, SUV, SUX, SVD, SVG, SVL, SVO, SVQ, SVX, SW0, 
-    SWF, SWP, SWS, SXB, SXF, SXL, SXM, SXR, SYD, SYR, 
-    SYY, SZB, SZD, SZF, SZG, SZK, SZX, SZZ, TAB, TAK, 
-    TAM, TAO, TAS, TAY, TBS, TBU, TCA, TCB, TCI, TCL, 
-    TCU, TED, TEM, TEQ, TER, TEU, TEX, TF0, TFN, TFS, 
-    TGD, TGU, TGV, TGZ, THE, THF, THR, TIA, TIF, TIJ, 
-    TIP, TIS, TIV, TK0, TKA, TKS, TKU, TLH, TLL, TLS, 
-    TLV, TMP, TMS, TMW, TMZ, TNA, TNG, TNR, TOD, TOL, 
-    TOS, TOU, TOV, TOY, TPA, TPE, TPR, TPS, TRD, TRF, 
-    TRI, TRN, TRO, TRS, TRV, TRW, TRZ, TSA, TSB, TSE, 
-    TSF, TSN, TSV, TTN, TUC, TUK, TUL, TUN, TUP, TUS, 
-    TUU, TVC, TVF, TVL, TWB, TWF, TWU, TXK, TXL, TYN, 
-    TYO, TYR, TYS, TZX, UAH, UAK, UAP, UBA, UBJ, UBP, 
-    UCA, UCT, UDE, UDI, UDJ, UDR, UEE, UET, UFA, UGC, 
-    UGO, UHE, UII, UIN, UIO, UIP, UIT, UKB, UKI, UKY, 
-    ULB, ULD, ULN, ULU, UMD, UME, UMR, UNI, UNK, UNT, 
-    UPG, UPL, UPN, UPP, URB, URC, URG, URM, URZ, USH, 
-    USN, UTC, UTH, UTN, UTP, UTT, UUD, UVE, UVF, UVL, 
-    VA0, VAA, VAN, VAP, VAR, VAS, VBS, VBY, VCE, VCP, 
-    VDA, VDE, VDZ, VEL, VER, VFA, VGO, VID, VIE, VIJ, 
-    VIS, VIT, VIX, VKO, VLC, VLD, VLI, VLL, VLN, VLU, 
-    VN0, VNO, VNS, VOG, VPS, VRA, VRB, VRK, VRN, VSA, 
-    VST, VTE, VVO, VXO, VYD, VZ0, WAS, WAW, WDH, WEI, 
-    WEL, WGA, WHK, WHM, WIC, WIE, WLB, WLG, WLS, WMB, 
-    WNS, WOL, WP0, WRE, WRG, WRL, WRO, WUH, WUN, WUX, 
-    WVB, WYA, WYN, WYS, XCH, XIY, XLB, XMH, XMN, XPK, 
-    XRY, XSI, XSP, XXX, YAK, YAO, YAT, YBE, YCB, YDF, 
-    YEA, YEG, YEV, YFA, YFB, YFC, YFO, YGL, YGW, YGX, 
-    YHM, YHR, YHZ, YIF, YIH, YKA, YKM, YKS, YLR, YLW, 
-    YMM, YMQ, YMX, YNB, YOK, YOP, YOW, YPN, YPR, YQB, 
-    YQD, YQG, YQM, YQR, YQT, YQX, YRB, YSJ, YSM, YSR, 
-    YTH, YTO, YTZ, YUD, YUL, YUM, YUX, YVB, YVO, YVP, 
-    YVQ, YVR, YWG, YWK, YXD, YXE, YXJ, YXN, YXS, YXT, 
-    YXU, YXY, YYC, YYD, YYJ, YYQ, YYR, YYT, YYZ, YZF, 
-    YZP, ZAD, ZAG, ZAZ, ZBO, ZCL, ZDJ, ZIH, ZJK, ZKE, 
+    SRQ, SRZ, SSA, SSG, SSH, SSL, ST0, STI, STL, STN, 
+    STO, STP, STR, STS, STT, STV, STX, SUB, SUF, SUL, 
+    SUM, SUN, SUV, SUX, SVD, SVG, SVL, SVO, SVQ, SVX, 
+    SW0, SWF, SWP, SWS, SXB, SXF, SXL, SXM, SXR, SYD, 
+    SYR, SYY, SZB, SZD, SZF, SZG, SZK, SZX, SZZ, TAB, 
+    TAK, TAM, TAO, TAS, TAY, TBS, TBU, TCA, TCB, TCI, 
+    TCL, TCU, TED, TEM, TEQ, TER, TEU, TEX, TF0, TFN, 
+    TFS, TGD, TGU, TGV, TGZ, THE, THF, THR, TIA, TIF, 
+    TIJ, TIP, TIS, TIV, TK0, TKA, TKS, TKU, TLH, TLL, 
+    TLS, TLV, TMP, TMS, TMW, TMZ, TNA, TNG, TNR, TOD, 
+    TOL, TOS, TOU, TOV, TOY, TPA, TPE, TPR, TPS, TRD, 
+    TRF, TRI, TRN, TRO, TRS, TRV, TRW, TRZ, TSA, TSB, 
+    TSE, TSF, TSN, TSV, TTN, TUC, TUK, TUL, TUN, TUP, 
+    TUS, TUU, TVC, TVF, TVL, TWB, TWF, TWU, TXK, TXL, 
+    TYN, TYO, TYR, TYS, TZX, UAH, UAK, UAP, UBA, UBJ, 
+    UBP, UCA, UCT, UDE, UDI, UDJ, UDR, UEE, UET, UFA, 
+    UGC, UGO, UHE, UII, UIN, UIO, UIP, UIT, UKB, UKI, 
+    UKY, ULB, ULD, ULN, ULU, UMD, UME, UMR, UNI, UNK, 
+    UNT, UPG, UPL, UPN, UPP, URB, URC, URG, URM, URZ, 
+    USH, USN, UTC, UTH, UTN, UTP, UTT, UUD, UVE, UVF, 
+    UVL, VA0, VAA, VAN, VAP, VAR, VAS, VBS, VBY, VCE, 
+    VCP, VDA, VDE, VDZ, VEL, VER, VFA, VGO, VID, VIE, 
+    VIJ, VIS, VIT, VIX, VKO, VLC, VLD, VLI, VLL, VLN, 
+    VLU, VN0, VNO, VNS, VOG, VPS, VRA, VRB, VRK, VRN, 
+    VSA, VST, VTE, VVO, VXO, VYD, VZ0, WAS, WAW, WDH, 
+    WEI, WEL, WGA, WHK, WHM, WIC, WIE, WLB, WLG, WLS, 
+    WMB, WNS, WOL, WP0, WRE, WRG, WRL, WRO, WUH, WUN, 
+    WUX, WVB, WYA, WYN, WYS, XCH, XIY, XLB, XMH, XMN, 
+    XPK, XRY, XSI, XSP, XXX, YAK, YAO, YAT, YBE, YCB, 
+    YDF, YEA, YEG, YEV, YFA, YFB, YFC, YFO, YGL, YGW, 
+    YGX, YHM, YHR, YHZ, YIF, YIH, YKA, YKM, YKS, YLR, 
+    YLW, YMM, YMQ, YMX, YNB, YOK, YOP, YOW, YPN, YPR, 
+    YQB, YQD, YQG, YQM, YQR, YQT, YQX, YRB, YSJ, YSM, 
+    YSR, YTH, YTO, YTZ, YUD, YUL, YUM, YUX, YVB, YVO, 
+    YVP, YVQ, YVR, YWG, YWK, YXD, YXE, YXJ, YXN, YXS, 
+    YXT, YXU, YXY, YYC, YYD, YYJ, YYQ, YYR, YYT, YYZ, 
+    YZF, YZP, ZAD, ZAG, ZAZ, ZBO, ZCL, ZIH, ZJK, ZKE, 
     ZLO, ZND, ZNE, ZQN, ZRH, ZSA, ZSS, ZTH, ZTM, ZYL
 };
 
@@ -886,7 +957,7 @@ const short City::m_fromISO[MAXCITY] = {
     221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 
     231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 
     241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 
-    251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 
+    251, 252, 253, 254, 255, 256, 257, 258, 259, 138, 
     261, 262, 263, 264, 265, 266, 268, 269, 270, 271, 
     272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 
     282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 
@@ -905,7 +976,7 @@ const short City::m_fromISO[MAXCITY] = {
     422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 
     432, 433, 434, 437, 438, 439, 440, 441, 442, 443, 
     444, 445, 446, 447, 448, 449, 450, 451, 453, 454, 
-    455, 456, 458, 459, 460, 461, 462, 463, 464, 465, 
+    455, 418, 458, 459, 460, 461, 462, 463, 464, 465, 
     466, 467, 468, 469, 471, 472, 473, 474, 475, 476, 
     477, 478, 479, 481, 482, 483, 484, 485, 486, 487, 
     488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 
@@ -938,13 +1009,13 @@ const short City::m_fromISO[MAXCITY] = {
     775, 776, 777, 778, 779, 780, 781, 782, 784, 785, 
     786, 787, 788, 789, 790, 791, 792, 793, 794, 795, 
     796, 797, 798, 799, 800, 801, 802, 803, 804, 805, 
-    806, 807, 808, 809, 810, 811, 812, 813, 814, 815, 
+    806, 807, 371, 809, 810, 811, 812, 813, 814, 815, 
     816, 817, 818, 819, 821, 822, 823, 824, 825, 826, 
     827, 828, 829, 830, 831, 832, 833, 834, 835, 836, 
     837, 838, 839, 840, 841, 842, 843, 844, 845, 846, 
     847, 848, 849, 850, 851, 852, 853, 854, 855, 856, 
     857, 858, 859, 860, 861, 862, 863, 864, 865, 866, 
-    867, 868, 869, 870, 871, 872, 873, 874, 875, 876, 
+    867, 868, 869, 870, 0, 872, 873, 874, 875, 876, 
     877, 878, 879, 880, 881, 882, 883, 884, 885, 886, 
     887, 888, 889, 890, 891, 892, 893, 894, 896, 897, 
     898, 899, 900, 901, 902, 903, 905, 906, 907, 908, 
@@ -973,7 +1044,7 @@ const short City::m_fromISO[MAXCITY] = {
     1141, 1142, 1143, 1144, 1145, 1146, 1147, 1148, 1149, 1150, 
     1151, 1152, 1153, 1154, 1155, 1156, 1157, 1158, 1159, 1160, 
     1161, 1162, 1163, 1164, 1165, 1166, 1167, 1168, 1169, 1170, 
-    1171, 1172, 1173, 1174, 1176, 1177, 1178, 1179, 1180, 1181, 
+    1171, 1172, 1173, 1174, 1176, 1177, 1178, 1179, 1180, 1175, 
     1182, 1183, 1184, 1185, 1186, 1187, 1188, 1189, 1190, 1191, 
     1192, 1193, 1194, 1195, 1196, 1198, 1199, 1200, 1201, 1202, 
     1203, 1204, 1205, 1206, 1207, 1208, 1209, 1210, 1211, 1212, 
@@ -988,9 +1059,9 @@ const short City::m_fromISO[MAXCITY] = {
     1299, 1301, 1302, 1303, 1304, 1305, 1306, 1307, 1308, 1309, 
     1310, 1311, 1312, 1313, 1314, 1315, 1316, 1317, 1318, 1319, 
     1320, 1321, 1322, 1323, 1324, 1325, 1326, 1327, 1328, 1329, 
-    1330, 1331, 1332, 1333, 1335, 1336, 1337, 1338, 1339, 1340, 
+    1330, 1331, 1332, 1333, 1335, 1336, 1337, 1104, 1339, 1340, 
     1342, 1343, 1344, 1345, 1346, 1347, 1349, 1350, 1351, 1352, 
-    1353, 1354, 1355, 1356, 1357, 1358, 1359, 1360, 1361, 1362, 
+    1353, 1354, 1355, 1356, 1357, 1358, 267, 1360, 1361, 1362, 
     1363, 1364, 1365, 1366, 1367, 1368, 1369, 1370, 1371, 1372, 
     1373, 1374, 1375, 1376, 1377, 1378, 1379, 1380, 1382, 1383, 
     1384, 1385, 1386, 1387, 1388, 1389, 1390, 1391, 1392, 1393, 
@@ -1020,41 +1091,41 @@ const short City::m_fromISO[MAXCITY] = {
     1639, 1640, 1641, 1642, 1643, 1644, 1645, 1646, 1647, 1648, 
     1649, 1650, 1651, 1652, 1653, 1654, 1655, 1656, 1657, 1658, 
     1659, 1660, 1661, 1662, 1664, 1665, 1666, 1667, 1668, 1669, 
-    1670, 1671, 1672, 1673, 1674, 1675, 1676, 1677, 1577, 1678, 
-    1680, 1681, 1682, 1683, 1684, 1685, 1686, 1687, 1688, 1689, 
-    1690, 1691, 1692, 1693, 1694, 1695, 1696, 1698, 1699, 1700, 
-    1701, 1702, 1703, 1704, 1706, 1707, 1708, 1709, 1710, 1711, 
-    1713, 1714, 1715, 1716, 1717, 1718, 1719, 1720, 1721, 1722, 
-    1723, 1724, 1725, 1726, 1727, 1728, 1730, 1731, 1732, 1733, 
-    1734, 1735, 1736, 1737, 1738, 1739, 1740, 1741, 1742, 1743, 
-    1744, 1745, 1747, 1748, 1749, 1750, 1751, 1752, 1753, 1754, 
-    1755, 1756, 1757, 1758, 1759, 1760, 1761, 1762, 1763, 1764, 
-    1765, 1766, 1767, 1768, 1769, 1770, 1771, 1772, 1773, 1774, 
-    1775, 1777, 1778, 1779, 1781, 1782, 1783, 1784, 1785, 1786, 
-    1787, 1789, 1790, 1791, 1792, 1793, 1794, 1795, 1796, 1797, 
-    1798, 1799, 1800, 1801, 1802, 1803, 1804, 1805, 1806, 1807, 
-    1808, 1810, 1811, 1812, 1813, 1814, 1815, 1816, 1817, 1818, 
-    1819, 1820, 1821, 1822, 1823, 1824, 1825, 1826, 1827, 1828, 
-    1829, 1830, 1831, 1832, 1833, 1834, 1835, 1836, 1837, 1838, 
-    1839, 1840, 1841, 1842, 1843, 1844, 1845, 1846, 1847, 1848, 
-    1849, 1850, 1851, 1852, 1853, 1854, 1855, 1856, 1857, 1858, 
-    1859, 1860, 1861, 1862, 1863, 1864, 1865, 1866, 1867, 1868, 
-    1869, 1870, 1871, 1872, 1873, 1874, 1875, 1876, 1877, 1878, 
-    1879, 1882, 1883, 1884, 1885, 1886, 1887, 1888, 1889, 1890, 
-    1891, 1892, 1893, 1895, 1896, 1897, 1898, 1899, 1900, 1901, 
-    1902, 1903, 1904, 1905, 1906, 1907, 1908, 1909, 1910, 1911, 
-    1912, 1913, 1914, 1915, 1916, 1918, 1919, 1920, 1921, 1922, 
-    1923, 1924, 1925, 1926, 1927, 1928, 1929, 1930, 1931, 1932, 
-    1933, 1934, 1935, 1936, 1937, 1938, 1939, 1940, 1941, 1942, 
-    1943, 1944, 1945, 1946, 1947, 1948, 1949, 1950, 1951, 1952, 
-    1954, 1955, 1956, 1957, 1958, 1959, 1960, 1963, 1964, 1965, 
-    1966, 1967, 1968, 1969, 1970, 1971, 1972, 1973, 1974, 1975, 
-    1976, 1977, 1978, 1979, 1980, 1981, 1982, 1984, 1985, 1986, 
-    1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 
-    1997, 1998, 1999, 2000, 2001, 2002, 2004, 2006, 2007, 2008, 
-    2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 
-    2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 
-    2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2038, 2040, 
+    1670, 1671, 1672, 1673, 1674, 1675, 1676, 1677, 1678, 1679, 
+    1681, 1682, 1683, 1684, 1685, 1686, 1687, 1688, 1689, 1690, 
+    1691, 1692, 1693, 1694, 1695, 1696, 1697, 1699, 1700, 1701, 
+    1702, 1703, 1704, 1705, 1707, 1708, 1709, 1710, 1711, 1712, 
+    1714, 1715, 1716, 1717, 1718, 1719, 1720, 1721, 1722, 1723, 
+    1724, 1725, 1726, 1727, 1728, 1729, 1731, 1732, 1733, 1734, 
+    1735, 1736, 1737, 1738, 1739, 0, 1730, 1742, 1743, 1744, 
+    1745, 1746, 1748, 1749, 1750, 1751, 1752, 1753, 1754, 1755, 
+    1756, 1757, 1758, 1759, 1760, 1761, 1762, 1763, 1764, 1765, 
+    1766, 1767, 1768, 1769, 1770, 1771, 1772, 1773, 1774, 1775, 
+    1776, 1778, 1779, 1780, 1782, 1783, 1784, 1785, 1786, 1787, 
+    1788, 1790, 1791, 1792, 1793, 1794, 1795, 1796, 1797, 1798, 
+    1799, 1800, 1801, 1802, 1803, 1804, 1805, 1806, 1807, 1808, 
+    1809, 1811, 1812, 1813, 1814, 1815, 1816, 1817, 1818, 1819, 
+    1820, 1821, 1822, 1823, 1824, 1825, 1826, 1827, 1828, 1829, 
+    1830, 1831, 1832, 1833, 1834, 1835, 1836, 1837, 1838, 1839, 
+    1840, 1841, 1842, 1843, 1844, 1845, 1846, 1847, 1848, 1849, 
+    1850, 1851, 1852, 1853, 1854, 1855, 1856, 1857, 1858, 1859, 
+    1860, 1861, 1862, 1863, 1864, 1865, 1866, 1867, 1868, 1869, 
+    1870, 1871, 1872, 1873, 1874, 1875, 1876, 1877, 1878, 1879, 
+    1880, 1883, 1884, 1885, 1886, 1887, 1888, 1889, 1890, 1891, 
+    1892, 1893, 1894, 1896, 1897, 1898, 1899, 1900, 1901, 1902, 
+    1903, 1904, 1905, 1906, 1907, 1908, 1909, 1910, 1911, 1912, 
+    1913, 1914, 1915, 1916, 1917, 1919, 1920, 1921, 1922, 1923, 
+    1924, 1925, 1926, 1927, 1928, 1929, 1930, 1931, 1932, 1933, 
+    1934, 1935, 1936, 1937, 1938, 1939, 1940, 1941, 1942, 1943, 
+    1944, 1945, 1946, 1947, 1948, 1949, 1950, 1951, 1952, 1953, 
+    1955, 1956, 1957, 1958, 1959, 1960, 1961, 1964, 1965, 1966, 
+    1967, 1968, 1969, 1970, 1971, 1972, 1973, 1974, 1975, 1976, 
+    1977, 1978, 1979, 1980, 1981, 1982, 1983, 1985, 1986, 1987, 
+    1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 
+    1998, 1999, 2000, 2001, 2002, 2003, 2005, 2007, 2008, 2009, 
+    2010, 2011, 2012, 2013, 2014, 2015, 1962, 2017, 2018, 2019, 
+    2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 
+    2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037, 2038, 2040, 
     2041, 2042, 2043, 2044, 2045, 2046, 2047, 2048, 2049, 2050
 };
 
@@ -1207,7 +1278,7 @@ const unsigned char City::m_capital[NUMCITY] = { 0, // NOCITY
     1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 
-    0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 
+    0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 
     0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 
     0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
@@ -1226,55 +1297,54 @@ const unsigned char City::m_capital[NUMCITY] = { 0, // NOCITY
     0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 
     0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
     0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 
-    0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
-    0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 
-    0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 
-    0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 
-    1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 
-    1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 
-    1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 
-    0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 
-    0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 
-    0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
+    0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 
+    1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
+    0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 
+    0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 
     0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 
-    0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 
-    0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 
-    0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
-    0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 
+    0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 
+    0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 
     0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
+    1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 
+    1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 
+    0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+    0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 
+    0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 
+    0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 
+    0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+    0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-// lat, lon
 const float City::m_position[NUMCITY][2] = { { 0.0, 0.0 }, // NOCITY
     {31.1515, 33.8311}, {36.8982, 7.75493}, {57.0463, 9.92153}, {24.2249, 55.7452}, {56.1496, 10.2134}, {47.1002, 88.4342}, {55.0446, 9.42097}, {30.3636, 48.2591}, {40.6022, -75.4713}, {32.4464, -99.7476}, 
-    {5.32036, -4.01611}, {-10.8895, 142.389}, {35.0841, -106.651}, {45.465, -98.4878}, {22.3371, 31.6258}, {9.06433, 7.4893}, {-36.0738, 146.914}, {31.5782, -84.1557}, {57.1482, -2.09281}, {16.868, -99.894}, 
+    {5.32036, -4.01611}, {-10.8895, 142.389}, {35.0841, -106.651}, {45.465, -98.4878}, {22.3371, 31.6258}, {9.06433, 7.4893}, {-36.0738, 146.914}, {42.6512, -73.755}, {57.1482, -2.09281}, {16.868, -99.894}, 
     {5.55711, -0.201238}, {29.0397, -13.6363}, {47.4904, 9.55405}, {49.717, -2.19689}, {41.2728, -70.0952}, {31.5492, -97.1475}, {40.7907, -124.167}, {39.3643, -74.4229}, {37.1438, 35.4984}, {38.4237, 27.1428}, 
     {9.0, 38.75}, {12.8333, 44.9167}, {37.7602, 38.2773}, {31.9516, 35.924}, {-34.9282, 138.6}, {57.79, -152.407}, {-22.6806, 29.1072}, {4.90199, -75.7013}, {13.828, 20.8284}, {-34.6076, -58.4371}, 
     {43.5855, 39.7231}, {62.7671, 6.16883}, {30.4205, -9.58385}, {48.3668, 10.8987}, {36.7213, -4.42164}, {33.471, -81.9748}, {22.0, -102.5}, {-29.2371, 18.8407}, {18.3, 42.7333}, {33.9598, -83.3764}, 
     {40.56, 8.31515}, {35.2451, -3.93019}, {41.9264, 8.7376}, {17.4031, 42.8518}, {-12.2266, 44.4107}, {-10.9162, -37.0775}, {16.9726, 7.99074}, {-36.5413, 174.551}, {58.7552, -156.519}, {35.3283, 34.0435}, 
-    {43.2364, 76.9457}, {42.6512, -73.755}, {38.3436, -0.488171}, {69.9666, 23.2733}, {36.7754, 3.06019}, {-35.0248, 117.884}, {-28.5948, 16.4826}, {42.4983, -92.3329}, {36.1992, 37.1637}, {42.5069, 1.52125}, 
+    {43.2364, 76.9457}, {31.5782, -84.1557}, {38.3436, -0.488171}, {69.9666, 23.2733}, {36.7754, 3.06019}, {-35.0248, 117.884}, {-28.5948, 16.4826}, {42.4983, -92.3329}, {36.1992, 37.1637}, {42.5069, 1.52125}, 
     {46.2055, -118.517}, {31.1992, 29.8952}, {35.2072, -101.834}, {23.0216, 72.5797}, {31.9516, 35.924}, {52.3731, 4.89245}, {33.6625, -85.8283}, {61.2163, -149.895}, {39.716, 32.706}, {38.9786, -76.4928}, 
     {51.2211, 4.39971}, {17.1185, -61.8449}, {43.4801, 13.2188}, {40.8869, 140.59}, {35.6137, 27.1193}, {40.5187, -78.3947}, {26.1422, -81.7943}, {-13.8345, -171.765}, {29.5266, 35.0075}, {42.2814, -83.7485}, 
     {64.543, 40.5371}, {-3.36968, 36.6881}, {59.3251, 18.0711}, {37.9405, 58.3823}, {39.1911, -106.824}, {-15.9277, -5.71609}, {28.3777, 129.494}, {6.82001, -5.2776}, {15.339, 38.9327}, {-23.6984, 133.881}, 
@@ -1283,7 +1353,7 @@ const float City::m_position[NUMCITY][2] = { { 0.0, 0.0 }, // NOCITY
     {39.6899, 140.343}, {51.8161, -0.813038}, {-25.3456, 131.037}, {-19.5759, 147.404}, {36.8865, 30.703}, {-6.3415, 145.904}, {-1.15668, 132.465}, {-10.2989, 149.338}, {42.2917, -85.5872}, {19.4326, -99.1332}, 
     {19.2037, -69.339}, {26.2235, 50.5822}, {40.3756, 49.8328}, {10.9939, -74.7927}, {20.2603, 85.8395}, {16.0001, -61.7333}, {4.25934, 15.7878}, {44.4361, 26.1027}, {5.768, 20.6756}, {41.3829, 2.17743}, 
     {5.78599, 36.5652}, {26.3587, -80.0831}, {17.2502, -88.77}, {32.2937, -64.7815}, {-24.8653, 152.352}, {41.7646, -72.6909}, {-6.92155, 107.611}, {22.2973, 73.1943}, {41.167, -73.2048}, {40.6359, 17.6884}, 
-    {69.0656, 18.5159}, {57.4464, -7.33777}, {44.8178, 20.4569}, {42.1167, -86.4542}, {-1.45056, -48.4682}, {32.1288, 20.0817}, {-32.9273, 151.781}, {52.517, 13.3889}, {48.3905, -4.48601}, {60.7922, -161.756}, 
+    {69.0656, 18.5159}, {57.4464, -7.33777}, {44.8178, 20.4569}, {42.1167, -86.4542}, {-1.45056, -48.4682}, {32.1288, 20.0817}, {-32.9193, 151.78}, {52.517, 13.3889}, {48.3905, -4.48601}, {60.7922, -161.756}, 
     {-19.8287, 34.8418}, {33.8892, 35.5026}, {41.7747, -76.5265}, {35.3739, -119.019}, {-29.1164, 26.2155}, {-20.136, 31.2863}, {54.5964, -5.93018}, {7.16698, -73.1047}, {4.36351, 18.5836}, {13.0978, -59.6184}, 
     {42.1157, -75.9588}, {60.3943, 5.32592}, {44.8016, -68.7713}, {4.74353, 22.8233}, {33.3062, 44.3872}, {45.7567, 9.75422}, {35.1689, -114.639}, {54.5964, -5.93018}, {-41.5119, 173.955}, {33.5207, -86.8024}, 
     {23.2585, 77.402}, {-31.965, 141.451}, {29.3946, 71.6639}, {52.4797, -1.90269}, {42.6994, 9.45092}, {45.7875, -108.496}, {43.263, -2.935}, {43.4711, -1.55273}, {46.8083, -100.784}, {6.53927, 21.9872}, 
@@ -1310,7 +1380,7 @@ const float City::m_position[NUMCITY][2] = { { 0.0, 0.0 }, // NOCITY
     {44.9596, -89.6298}, {-25.4296, -49.2713}, {51.4817, -3.17919}, {1.872, -157.384}, {-20.0714, 146.271}, {41.14, -104.82}, {10.8551, 121.008}, {20.6829, -88.5687}, {36.3642, 6.60843}, {20.4318, -86.9203}, 
     {29.2108, -81.0228}, {23.7644, 90.389}, {32.7763, -96.7969}, {33.5131, 36.3096}, {36.588, -79.3917}, {-6.81608, 39.2804}, {39.7589, -84.1916}, {-32.2479, 148.603}, {42.5006, -90.6648}, {42.6502, 18.0925}, 
     {-27.1823, 151.263}, {38.895, -77.0365}, {15.424, -61.3419}, {-20.2558, 148.814}, {39.8454, -88.9524}, {28.6139, 77.209}, {39.7392, -104.985}, {42.3316, -83.0466}, {32.7763, -96.7969}, {26.2967, 50.1202}, 
-    {31.2237, -85.3934}, {-8.55368, 125.578}, {-1.63947, 102.945}, {33.7736, 10.8862}, {-2.53875, 140.704}, {6.87669, -6.45161}, {-33.2334, 151.561}, {14.6934, -17.4479}, {4.04294, 9.7062}, {39.7403, 122.256}, 
+    {31.2237, -85.3934}, {-8.55368, 125.578}, {-1.63947, 102.945}, {33.7736, 10.8862}, {-2.53875, 140.704}, {6.87669, -6.45161}, {-33.2334, 151.561}, {14.6934, -17.4479}, {4.04294, 9.7062}, {38.9182, 121.628}, 
     {59.0397, -158.458}, {46.7729, -92.1251}, {36.7672, 28.8003}, {48.8701, 2.77393}, {55.6256, 37.6064}, {13.8246, 100.622}, {26.4368, 50.104}, {56.4606, -2.97019}, {48.6626, 34.9502}, {48.632, -2.05802}, 
     {41.0918, 29.7895}, {-6.17912, 35.7468}, {25.2856, 51.5264}, {15.5477, -61.2936}, {39.1582, -75.5244}, {-41.1798, 146.361}, {-8.45602, 115.27}, {-17.3032, 123.629}, {37.2395, -107.822}, {51.0493, 13.7381}, 
     {-12.4604, 130.841}, {53.3807, -1.47023}, {31.8275, 70.9091}, {41.591, -93.6047}, {51.5142, 7.46528}, {42.3316, -83.0466}, {42.3316, -83.0466}, {53.3494, -6.26056}, {-45.8741, 170.504}, {41.1187, -78.7622}, 
@@ -1321,7 +1391,7 @@ const float City::m_position[NUMCITY][2] = { { 0.0, 0.0 }, // NOCITY
     {-33.8582, 121.893}, {39.6073, 39.2013}, {50.9778, 11.0287}, {42.1295, -80.0853}, {-22.5776, 17.0773}, {39.9063, 41.2728}, {60.2048, 24.6568}, {39.716, 32.706}, {45.7456, -87.0647}, {31.291, -92.4616}, 
     {50.8215, -0.140056}, {-26.2462, -69.626}, {29.5569, 34.9498}, {49.1197, 6.17636}, {44.0505, -123.095}, {26.7301, -12.9767}, {68.4969, 16.907}, {40.1777, 44.5126}, {37.9705, -87.5716}, {35.1085, -77.0441}, 
     {40.7216, -74.0475}, {50.7256, -3.52695}, {24.5548, -81.8021}, {-34.6076, -58.4371}, {62.012, -6.768}, {64.8378, -147.717}, {37.0163, -7.93518}, {46.8772, -96.7898}, {36.7394, -119.785}, {35.1403, -79.1541}, 
-    {-10.7367, 25.4982}, {59.9133, 10.739}, {37.56, -122.269}, {48.2022, -114.315}, {41.8933, 12.4829}, {14.6028, -61.0677}, {47.65, 9.48009}, {34.0347, -5.01619}, {38.2009, -84.8733}, {31.5273, -110.361}, 
+    {-10.7367, 25.4982}, {59.9133, 10.739}, {37.56, -122.269}, {48.2022, -114.315}, {41.8933, 12.4829}, {14.6028, -61.0677}, {47.65, 9.48009}, {34.0347, -5.01619}, {39.7056, -96.417}, {31.5273, -110.361}, 
     {59.5326, -1.63104}, {-4.3197, 15.3424}, {25.3367, 56.1727}, {49.0069, 8.40342}, {0.518402, 25.2057}, {39.9259, -77.7486}, {37.7545, 140.459}, {35.1988, -111.652}, {26.1223, -80.1434}, {-27.5973, -48.5496}, 
     {34.1984, -79.7672}, {43.7699, 11.2556}, {36.7291, -108.205}, {52.272, 8.04764}, {26.6406, -81.8723}, {8.479, -13.268}, {32.6497, -16.9087}, {43.8374, 4.36007}, {39.0168, 125.747}, {43.0162, -83.69}, 
     {42.5044, -94.191}, {39.049, -95.6776}, {-3.73045, -38.5218}, {60.1338, -2.0831}, {26.5357, -78.6954}, {50.1106, 8.68209}, {39.1715, -96.7799}, {43.433, 6.73602}, {61.6003, 5.03496}, {42.8778, 74.6067}, 
@@ -1334,7 +1404,7 @@ const float City::m_position[NUMCITY][2] = { { 0.0, 0.0 }, // NOCITY
     {55.7571, 8.92776}, {44.5126, -88.0126}, {-33.9597, 22.4587}, {41.9793, 2.81994}, {53.2191, 6.56801}, {42.9632, -85.6679}, {-23.5507, -46.6334}, {37.9557, -3.49206}, {47.0709, 15.4383}, {-54.2835, -36.4946}, 
     {-9.59842, 160.149}, {36.0726, -79.792}, {34.8514, -82.3985}, {-13.9805, 136.587}, {47.5049, -111.292}, {54.3851, 13.3106}, {-43.595, 170.142}, {14.6425, -90.5131}, {38.6477, -107.06}, {13.4727, 144.752}, 
     {46.2018, 6.1466}, {41.0265, -73.6285}, {25.148, 62.3255}, {-19.4616, 29.8206}, {54.9065, 8.30717}, {53.2744, -9.04906}, {40.3756, 49.8328}, {-2.19006, -79.8869}, {-16.6809, -49.2533}, {-26.19, 152.66}, 
-    {31.5129, 34.4581}, {36.9666, 37.4074}, {33.1025, 139.808}, {52.08, 4.31135}, {-11.6931, 43.2543}, {52.3745, 9.73855}, {53.5673, 9.94173}, {21.0283, 105.854}, {-20.3467, 148.956}, {40.2663, -76.8861}, 
+    {-23.3284, 32.8066}, {36.9666, 37.4074}, {33.1025, 139.808}, {52.08, 4.31135}, {-11.6931, 43.2543}, {52.3745, 9.73855}, {53.5673, 9.94173}, {21.0283, 105.854}, {-20.3467, 148.956}, {40.2663, -76.8861}, 
     {59.4682, 5.08276}, {23.1353, -82.359}, {-42.8825, 147.328}, {31.1992, 29.8952}, {25.4075, 68.3613}, {40.4848, -106.832}, {6.9341, 100.388}, {60.1675, 24.9427}, {35.3391, 25.1333}, {37.9756, 23.7348}, 
     {32.8191, 34.9984}, {70.6413, 23.8361}, {30.249, 120.205}, {9.45747, -5.63425}, {32.1618, -80.7513}, {50.1106, 8.68209}, {47.4272, -92.9377}, {34.4775, -114.338}, {34.3917, 132.452}, {-9.4378, 159.962}, 
     {-20.0502, 148.888}, {41.7688, 140.729}, {22.2793, 114.163}, {32.2999, -90.183}, {7.9366, 98.3529}, {35.7333, -81.3443}, {-25.9397, 27.9262}, {46.0698, 122.087}, {46.5927, -112.036}, {-6.17525, 106.827}, 
@@ -1350,12 +1420,12 @@ const float City::m_position[NUMCITY][2] = { { 0.0, 0.0 }, // NOCITY
     {32.7186, 74.8581}, {23.3701, 85.325}, {22.8015, 86.203}, {35.6521, -117.818}, {38.4237, 27.1428}, {34.4302, 70.4601}, {43.684, -110.444}, {-32.1024, 115.872}, {9.66509, 80.0093}, {28.2813, 68.4364}, 
     {26.9155, 75.819}, {18.2353, -72.5375}, {17.7708, -92.8022}, {42.4839, 26.5106}, {32.2999, -90.183}, {-5.57064, 151.491}, {-11.7752, -75.5}, {30.3322, -81.6556}, {35.8272, -90.695}, {-27.1737, -51.5065}, 
     {-20.6568, 141.745}, {-11.1852, -40.5112}, {-21.761, -43.3501}, {26.2968, 73.0351}, {29.2713, 117.173}, {21.581, 39.1654}, {18.6446, -74.1139}, {38.5774, -92.1724}, {49.1857, -2.11023}, {40.7127, -74.006}, 
-    {22.4732, 70.0552}, {19.0871, 82.0236}, {39.7722, 98.2885}, {27.0937, 114.961}, {1.50356, 103.75}, {56.0442, 12.7037}, {22.0026, 100.771}, {20.9656, -156.672}, {-20.2896, 148.789}, {42.0965, -79.238}, 
+    {22.4732, 70.0552}, {19.0871, 82.0236}, {39.7722, 98.2885}, {27.0431, 114.903}, {1.50356, 103.75}, {56.0442, 12.7037}, {22.0026, 100.771}, {20.9656, -156.672}, {-20.2896, 148.789}, {42.0965, -79.238}, 
     {11.8146, 42.8453}, {9.35085, 42.8004}, {43.729, 126.2}, {7.67562, 36.8479}, {0.575157, 33.2805}, {-1.51582, -80.6125}, {27.6674, 86.2728}, {29.6654, 115.947}, {25.0503, 61.7466}, {-7.272, -76.7509}, 
     {30.6013, 104.114}, {57.7826, 14.1657}, {38.3758, 26.0647}, {26.7281, 85.9364}, {-6.17525, 106.827}, {31.9638, -95.2705}, {37.0842, -94.5133}, {31.3324, 75.5769}, {-20.2672, -50.5492}, {-14.6902, 16.0306}, 
     {37.4514, 25.3923}, {28.7838, 83.7305}, {46.9105, -98.7084}, {47.0216, 132.044}, {-15.4875, -44.3611}, {-26.205, 28.0497}, {35.4125, 116.585}, {-34.5934, -60.9462}, {43.9532, -90.1218}, {37.06, 25.4708}, 
     {41.4944, 121.615}, {62.6006, 29.7622}, {-26.3045, -48.8487}, {6.05366, 121.0}, {16.7289, -169.534}, {9.91751, 8.89794}, {-7.1216, -34.882}, {7.51792, -78.1624}, {26.7578, 94.208}, {-3.07641, 37.354}, 
-    {31.7885, 35.2188}, {26.9218, 70.9191}, {39.1693, 23.4553}, {-44.0515, -70.4706}, {23.1665, 89.2094}, {40.3267, -78.922}, {-17.8784, -51.7204}, {36.4071, 25.4567}, {4.84592, 31.5959}, {53.6784, 6.99561}, 
+    {31.7885, 35.2188}, {26.9218, 70.9191}, {39.1693, 23.4553}, {-44.0515, -70.4706}, {31.7885, 35.2188}, {40.3267, -78.922}, {-17.8784, -51.7204}, {36.4071, 25.4567}, {4.84592, 31.5959}, {53.6784, 6.99561}, 
     {-23.3161, -65.7595}, {-15.4932, -70.1356}, {29.2389, 82.198}, {-24.8334, 143.062}, {14.5322, -86.3218}, {72.7847, -56.147}, {42.683, -89.0227}, {-24.6004, 24.7303}, {42.2416, -84.4256}, {62.2417, 25.7496}, 
     {64.2241, 27.7334}, {11.8948, 8.53641}, {65.9646, 29.1883}, {34.526, 69.1777}, {50.45, 30.5241}, {-32.738, 134.616}, {56.014, -132.828}, {-20.5571, 147.825}, {1.55741, 110.344}, {37.783, 36.8307}, 
     {33.568, 133.539}, {27.8, 66.6167}, {35.2875, 75.6074}, {64.146, -21.9422}, {54.3227, 10.1356}, {65.7333, 24.5667}, {-35.6525, 137.637}, {54.7046, 20.4566}, {-30.7464, 121.473}, {-1.95085, 30.0615}, 
@@ -1397,7 +1467,7 @@ const float City::m_position[NUMCITY][2] = { { 0.0, 0.0 }, // NOCITY
     {-27.7628, 29.9239}, {45.8992, 6.12888}, {20.9127, -17.0503}, {12.1192, 15.0503}, {-17.918, 19.756}, {17.1509, -62.5853}, {7.37631, 13.5961}, {35.1851, 136.9}, {33.1155, 129.787}, {35.1747, 33.3639}, 
     {13.5248, 2.10982}, {30.3322, -81.6556}, {18.0619, -15.9311}, {-7.33836, 72.4718}, {-12.9769, 28.6069}, {27.4951, -99.5074}, {-29.0564, 167.96}, {-25.4819, 30.9847}, {19.4326, -99.1332}, {46.9759, 31.994}, 
     {22.8193, 108.363}, {53.7948, -8.91935}, {10.2881, 123.972}, {-22.2745, 166.442}, {50.4134, -5.08488}, {-34.5926, 146.7}, {58.5909, 16.1904}, {35.6841, 139.774}, {-26.3181, 152.931}, {-41.2711, 173.284}, 
-    {-32.0469, 150.867}, {8.67723, 99.731}, {47.2186, -1.55414}, {-32.9273, 151.781}, {25.6802, -100.315}, {-25.175, 27.0642}, {49.4539, 11.0773}, {52.6286, 1.2924}, {40.7127, -74.006}, {30.3322, -81.6556}, 
+    {-32.0469, 150.867}, {8.67723, 99.731}, {47.2186, -1.55414}, {-32.9193, 151.78}, {25.6802, -100.315}, {-25.175, 27.0642}, {49.4539, 11.0773}, {52.6286, 1.2924}, {40.7127, -74.006}, {30.3322, -81.6556}, 
     {-33.282, 149.097}, {34.7495, -77.4208}, {37.8045, -122.271}, {17.0, -96.5}, {53.139, 8.2146}, {8.07158, 22.3962}, {37.8846, -4.77601}, {55.3997, 10.3852}, {46.4843, 30.7323}, {20.8748, -156.453}, 
     {41.117, 20.8017}, {33.5967, 71.44}, {33.2394, 131.61}, {26.5708, 128.026}, {35.473, -97.5171}, {43.0619, 141.354}, {34.8581, 133.776}, {-18.8136, 17.0498}, {40.9233, 9.50274}, {48.0906, -105.641}, 
     {47.0451, -122.895}, {-30.4402, 136.876}, {41.2587, -95.9384}, {-28.5519, 16.4284}, {64.5128, -165.424}, {37.5483, 45.0667}, {43.3436, 17.8077}, {-17.9083, 15.977}, {34.0658, -117.648}, {-28.0024, 153.415}, 
@@ -1435,151 +1505,42 @@ const float City::m_position[NUMCITY][2] = { { 0.0, 0.0 }, // NOCITY
     {17.0175, 54.1011}, {22.5, -100.495}, {44.1183, 27.26}, {14.0096, -60.9902}, {-2.52953, -44.2964}, {43.9364, 12.4467}, {36.9726, -25.1026}, {38.5811, -121.494}, {37.7246, 26.8193}, {34.9531, -120.436}, 
     {33.75, -117.87}, {-2.20793, -80.9672}, {52.6613, -8.63012}, {36.6744, -121.655}, {42.6977, 23.3217}, {61.3298, 6.72036}, {-20.2683, 148.838}, {-15.1563, 167.051}, {67.3665, 26.6303}, {50.9025, -1.40419}, 
     {28.6819, -17.7663}, {39.799, -89.644}, {43.0619, 141.354}, {15.2107, 145.752}, {33.9005, -98.5021}, {43.5116, 16.44}, {5.01415, -6.94022}, {-27.8644, -54.4779}, {-15.2741, -63.011}, {26.6817, -105.457}, 
-    {27.3366, -82.5309}, {-17.7835, -63.1821}, {-12.9823, -38.4813}, {3.74188, 8.77407}, {27.8644, 34.2954}, {10.8329, -74.1195}, {41.0534, -73.5387}, {38.628, -90.191}, {51.4893, -0.144055}, {59.3251, 18.0711}, 
-    {44.9497, -93.0931}, {48.7785, 9.18001}, {38.4405, -122.714}, {18.3411, -64.9328}, {21.2095, 72.8317}, {17.729, -64.759}, {-7.24597, 112.738}, {38.9645, 16.3021}, {28.6422, 69.1916}, {13.4732, 144.765}, 
-    {43.6962, -114.353}, {-18.1416, 178.442}, {42.4967, -96.4059}, {13.1562, -61.228}, {58.97, 5.73181}, {61.869, 28.8797}, {55.6256, 37.6064}, {37.3886, -5.99534}, {56.8391, 60.6082}, {53.6288, 11.4148}, 
-    {41.5034, -74.0104}, {-22.6768, 14.5314}, {51.6196, -3.94592}, {48.5846, 7.75071}, {52.517, 13.3889}, {54.193, -8.73054}, {18.0251, -63.0483}, {34.0747, 74.8204}, {-33.7685, 150.957}, {43.0481, -76.1474}, 
-    {58.2084, -6.38812}, {3.1517, 101.694}, {53.3807, -1.47023}, {41.2946, 36.3321}, {47.7981, 13.0465}, {-24.9612, 31.59}, {22.5446, 114.055}, {53.4302, 14.551}, {11.1853, -60.735}, {34.3426, 134.047}, 
-    {22.2158, -97.8578}, {36.0638, 120.378}, {41.3123, 69.2787}, {25.0375, 121.564}, {41.6935, 44.8014}, {-21.1343, -175.202}, {-19.6482, 134.19}, {26.6775, -77.2895}, {28.2936, -16.6214}, {33.2096, -87.5675}, 
-    {-29.1979, 26.8322}, {56.9562, 8.68487}, {-34.383, 147.469}, {40.9913, 27.3676}, {38.7212, -27.2176}, {-45.4145, 167.717}, {37.9375, -107.812}, {-49.3537, 70.2436}, {28.4828, -16.3412}, {28.2936, -16.6214}, 
-    {42.4415, 19.2621}, {14.1057, -87.204}, {43.2512, 26.5728}, {16.7538, -93.116}, {-5.08746, -42.805}, {52.517, 13.3889}, {35.6893, 51.3896}, {41.3281, 19.8184}, {21.2703, 40.4158}, {32.5317, -117.02}, 
-    {32.8967, 13.1778}, {-10.5786, 142.219}, {42.4304, 18.6988}, {-9.20047, -171.848}, {62.2676, -150.03}, {33.9196, 134.251}, {60.4518, 22.2671}, {30.4381, -84.2809}, {59.4372, 24.7454}, {43.6045, 1.44425}, 
-    {32.0853, 34.7818}, {61.498, 23.7603}, {0.338924, 6.7313}, {-31.0901, 150.929}, {37.2442, 67.2831}, {36.6507, 117.114}, {35.7642, -5.84296}, {-18.91, 47.5256}, {2.80651, 104.172}, {41.6529, -83.5378}, 
-    {69.6516, 18.9559}, {-20.8033, 165.156}, {18.4211, -64.6388}, {36.6468, 137.218}, {27.9478, -82.4584}, {25.0375, 121.564}, {-22.6893, 117.797}, {38.0174, 12.516}, {63.4304, 10.3952}, {59.9133, 10.739}, 
-    {36.5338, -82.3334}, {45.0678, 7.68249}, {-31.9129, 152.461}, {45.6496, 13.7773}, {8.48823, 76.9475}, {1.48455, 172.969}, {10.805, 78.687}, {25.0375, 121.564}, {-19.2484, 17.7087}, {51.1282, 71.4307}, 
-    {45.8067, 12.2063}, {39.3033, 117.416}, {-19.2569, 146.824}, {40.2203, -74.7659}, {-26.5644, -64.8824}, {26.0028, 63.0506}, {36.1563, -95.9928}, {33.8439, 9.40014}, {34.0789, -84.4131}, {32.2229, -110.975}, 
-    {28.3252, 37.6329}, {44.7606, -85.6165}, {48.1172, -96.1771}, {39.0885, -120.05}, {-27.561, 151.953}, {42.5704, -114.46}, {4.24352, 117.885}, {33.4254, -94.0431}, {52.517, 13.3889}, {37.87, 112.545}, 
-    {35.6841, 139.774}, {30.7564, -94.3985}, {35.9604, -83.921}, {41.0055, 39.7301}, {-8.90966, -139.552}, {61.1556, -45.4239}, {-9.40108, -140.08}, {-19.7508, -47.9367}, {33.9519, 131.247}, {15.188, 105.327}, 
-    {43.1009, -75.2327}, {63.5624, 53.6842}, {51.6591, 5.61486}, {-18.9188, -48.2768}, {48.6224, 22.3023}, {24.5787, 73.6863}, {-42.0801, 145.555}, {30.1958, 67.0172}, {54.7261, 55.9475}, {41.5753, 60.5999}, 
-    {-6.95168, 15.4799}, {49.0681, 17.4664}, {16.0966, -86.9434}, {39.9356, -91.4099}, {-0.220164, -78.5123}, {47.996, -4.10248}, {5.85139, 169.623}, {34.6932, 135.194}, {39.1502, -123.208}, {35.021, 135.756}, 
-    {-16.3325, 168.301}, {-28.2919, 31.4294}, {47.9409, 106.918}, {3.0199, 32.3883}, {70.6749, -52.1269}, {63.8257, 20.2631}, {-31.1999, 136.825}, {12.5972, -61.4335}, {63.8731, -160.788}, {60.7595, -0.896019}, 
-    {-5.1343, 119.412}, {10.8682, -85.1446}, {19.4061, -102.034}, {20.2685, -155.851}, {-20.8836, -51.3714}, {43.4198, 87.3195}, {-29.7561, -57.0868}, {5.35668, -62.6698}, {32.813, 66.0183}, {-54.8069, -68.3073}, 
-    {35.5392, 129.312}, {52.0907, 5.12156}, {17.5212, 102.668}, {-28.4563, 21.2419}, {12.9356, 100.883}, {-31.5891, 28.7891}, {51.8358, 107.584}, {1.59979, 11.5751}, {13.773, -60.958}, {25.3897, 30.5552}, 
-    {41.9034, 12.4529}, {63.0958, 21.6159}, {38.325, 43.659}, {-32.5976, -70.853}, {43.2074, 27.9167}, {39.4192, 37.1012}, {45.7796, 10.4259}, {57.6379, 18.298}, {45.4372, 12.3346}, {-23.5507, -46.6334}, 
-    {29.5569, 34.9498}, {27.8097, -17.9151}, {61.1299, -146.349}, {40.4557, -109.528}, {19.3333, -96.6667}, {-17.9229, 25.8477}, {42.1964, -8.71178}, {43.8013, 22.6795}, {48.2084, 16.3725}, {18.4654, -64.4155}, 
-    {36.3302, -119.292}, {42.8465, -2.6724}, {-20.3201, -40.3377}, {55.6256, 37.6064}, {39.4697, -0.376335}, {30.8327, -83.2785}, {-17.7415, 168.315}, {41.6521, -4.72856}, {10.17, -68.0004}, {56.3424, 30.5279}, 
-    {38.9014, -77.2652}, {54.687, 25.2829}, {25.3356, 83.0076}, {48.6484, 44.385}, {30.4058, -86.6188}, {23.1496, -81.26}, {27.6387, -80.3975}, {62.3176, 27.8681}, {45.4385, 10.9924}, {18.0018, -92.933}, 
-    {59.6111, 16.5464}, {17.9641, 102.613}, {43.1151, 131.886}, {56.8787, 14.8094}, {-27.7705, 30.7886}, {46.308, 16.3378}, {38.895, -77.0365}, {52.2337, 21.0714}, {-22.5776, 17.0773}, {-12.6387, 141.871}, 
-    {-27.9823, 26.738}, {-35.115, 147.368}, {-37.9519, 176.995}, {-39.6202, 143.984}, {58.4426, -3.09158}, {50.082, 8.24166}, {56.3057, -133.618}, {-41.2888, 174.777}, {-13.282, -176.174}, {-38.3826, 142.481}, 
-    {26.3996, 68.0377}, {-34.4244, 150.894}, {28.5978, -81.351}, {-35.7275, 174.319}, {56.2046, -132.043}, {44.0168, -107.956}, {51.109, 17.0327}, {30.5951, 114.3}, {-25.3747, 122.377}, {31.5777, 120.295}, 
-    {-34.1712, 22.1207}, {-33.0382, 137.584}, {-15.4868, 128.124}, {44.6632, -111.101}, {-10.4913, 105.617}, {34.2608, 108.942}, {58.6228, -101.486}, {-14.3984, -145.941}, {24.5439, 118.077}, {55.748, -101.312}, 
-    {36.6817, -6.13774}, {56.7791, -98.9278}, {1.28992, 103.852}, {0.0, 0.0}, {59.5727, -139.578}, {3.86899, 11.5213}, {52.9244, -82.427}, {59.5691, -108.616}, {69.1178, -105.06}, {49.183, -57.432}, 
-    {53.5462, -113.491}, {53.5462, -113.491}, {73.6585, -118.441}, {52.213, -81.6824}, {63.7493, -68.5214}, {45.9348, -66.6556}, {54.7698, -101.879}, {-13.5402, -71.9302}, {55.2821, -77.7563}, {56.345, -94.7062}, 
-    {32.2943, -64.7853}, {50.4977, -59.4785}, {44.6486, -63.5859}, {51.2253, -58.6495}, {30.6941, 111.28}, {50.6758, -120.339}, {46.6016, -120.511}, {62.0274, 129.732}, {56.4615, -100.017}, {49.8879, -119.496}, 
-    {56.7292, -111.389}, {45.5032, -73.5698}, {45.5032, -73.5698}, {24.0889, 38.0667}, {35.4444, 139.637}, {58.5025, -119.4}, {45.4209, -75.6901}, {49.8179, -64.3515}, {54.3127, -130.325}, {52.4761, -71.8259}, 
-    {53.8224, -101.241}, {42.3167, -83.0373}, {46.098, -64.8001}, {50.4488, -104.617}, {49.8097, -88.4812}, {48.9592, -54.6188}, {74.6791, -94.8423}, {45.2788, -66.058}, {60.0059, -111.89}, {73.0349, -84.5407}, 
-    {55.7433, -97.8635}, {43.6535, -79.3839}, {43.6535, -79.3839}, {56.553, -76.5458}, {45.5032, -73.5698}, {32.6927, -114.628}, {68.7927, -81.244}, {48.3062, -65.5717}, {48.1023, -77.7876}, {58.1067, -68.4039}, 
-    {65.2824, -126.833}, {49.2609, -123.114}, {49.8955, -97.1385}, {52.9, -66.8702}, {53.5462, -113.491}, {52.1318, -106.661}, {45.2773, -66.0714}, {62.1734, -92.5864}, {53.9129, -122.745}, {54.5173, -128.6}, 
-    {42.9832, -81.2434}, {60.7216, -135.055}, {51.0456, -114.058}, {54.7792, -127.176}, {48.4283, -123.365}, {58.7693, -94.1737}, {53.3333, -60.4167}, {53.8301, -112.333}, {43.5896, -79.6444}, {62.4541, -114.377}, 
-    {53.2435, -131.828}, {44.1169, 15.2353}, {45.8426, 15.9622}, {41.6521, -0.880943}, {-20.0121, 148.246}, {23.0824, -103.209}, {46.9485, 7.45217}, {16.8076, -92.8987}, {22.2793, 114.163}, {52.2874, -81.6564}, 
+    {27.3366, -82.5309}, {-17.7835, -63.1821}, {-12.9823, -38.4813}, {3.74188, 8.77407}, {27.8644, 34.2954}, {10.8329, -74.1195}, {41.0534, -73.5387}, {-33.4378, -70.6505}, {38.628, -90.191}, {51.4893, -0.144055}, 
+    {59.3251, 18.0711}, {44.9497, -93.0931}, {48.7785, 9.18001}, {38.4405, -122.714}, {18.3411, -64.9328}, {21.2095, 72.8317}, {17.729, -64.759}, {-7.24597, 112.738}, {38.9645, 16.3021}, {28.6422, 69.1916}, 
+    {13.4732, 144.765}, {43.6962, -114.353}, {-18.1416, 178.442}, {42.4967, -96.4059}, {13.1562, -61.228}, {58.97, 5.73181}, {61.869, 28.8797}, {55.6256, 37.6064}, {37.3886, -5.99534}, {56.8391, 60.6082}, 
+    {53.6288, 11.4148}, {41.5034, -74.0104}, {-22.6768, 14.5314}, {51.6196, -3.94592}, {48.5846, 7.75071}, {52.517, 13.3889}, {54.193, -8.73054}, {18.0251, -63.0483}, {34.0747, 74.8204}, {-33.7685, 150.957}, 
+    {43.0481, -76.1474}, {58.2084, -6.38812}, {3.1517, 101.694}, {53.3807, -1.47023}, {41.2946, 36.3321}, {47.7981, 13.0465}, {-24.9612, 31.59}, {22.5446, 114.055}, {53.4302, 14.551}, {11.1853, -60.735}, 
+    {34.3426, 134.047}, {22.2158, -97.8578}, {36.0638, 120.378}, {41.3123, 69.2787}, {25.0375, 121.564}, {41.6935, 44.8014}, {-21.1343, -175.202}, {-19.6482, 134.19}, {26.6775, -77.2895}, {28.2936, -16.6214}, 
+    {33.2096, -87.5675}, {-29.1979, 26.8322}, {56.9562, 8.68487}, {-34.383, 147.469}, {40.9913, 27.3676}, {38.7212, -27.2176}, {-45.4145, 167.717}, {37.9375, -107.812}, {-49.3537, 70.2436}, {28.2936, -16.6214}, 
+    {28.2936, -16.6214}, {42.4415, 19.2621}, {14.1057, -87.204}, {43.2512, 26.5728}, {16.7538, -93.116}, {-5.08746, -42.805}, {52.517, 13.3889}, {35.6893, 51.3896}, {41.3281, 19.8184}, {21.2703, 40.4158}, 
+    {32.5317, -117.02}, {32.8967, 13.1778}, {-10.5786, 142.219}, {42.4304, 18.6988}, {-9.20047, -171.848}, {62.2676, -150.03}, {33.9196, 134.251}, {60.4518, 22.2671}, {30.4381, -84.2809}, {59.4372, 24.7454}, 
+    {43.6045, 1.44425}, {32.0853, 34.7818}, {61.498, 23.7603}, {0.338924, 6.7313}, {-31.0901, 150.929}, {37.2442, 67.2831}, {36.6507, 117.114}, {35.7642, -5.84296}, {-18.91, 47.5256}, {2.80651, 104.172}, 
+    {41.6529, -83.5378}, {69.6516, 18.9559}, {-20.8033, 165.156}, {18.4211, -64.6388}, {36.6468, 137.218}, {27.9478, -82.4584}, {25.0375, 121.564}, {-22.6893, 117.797}, {38.0174, 12.516}, {63.4304, 10.3952}, 
+    {59.9133, 10.739}, {36.5338, -82.3334}, {45.0678, 7.68249}, {-31.9129, 152.461}, {45.6496, 13.7773}, {8.48823, 76.9475}, {1.48455, 172.969}, {10.805, 78.687}, {25.0375, 121.564}, {-19.2484, 17.7087}, 
+    {51.1282, 71.4307}, {45.8067, 12.2063}, {39.3033, 117.416}, {-19.2569, 146.824}, {40.2203, -74.7659}, {-26.5644, -64.8824}, {26.0028, 63.0506}, {36.1563, -95.9928}, {33.8439, 9.40014}, {34.0789, -84.4131}, 
+    {32.2229, -110.975}, {28.3252, 37.6329}, {44.7606, -85.6165}, {48.1172, -96.1771}, {39.0885, -120.05}, {-27.561, 151.953}, {42.5704, -114.46}, {4.24352, 117.885}, {33.4254, -94.0431}, {52.517, 13.3889}, 
+    {37.87, 112.545}, {35.6841, 139.774}, {30.7564, -94.3985}, {35.9604, -83.921}, {41.0055, 39.7301}, {-8.90966, -139.552}, {61.1556, -45.4239}, {-9.40108, -140.08}, {-19.7508, -47.9367}, {33.9519, 131.247}, 
+    {15.188, 105.327}, {43.1009, -75.2327}, {63.5624, 53.6842}, {51.6591, 5.61486}, {-18.9188, -48.2768}, {48.6224, 22.3023}, {24.5787, 73.6863}, {-42.0801, 145.555}, {30.1958, 67.0172}, {54.7261, 55.9475}, 
+    {41.5753, 60.5999}, {-6.95168, 15.4799}, {49.0681, 17.4664}, {16.0966, -86.9434}, {39.9356, -91.4099}, {-0.220164, -78.5123}, {47.996, -4.10248}, {5.85139, 169.623}, {34.6932, 135.194}, {39.1502, -123.208}, 
+    {35.021, 135.756}, {-16.3325, 168.301}, {-28.2919, 31.4294}, {47.9409, 106.918}, {3.0199, 32.3883}, {70.6749, -52.1269}, {63.8257, 20.2631}, {-31.1999, 136.825}, {12.5972, -61.4335}, {63.8731, -160.788}, 
+    {60.7595, -0.896019}, {-5.1343, 119.412}, {10.8682, -85.1446}, {19.4061, -102.034}, {20.2685, -155.851}, {-20.8836, -51.3714}, {43.4198, 87.3195}, {-29.7561, -57.0868}, {5.35668, -62.6698}, {32.813, 66.0183}, 
+    {-54.8069, -68.3073}, {35.5392, 129.312}, {52.0907, 5.12156}, {17.5212, 102.668}, {-28.4563, 21.2419}, {12.9356, 100.883}, {-31.5891, 28.7891}, {51.8358, 107.584}, {1.59979, 11.5751}, {13.773, -60.958}, 
+    {25.3897, 30.5552}, {41.9034, 12.4529}, {63.0958, 21.6159}, {38.325, 43.659}, {-32.5976, -70.853}, {43.2074, 27.9167}, {39.4192, 37.1012}, {45.7796, 10.4259}, {57.6379, 18.298}, {45.4372, 12.3346}, 
+    {-23.5507, -46.6334}, {29.5569, 34.9498}, {27.8097, -17.9151}, {61.1299, -146.349}, {40.4557, -109.528}, {19.3333, -96.6667}, {-17.9229, 25.8477}, {42.1964, -8.71178}, {43.8013, 22.6795}, {48.2084, 16.3725}, 
+    {18.4654, -64.4155}, {36.3302, -119.292}, {42.8465, -2.6724}, {-20.3201, -40.3377}, {55.6256, 37.6064}, {39.4697, -0.376335}, {30.8327, -83.2785}, {-17.7415, 168.315}, {41.6521, -4.72856}, {10.17, -68.0004}, 
+    {56.3424, 30.5279}, {38.9014, -77.2652}, {54.687, 25.2829}, {25.3356, 83.0076}, {48.6484, 44.385}, {30.4086, -86.6026}, {23.1496, -81.26}, {27.6387, -80.3975}, {62.3176, 27.8681}, {45.4385, 10.9924}, 
+    {18.0018, -92.933}, {59.6111, 16.5464}, {17.9641, 102.613}, {43.1151, 131.886}, {56.8787, 14.8094}, {-27.7705, 30.7886}, {46.308, 16.3378}, {38.895, -77.0365}, {52.2337, 21.0714}, {-22.5776, 17.0773}, 
+    {-12.6387, 141.871}, {-27.9823, 26.738}, {-35.115, 147.368}, {-37.9519, 176.995}, {-39.6202, 143.984}, {58.4426, -3.09158}, {50.082, 8.24166}, {56.3057, -133.618}, {-41.2888, 174.777}, {-13.282, -176.174}, 
+    {-38.3826, 142.481}, {26.3996, 68.0377}, {-34.4244, 150.894}, {28.5978, -81.351}, {-35.7275, 174.319}, {56.2046, -132.043}, {44.0168, -107.956}, {51.109, 17.0327}, {30.5951, 114.3}, {-25.3747, 122.377}, 
+    {31.5777, 120.295}, {-34.1712, 22.1207}, {-33.0382, 137.584}, {-15.4868, 128.124}, {44.6632, -111.101}, {-10.4913, 105.617}, {34.3312, 108.704}, {58.6228, -101.486}, {-14.3984, -145.941}, {24.4801, 118.085}, 
+    {55.748, -101.312}, {36.6817, -6.13774}, {56.7791, -98.9278}, {1.28992, 103.852}, {0.0, 0.0}, {59.5727, -139.578}, {3.86899, 11.5213}, {52.9244, -82.427}, {59.5691, -108.616}, {69.1178, -105.06}, 
+    {49.183, -57.432}, {53.5462, -113.491}, {53.5462, -113.491}, {73.6585, -118.441}, {52.213, -81.6824}, {63.7493, -68.5214}, {45.9348, -66.6556}, {54.7698, -101.879}, {-13.5402, -71.9302}, {55.2821, -77.7563}, 
+    {56.345, -94.7062}, {32.2943, -64.7853}, {50.4977, -59.4785}, {44.6486, -63.5859}, {51.2253, -58.6495}, {30.6941, 111.28}, {50.6758, -120.339}, {46.6016, -120.511}, {62.0274, 129.732}, {56.4615, -100.017}, 
+    {49.8879, -119.496}, {56.7292, -111.389}, {45.5032, -73.5698}, {45.5032, -73.5698}, {24.0889, 38.0667}, {35.4444, 139.637}, {58.5025, -119.4}, {45.4209, -75.6901}, {49.8179, -64.3515}, {54.3127, -130.325}, 
+    {52.4761, -71.8259}, {53.8224, -101.241}, {42.3167, -83.0373}, {46.098, -64.8001}, {50.4488, -104.617}, {49.8097, -88.4812}, {48.9592, -54.6188}, {74.6791, -94.8423}, {45.2788, -66.058}, {60.0059, -111.89}, 
+    {73.0349, -84.5407}, {55.7433, -97.8635}, {43.6535, -79.3839}, {43.6535, -79.3839}, {56.553, -76.5458}, {45.5032, -73.5698}, {32.6927, -114.628}, {68.7927, -81.244}, {48.3062, -65.5717}, {48.1023, -77.7876}, 
+    {58.1067, -68.4039}, {65.2824, -126.833}, {49.2609, -123.114}, {49.8955, -97.1385}, {52.9, -66.8702}, {53.5462, -113.491}, {52.1318, -106.661}, {45.2773, -66.0714}, {62.1734, -92.5864}, {53.9129, -122.745}, 
+    {54.5173, -128.6}, {42.9832, -81.2434}, {60.7216, -135.055}, {51.0456, -114.058}, {54.7792, -127.176}, {48.4283, -123.365}, {58.7693, -94.1737}, {53.3333, -60.4167}, {53.8301, -112.333}, {43.5896, -79.6444}, 
+    {62.4541, -114.377}, {53.2435, -131.828}, {44.1169, 15.2353}, {45.8426, 15.9622}, {41.6521, -0.880943}, {-20.0121, 148.246}, {23.0824, -103.209}, {16.8076, -92.8987}, {22.2793, 114.163}, {52.2874, -81.6564}, 
     {19.1277, -104.284}, {13.8063, 8.98917}, {-23.3574, 119.733}, {-45.0322, 168.661}, {47.3745, 8.54104}, {24.032, -74.49}, {4.949, -6.09217}, {37.7891, 20.7901}, {55.8609, -92.0898}, {24.7359, 91.6852}
 };
-
-
-
- /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
- /* Vincenty Inverse Solution of Geodesics on the Ellipsoid (c) Chris Veness 2002-2011             */
- /*                                                                                                */
- /* from: Vincenty inverse formula - T Vincenty, "Direct and Inverse Solutions of Geodesics on the */
- /*       Ellipsoid with application of nested equations", Survey Review, vol XXII no 176, 1975    */
- /*       http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf                                             */
- /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
- 
- // see https://en.wikipedia.org/wiki/Great-circle_distance
- // and http://www.movable-type.co.uk/scripts/latlong-vincenty.html
- // and https://en.wikipedia.org/wiki/Vincenty%27s_formulae
-
- // Table taken from GMT project. Radii in metres 
- //   Name,          Date,  Eq. rad,    Pole rad,         Flattening
- // { "WGS_84",      1984,  6378137.0,  6356752.31424518, 1.0/298.257223563 },
- // { "OSU91A",      1991,  6378136.3,  6356751.61633668, 1.0/298.25722 },
- // { "OSU86F",      1986,  6378136.2,  6356751.51667196, 1.0/298.25722 },
- // { "Engelis",     1985,  6378136.05, 6356751.32272154, 1.0/298.2566 },
- // { "SGS_85",      1985,  6378136.0,  6356751.30156878, 1.0/298.257 },
- // { "TOPEX",       1990,  6378136.3,  6356751.60056294, 1.0/298.257 },
- // { "MERIT_83",    1983,  6378137.0,  6356752.29821597, 1.0/298.257 },
- // { "GRS_80",      1980,  6378137.0,  6356752.31414036, 1.0/298.257222101 },
- // { "Hughes_1980", 1980,  6378273.0,  6356889.44820259, 1.0/298.2794 },
-
-float
-City::dist( float lat1, float lon1, float lat2, float lon2 ) 
-/**
- * Calculates geodetic distance in metres between two points specified by latitude/longitude using 
- * Vincenty inverse formula for ellipsoids
- *
- * @param   {Number} lat1, lon1: first point in decimal degrees
- * @param   {Number} lat2, lon2: second point in decimal degrees
- * @returns (Number} distance in metres between points
- * 
- */
-{
-    const double D2R = (M_PI / 180.0); 
-    const double R2D = (180.0 / M_PI); 
-    
-    //   { "WGS_84",  1984,  6378137.0, 6356752.31424518,  1.0/298.257223563 },
-    double a = 6378137;           // theEllipsoid->eqRadius();    // ellipsoid param
-    double b = 6356752.31424518;  // theEllipsoid->polRadius();   // ellipsoid param
-    double f = 1.0/298.257223563; // theEllipsoid->flattening();  // ellipsoid param
-    
-    double L = (lon2-lon1) * D2R;
-    double U1 = std::atan((1.0-f) * std::tan(lat1 * D2R));
-    double U2 = std::atan((1.0-f) * std::tan(lat2 * D2R));
-    double sinU1 = std::sin(U1), cosU1 = std::cos(U1);
-    double sinU2 = std::sin(U2), cosU2 = std::cos(U2);
-    
-    double lambda = L, lambdaP;
-    double cosSqAlpha;
-    double sigma;
-    double sinSigma;
-    double cosSigma;
-    double cos2SigmaM;
-    int iterLimit = 5000;
-    double sinLambda;
-    double cosLambda;
-    
-    do 
-    {
-        sinLambda = std::sin(lambda);
-        cosLambda = std::cos(lambda);
-        
-        sinSigma = sqrt( (cosU2 * sinLambda) * (cosU2 * sinLambda) + 
-                        ((cosU1 * sinU2) - (sinU1 * cosU2 * cosLambda)) * ((cosU1 * sinU2)-(sinU1 * cosU2 * cosLambda)));
-        
-        if (sinSigma == 0)
-            return 0;  // co-incident points
-        
-        cosSigma = (sinU1 * sinU2) + (cosU1 * cosU2 * cosLambda);
-        sigma = std::atan2(sinSigma, cosSigma);
-        
-        double sinAlpha = (cosU1 * cosU2 * sinLambda) / sinSigma;
-        cosSqAlpha = 1.0 - sinAlpha * sinAlpha;
-        cos2SigmaM = cosSigma - ((2.0*sinU1*sinU2) / cosSqAlpha); 
-        
-        if (std::isnan(cos2SigmaM))  
-            cos2SigmaM = 0;  // equatorial line: cosSqAlpha=0 (§6)
-        
-        double C = f / (16.0 * cosSqAlpha * (4.0 + f * (4.0 - (3.0 * cosSqAlpha))));
-        lambdaP = lambda;
-        lambda = L + (1.0-C) * f * sinAlpha *
-        (sigma + (C * sinSigma * (cos2SigmaM + C * cosSigma * (-1.0 + 2.0 * cos2SigmaM * cos2SigmaM))));    
-    } 
-    while ((fabs(lambda - lambdaP) > 1e-12) && (--iterLimit > 0));
-    
-    if (iterLimit == 0)
-        return -1.0;  // formula failed to converge
-    
-    double uSq = cosSqAlpha * (a * a - b * b) / (b*b);
-    double A = 1.0 + uSq / 16384.0 * (4096.0 + uSq * (-768.0 + uSq * (320.0 - 175.0 * uSq)));
-    double B = uSq / (1024.0 * (256.0 + uSq * (-128.0 + uSq * (74.0 - 47.0 * uSq))));
-    double deltaSigma = B * sinSigma * (cos2SigmaM + B / 4.0 * (cosSigma * (-1.0 + 2.0 * cos2SigmaM * cos2SigmaM) -
-                                                                B / 6.0 * cos2SigmaM * (-3.0 + 4.0 * sinSigma * sinSigma) * (-3.0 + 4.0 * cos2SigmaM * cos2SigmaM)));
-    double s = b * A * (sigma - deltaSigma);
-    
-    return s;
-    
-    // note: to return initial/final bearings in addition to distance, use something like:
-    // double fwdAz = atan2(cosU2 * sinLambda,  cosU1 * sinU2 - sinU1 * cosU2 * cosLambda);
-    // double revAz = atan2(cosU1 * sinLambda, -sinU1 * cosU2 + cosU1 * sinU2 * cosLambda);
-    // return Pair<double,double>( fwdAz * R2D, revAz * R2D );
-}
-

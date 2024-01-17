@@ -7,26 +7,26 @@
  by W.B. Yates    
  Copyright (c) W.B. Yates. All rights reserved. 
  History: Identifies a city (not an airport) using a large part of the IATA airport code list. 
-          This class is can represent 2051 distinct cities including the capital cities of the world and all US state capitals.
-          This is enough to describe (almost) every city associated with a Market Identification Code (MIC).
+ This class can represent 2051 distinct cities including the capital cities of the world and all US state capitals.
+ This is enough to describe (almost) every city associated with a Market Identification Code (MIC).
  
  Each IATA code corresponds to the city served by that airport. For the special cases where no airport
  serves a city we have invented a code terminated in a '0' (see table below).
  When a city with no airport is a capital city the city3code is the country 2 code followed by a 0.
- Note that distinct IATA codes can map to a single city i.e 'LHR', 'LGW', 'LTN', 'LST' all map to 'LON' - London
+ Note that distinct IATA codes can map to a single city i.e 'LHR', 'LGW', 'LTN', 'STN', 'LCY' all map to 'LON' - London
  while 'JFK', 'LGA' all map to 'NYC' - New York
  
  Latitude and longtitude of cities (not airports) is provided for geograpical positioning and the calculation of distances between cities.
  Geodetic distances (in metres) between points specified by latitude/longitude are calculated using the Vincenty formula.
  
- see https://www.iata.org/en/publications/directories/code-search/
- see https://en.wikipedia.org/wiki/IATA_airport_code
+ https://www.iata.org/en/publications/directories/code-search/
+ https://en.wikipedia.org/wiki/IATA_airport_code
  
- **** Updated 29/11/2023 ****
+ **** Updated 16/01/2024 ****
  
-
+ Note for 'Kansas City' which could be either 'Kansas City (KS)' or 'Kansas City (MO)' we have choosen '(MO)'
+ 
  select city, city3code, country3code from cities where city3code like '%0' order by city;
- 
  +-------------------+-----------+--------------+
  | city              | city3code | country3code |
  +-------------------+-----------+--------------+
@@ -40,14 +40,14 @@
  | Foster City       | FC0       | USA          |
  | Gandhinagar       | GH0       | IND          |
  | GIFT City         | GC0       | IND          |
- | Greenwich         | GW0       | USA          |
+ | Greenwich (CT)    | GW0       | USA          |
  | Grindsted         | GR0       | DNK          |
  | Horsens           | HS0       | DNK          |
  | King Edward Point | GS0       | SGS          |
  | Leuven            | LV0       | BEL          |
  | Lucerne           | LU0       | CHE          |
  | Makati City       | MC0       | PHL          |
- | Mill Valley       | MV0       | USA          |
+ | Mill Valley (CA)  | MV0       | USA          |
  | Nablus            | PS0       | PSE          |
  | Nukunonu          | TK0       | TKL          |
  | Oldenburg         | OB0       | DEU          |
@@ -60,12 +60,12 @@
  | Schwerin          | SW0       | DEU          |
  | Shimonoseki       | SK0       | JPN          |
  | Silkeborg         | SI0       | DNK          |
- | Stamford          | ST0       | USA          |
+ | Stamford (CT)     | ST0       | USA          |
  | Vaduz             | LI0       | LIE          |
  | Varazdin          | VZ0       | HRV          |
  | Vatican City      | VA0       | VAT          |
- | Vienna            | VN0       | USA          |
- | Winter Park       | WP0       | USA          |
+ | Vienna (VA)       | VN0       | USA          |
+ | Winter Park (FL)  | WP0       | USA          |
  +-------------------+-----------+--------------+
 
  
@@ -77,8 +77,8 @@
  std::cout << x.name() << std::endl;
  std::cout << short(x) << std::endl;
  std::cout << x.capital() << std::endl;
- std::cout << "lat = " << x.lat() << std::endl;
- std::cout << "lon = " << x.lon() << std::endl;
+ std::cout << "latitude = " << x.lat() << std::endl;
+ std::cout << "longitude = " << x.lon() << std::endl;
  
  City y;
  y.setCity( "LON" );
@@ -86,16 +86,16 @@
  std::cout << y.name() << std::endl;
  std::cout << short(y) << std::endl;
  std::cout << y.capital() << std::endl;
- std::cout << "lat = " << y.lat() << std::endl;
- std::cout << "lon = " << y.lon() << std::endl;
+ std::cout << "latitude = " << y.lat() << std::endl;
+ std::cout << "longitude = " << y.lon() << std::endl;
  
  for (int i = 0; i < City::NUMCITY; i++)
  {	
-    std::cout << City::index(i).toString() + " " + City::index(i).name() << std::endl;
+    std::cout << City::index(i) + " " + City::index(i).name() << std::endl;
  }
  
+ std::cout << "The distance between " << x.name() << " and " << y.name() << " is " << City::dist(x,y) / 1000.0 << " km" << std::endl;
  
- std::cout << "The distance between London and New York is " << City::dist(x,y) / 1000.0 << " km"  << std::endl;
  exit(1);
  
  */
@@ -115,8 +115,8 @@ class City
 {
 public:
 	
-	// The value of the enum elements are my arbitrary numeric code for each city. Note XXX, NOCITY, MAXCITY, NUMCITY and
-	// any city codes that terminates in a '0' are not IATA codes
+	// The value of the enum elements are my arbitrary numeric code for each city. 
+    // Note XXX, NOCITY, MAXCITY, NUMCITY and any city codes that terminates in a '0' are not IATA codes.
     enum CityCode : short {
         NOCITY = 0,
         AAC = 1000, AAE = 1001, AAL = 1056, AAN = 1002, AAR = 1003, AAT = 1004, AB0 = 1005, ABD = 1006, ABE = 1007, ABI = 1008, 
@@ -286,66 +286,67 @@ public:
         SLL = 2552, SLP = 2553, SLS = 2554, SLU = 2555, SLZ = 2556, SM0 = 2557, SMA = 2558, SMF = 2559, SMI = 2560, SMX = 2561, 
         SNA = 2562, SNC = 2563, SNN = 2564, SNS = 2565, SOF = 2566, SOG = 2567, SOI = 2568, SON = 2569, SOT = 2570, SOU = 2571, 
         SPC = 2572, SPI = 2573, SPK = 2246, SPN = 2574, SPS = 2575, SPU = 2576, SPY = 2577, SRA = 2578, SRB = 2579, SRL = 2580, 
-        SRQ = 2581, SRZ = 2582, SSA = 2583, SSG = 2584, SSH = 2585, SSL = 2586, ST0 = 2587, STL = 2589, STN = 1983, STO = 2590, 
-        STP = 2591, STR = 2592, STS = 2593, STT = 2594, STV = 2595, STX = 2596, SUB = 2597, SUF = 2598, SUL = 2599, SUM = 2600, 
-        SUN = 2601, SUV = 2602, SUX = 2603, SVD = 2604, SVG = 2605, SVL = 2606, SVO = 2127, SVQ = 2607, SVX = 2608, SW0 = 2609, 
-        SWF = 2610, SWP = 2611, SWS = 2612, SXB = 2613, SXF = 1150, SXL = 2614, SXM = 2615, SXR = 2616, SYD = 2617, SYR = 2618, 
-        SYY = 2619, SZB = 1911, SZD = 2620, SZF = 2621, SZG = 2622, SZK = 2623, SZX = 2624, SZZ = 2625, TAB = 2626, TAK = 2627, 
-        TAM = 2628, TAO = 2629, TAS = 2630, TAY = 2631, TBS = 2632, TBU = 2633, TCA = 2634, TCB = 2635, TCI = 2646, TCL = 2636, 
-        TCU = 2637, TED = 2638, TEM = 2639, TEQ = 2640, TER = 2641, TEU = 2642, TEX = 2643, TF0 = 2644, TFN = 2645, TFS = 2646, 
-        TGD = 2647, TGU = 2648, TGV = 2649, TGZ = 2650, THE = 2651, THF = 1150, THR = 2652, TIA = 2653, TIF = 2654, TIJ = 2655, 
-        TIP = 2656, TIS = 2657, TIV = 2658, TK0 = 2659, TKA = 2660, TKS = 2661, TKU = 2662, TLH = 2663, TLL = 2664, TLS = 2665, 
-        TLV = 2666, TMP = 2667, TMS = 2668, TMW = 2669, TMZ = 2670, TNA = 2671, TNG = 2672, TNR = 2673, TOD = 2674, TOL = 2675, 
-        TOS = 2676, TOU = 2677, TOV = 2678, TOY = 2679, TPA = 2680, TPE = 2631, TPR = 2681, TPS = 2682, TRD = 2683, TRF = 2273, 
-        TRI = 2684, TRN = 2685, TRO = 2686, TRS = 2687, TRV = 2688, TRW = 2689, TRZ = 2690, TSA = 2631, TSB = 2691, TSE = 2692, 
-        TSF = 2693, TSN = 2694, TSV = 2695, TTN = 2696, TUC = 2697, TUK = 2698, TUL = 2699, TUN = 2700, TUP = 2701, TUS = 2702, 
-        TUU = 2703, TVC = 2704, TVF = 2705, TVL = 2706, TWB = 2707, TWF = 2708, TWU = 2709, TXK = 2710, TXL = 1150, TYN = 2711, 
-        TYO = 2712, TYR = 2713, TYS = 2714, TZX = 2715, UAH = 2716, UAK = 2717, UAP = 2718, UBA = 2719, UBJ = 2720, UBP = 2721, 
-        UCA = 2722, UCT = 2723, UDE = 2724, UDI = 2725, UDJ = 2726, UDR = 2727, UEE = 2728, UET = 2729, UFA = 2730, UGC = 2731, 
-        UGO = 2732, UHE = 2733, UII = 2734, UIN = 2735, UIO = 2736, UIP = 2737, UIT = 2738, UKB = 2739, UKI = 2740, UKY = 2741, 
-        ULB = 2742, ULD = 2743, ULN = 2744, ULU = 2745, UMD = 2746, UME = 2747, UMR = 2748, UNI = 2749, UNK = 2750, UNT = 2751, 
-        UPG = 2752, UPL = 2753, UPN = 2754, UPP = 2755, URB = 2756, URC = 2757, URG = 2758, URM = 2759, URZ = 2760, USH = 2761, 
-        USN = 2762, UTC = 2763, UTH = 2764, UTN = 2765, UTP = 2766, UTT = 2767, UUD = 2768, UVE = 2769, UVF = 2770, UVL = 2771, 
-        VA0 = 2772, VAA = 2773, VAN = 2774, VAP = 2775, VAR = 2776, VAS = 2777, VBS = 2778, VBY = 2779, VCE = 2780, VCP = 2473, 
-        VDA = 1483, VDE = 2781, VDZ = 2782, VEL = 2783, VER = 2784, VFA = 2785, VGO = 2786, VID = 2787, VIE = 2788, VIJ = 2789, 
-        VIS = 2790, VIT = 2791, VIX = 2792, VKO = 2127, VLC = 2793, VLD = 2794, VLI = 2795, VLL = 2796, VLN = 2797, VLU = 2798, 
-        VN0 = 2799, VNO = 2800, VNS = 2801, VOG = 2802, VPS = 2803, VRA = 2804, VRB = 2805, VRK = 2806, VRN = 2807, VSA = 2808, 
-        VST = 2809, VTE = 2810, VVO = 2811, VXO = 2812, VYD = 2813, VZ0 = 2814, WAS = 1392, WAW = 2815, WDH = 2816, WEI = 2817, 
-        WEL = 2818, WGA = 2819, WHK = 2820, WHM = 2821, WIC = 2822, WIE = 2823, WLB = 2824, WLG = 2825, WLS = 2826, WMB = 2827, 
-        WNS = 2828, WOL = 2829, WP0 = 2830, WRE = 2831, WRG = 2832, WRL = 2833, WRO = 2834, WUH = 2835, WUN = 2836, WUX = 2837, 
-        WVB = 2838, WYA = 2839, WYN = 2840, WYS = 2841, XCH = 2842, XIY = 2843, XLB = 2844, XMH = 2845, XMN = 2846, XPK = 2847, 
-        XRY = 2848, XSI = 2849, XSP = 2528, XXX = 2850, YAK = 2851, YAO = 2852, YAT = 2853, YBE = 2854, YCB = 2855, YDF = 2856, 
-        YEA = 2906, YEG = 2906, YEV = 2857, YFA = 2858, YFB = 2859, YFC = 2860, YFO = 2861, YGL = 2862, YGW = 2863, YGX = 2864, 
-        YHM = 2865, YHR = 2866, YHZ = 2867, YIF = 2868, YIH = 2869, YKA = 2870, YKM = 2871, YKS = 2872, YLR = 2873, YLW = 2874, 
-        YMM = 2875, YMQ = 2876, YMX = 2876, YNB = 2877, YOK = 2878, YOP = 2879, YOW = 2880, YPN = 2881, YPR = 2882, YQB = 2883, 
-        YQD = 2884, YQG = 2885, YQM = 2886, YQR = 2887, YQT = 2888, YQX = 2889, YRB = 2890, YSJ = 2891, YSM = 2892, YSR = 2893, 
-        YTH = 2894, YTO = 2895, YTZ = 2895, YUD = 2896, YUL = 2876, YUM = 2897, YUX = 2898, YVB = 2899, YVO = 2900, YVP = 2901, 
-        YVQ = 2902, YVR = 2903, YWG = 2904, YWK = 2905, YXD = 2906, YXE = 2907, YXJ = 2908, YXN = 2909, YXS = 2910, YXT = 2911, 
-        YXU = 2912, YXY = 2913, YYC = 2914, YYD = 2915, YYJ = 2916, YYQ = 2917, YYR = 2918, YYT = 2919, YYZ = 2920, YZF = 2921, 
-        YZP = 2922, ZAD = 2923, ZAG = 2924, ZAZ = 2925, ZBO = 2926, ZCL = 2927, ZDJ = 1233, ZIH = 2928, ZJK = 1653, ZKE = 2929, 
+        SRQ = 2581, SRZ = 2582, SSA = 2583, SSG = 2584, SSH = 2585, SSL = 2586, ST0 = 2587, STI = 2588, STL = 2589, STN = 1983, 
+        STO = 2590, STP = 2591, STR = 2592, STS = 2593, STT = 2594, STV = 2595, STX = 2596, SUB = 2597, SUF = 2598, SUL = 2599, 
+        SUM = 2600, SUN = 2601, SUV = 2602, SUX = 2603, SVD = 2604, SVG = 2605, SVL = 2606, SVO = 2127, SVQ = 2607, SVX = 2608, 
+        SW0 = 2609, SWF = 2610, SWP = 2611, SWS = 2612, SXB = 2613, SXF = 1150, SXL = 2614, SXM = 2615, SXR = 2616, SYD = 2617, 
+        SYR = 2618, SYY = 2619, SZB = 1911, SZD = 2620, SZF = 2621, SZG = 2622, SZK = 2623, SZX = 2624, SZZ = 2625, TAB = 2626, 
+        TAK = 2627, TAM = 2628, TAO = 2629, TAS = 2630, TAY = 2631, TBS = 2632, TBU = 2633, TCA = 2634, TCB = 2635, TCI = 2646, 
+        TCL = 2636, TCU = 2637, TED = 2638, TEM = 2639, TEQ = 2640, TER = 2641, TEU = 2642, TEX = 2643, TF0 = 2644, TFN = 2646, 
+        TFS = 2646, TGD = 2647, TGU = 2648, TGV = 2649, TGZ = 2650, THE = 2651, THF = 1150, THR = 2652, TIA = 2653, TIF = 2654, 
+        TIJ = 2655, TIP = 2656, TIS = 2657, TIV = 2658, TK0 = 2659, TKA = 2660, TKS = 2661, TKU = 2662, TLH = 2663, TLL = 2664, 
+        TLS = 2665, TLV = 2666, TMP = 2667, TMS = 2668, TMW = 2669, TMZ = 2670, TNA = 2671, TNG = 2672, TNR = 2673, TOD = 2674, 
+        TOL = 2675, TOS = 2676, TOU = 2677, TOV = 2678, TOY = 2679, TPA = 2680, TPE = 2631, TPR = 2681, TPS = 2682, TRD = 2683, 
+        TRF = 2273, TRI = 2684, TRN = 2685, TRO = 2686, TRS = 2687, TRV = 2688, TRW = 2689, TRZ = 2690, TSA = 2631, TSB = 2691, 
+        TSE = 2692, TSF = 2693, TSN = 2694, TSV = 2695, TTN = 2696, TUC = 2697, TUK = 2698, TUL = 2699, TUN = 2700, TUP = 2701, 
+        TUS = 2702, TUU = 2703, TVC = 2704, TVF = 2705, TVL = 2706, TWB = 2707, TWF = 2708, TWU = 2709, TXK = 2710, TXL = 1150, 
+        TYN = 2711, TYO = 2712, TYR = 2713, TYS = 2714, TZX = 2715, UAH = 2716, UAK = 2717, UAP = 2718, UBA = 2719, UBJ = 2720, 
+        UBP = 2721, UCA = 2722, UCT = 2723, UDE = 2724, UDI = 2725, UDJ = 2726, UDR = 2727, UEE = 2728, UET = 2729, UFA = 2730, 
+        UGC = 2731, UGO = 2732, UHE = 2733, UII = 2734, UIN = 2735, UIO = 2736, UIP = 2737, UIT = 2738, UKB = 2739, UKI = 2740, 
+        UKY = 2741, ULB = 2742, ULD = 2743, ULN = 2744, ULU = 2745, UMD = 2746, UME = 2747, UMR = 2748, UNI = 2749, UNK = 2750, 
+        UNT = 2751, UPG = 2752, UPL = 2753, UPN = 2754, UPP = 2755, URB = 2756, URC = 2757, URG = 2758, URM = 2759, URZ = 2760, 
+        USH = 2761, USN = 2762, UTC = 2763, UTH = 2764, UTN = 2765, UTP = 2766, UTT = 2767, UUD = 2768, UVE = 2769, UVF = 2770, 
+        UVL = 2771, VA0 = 2772, VAA = 2773, VAN = 2774, VAP = 2775, VAR = 2776, VAS = 2777, VBS = 2778, VBY = 2779, VCE = 2780, 
+        VCP = 2473, VDA = 1483, VDE = 2781, VDZ = 2782, VEL = 2783, VER = 2784, VFA = 2785, VGO = 2786, VID = 2787, VIE = 2788, 
+        VIJ = 2789, VIS = 2790, VIT = 2791, VIX = 2792, VKO = 2127, VLC = 2793, VLD = 2794, VLI = 2795, VLL = 2796, VLN = 2797, 
+        VLU = 2798, VN0 = 2799, VNO = 2800, VNS = 2801, VOG = 2802, VPS = 2803, VRA = 2804, VRB = 2805, VRK = 2806, VRN = 2807, 
+        VSA = 2808, VST = 2809, VTE = 2810, VVO = 2811, VXO = 2812, VYD = 2813, VZ0 = 2814, WAS = 1392, WAW = 2815, WDH = 2816, 
+        WEI = 2817, WEL = 2818, WGA = 2819, WHK = 2820, WHM = 2821, WIC = 2822, WIE = 2823, WLB = 2824, WLG = 2825, WLS = 2826, 
+        WMB = 2827, WNS = 2828, WOL = 2829, WP0 = 2830, WRE = 2831, WRG = 2832, WRL = 2833, WRO = 2834, WUH = 2835, WUN = 2836, 
+        WUX = 2837, WVB = 2838, WYA = 2839, WYN = 2840, WYS = 2841, XCH = 2842, XIY = 2843, XLB = 2844, XMH = 2845, XMN = 2846, 
+        XPK = 2847, XRY = 2848, XSI = 2849, XSP = 2528, XXX = 2850, YAK = 2851, YAO = 2852, YAT = 2853, YBE = 2854, YCB = 2855, 
+        YDF = 2856, YEA = 2906, YEG = 2906, YEV = 2857, YFA = 2858, YFB = 2859, YFC = 2860, YFO = 2861, YGL = 2862, YGW = 2863, 
+        YGX = 2864, YHM = 2865, YHR = 2866, YHZ = 2867, YIF = 2868, YIH = 2869, YKA = 2870, YKM = 2871, YKS = 2872, YLR = 2873, 
+        YLW = 2874, YMM = 2875, YMQ = 2876, YMX = 2876, YNB = 2877, YOK = 2878, YOP = 2879, YOW = 2880, YPN = 2881, YPR = 2882, 
+        YQB = 2883, YQD = 2884, YQG = 2885, YQM = 2886, YQR = 2887, YQT = 2888, YQX = 2889, YRB = 2890, YSJ = 2891, YSM = 2892, 
+        YSR = 2893, YTH = 2894, YTO = 2895, YTZ = 2895, YUD = 2896, YUL = 2876, YUM = 2897, YUX = 2898, YVB = 2899, YVO = 2900, 
+        YVP = 2901, YVQ = 2902, YVR = 2903, YWG = 2904, YWK = 2905, YXD = 2906, YXE = 2907, YXJ = 2908, YXN = 2909, YXS = 2910, 
+        YXT = 2911, YXU = 2912, YXY = 2913, YYC = 2914, YYD = 2915, YYJ = 2916, YYQ = 2917, YYR = 2918, YYT = 2919, YYZ = 2920, 
+        YZF = 2921, YZP = 2922, ZAD = 2923, ZAG = 2924, ZAZ = 2925, ZBO = 2926, ZCL = 2927, ZIH = 2928, ZJK = 1653, ZKE = 2929, 
         ZLO = 2930, ZND = 2931, ZNE = 2932, ZQN = 2933, ZRH = 2934, ZSA = 2935, ZSS = 2936, ZTH = 2937, ZTM = 2938, ZYL = 2939, 
+
         MAXCITY = 2940, NUMCITY = 2051 
-    };
+        };
 
     
 	City( void ): m_city(NOCITY) {}
-	~City( void )  { m_city = NOCITY; }
+	~City( void ) { m_city = NOCITY; }
 	
 	// non-explicit constructors intentional here
 	City( CityCode i ): m_city(i) {} // i.e. i = City::LON
 	City( const std::string& s ): m_city(NOCITY) { setCity(s); }
 	City( const char *s ): m_city(NOCITY) { if (s) setCity(s); } 
     
-	// My numeric code for this city i.e. City::LON = 263
+	// My numeric code for this city i.e. City::LON = 1983
 	operator short( void ) const { return m_city; }
 	
 	// The IATA 3 letter code for this city i.e. "LON"
     std::string
     toString( void ) const { return m_cityNames[m_fromISO[m_city]]; }
 	
-	std::string
-	name( void ) const; // i.e "London" 
-	
+	std::string 
+	name( void ) const { return m_fullCityNames[m_fromISO[m_city]]; } // i.e "London" 
+    
 	bool
 	setCity( const std::string& s ); // i.e. s = "LON"
 	
@@ -353,14 +354,16 @@ public:
 	setCity( const CityCode s ) { m_city = s; } // i.e. s = City::LON
     
     bool
-    capital( void ) const;
+    capital( void ) const { return m_capital[m_fromISO[m_city]]; }
     
-    float
-    lat( void ) const;   // latitude  
-    
-	float
-	lon( void ) const;   // longitude
+    // longitude
+    float 
+    lon( void ) const { return m_position[m_fromISO[m_city]][1]; }
 
+    // latitude
+    float 
+    lat( void ) const { return m_position[m_fromISO[m_city]][0]; }
+    
     // distance (in metres) calculated using Vincenty inverse solution
     static float
     dist( const City c1, const City c2 ) { return City::dist(c1.lat(), c1.lon(), c2.lat(), c2.lon()); };
@@ -369,7 +372,7 @@ public:
     dist( float lat1, float lon1, float lat2, float lon2 );
     
 	static City
-	index( const int i )  { return CityCode(m_toISO[i]); }
+	index( const int i ) { return CityCode(m_toISO[i]); }
     
     static int
 	index( const City c ) { return CityCode(m_fromISO[c]); }
