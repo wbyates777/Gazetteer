@@ -49,7 +49,9 @@ bool
 MarketId::setMarketId( const std::string& str )
 // https://en.wikipedia.org/wiki/Binary_search_algorithm
 {	
-    if ((str.size() != 4) && (str.size() != 5 || str[0] != 'A'))
+    int len = (int) str.size();
+    
+    if (!(len == 4) && !(len == 5 && str[0] == 'A'))
 	{
         m_mic = MarketId::XXXX; // NOMARKET
 		return false;
@@ -57,7 +59,7 @@ MarketId::setMarketId( const std::string& str )
   
     int index = str[0] - 'A'; // 'A' = 65;
     
-    //assert(index > -1 && index < 26);
+    // assert(index > -1 && index < 26);
     if (index < 0 || index > 25)
     {
         m_mic = MarketId::XXXX;
@@ -73,7 +75,7 @@ MarketId::setMarketId( const std::string& str )
         int mid = low + ((high - low) >> 1);
         const char * const mic = m_micNames[mid];
         
-        for (i = 1; i < 4; ++i)
+        for (i = 1; i < len; ++i)
         {
             const char &a = str[i];
             const char &b = mic[i];
@@ -91,7 +93,7 @@ MarketId::setMarketId( const std::string& str )
             }
         }
         
-        if (i > 3)
+        if (i == len)
         {
             m_mic = m_toISO[mid]; 
 			return true;
