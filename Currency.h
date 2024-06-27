@@ -151,21 +151,21 @@ public:
 	index( const int i ) { return CurrencyCode(m_toISO[i]); }	
 
     static int
-	index( const Currency c ) { return CurrencyCode(m_fromISO[c]); }
+    index( const Currency c ) { return m_fromISO[c]; }
     
     bool                
-	valid( void ) const { return m_ccy != NOCURRENCY; }
+    valid( void ) const { return m_ccy != NOCURRENCY; }
 	
 private:
 	
     // we use short here rather than enum deliberately as it simplifies streaming and Gazetteer
-	short m_ccy; 
+    short m_ccy; 
     
-	static Currency m_baseCurrency;
-	static const char * const m_ccyNames[NUMCURRENCY];
-	static const char * const m_denomNames[NUMCURRENCY];
-	static const short        m_toISO[NUMCURRENCY]; 
-	static const short        m_fromISO[MAXCURRENCY]; 
+    static Currency m_baseCurrency;
+    static const char * const m_ccyNames[NUMCURRENCY];
+    static const char * const m_denomNames[NUMCURRENCY];
+    static const short        m_toISO[NUMCURRENCY]; 
+    static const short        m_fromISO[MAXCURRENCY]; 
     static const short        m_searchPoints[27]; 
     static const short        m_midPoints[26]; 
 };
