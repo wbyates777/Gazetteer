@@ -356,46 +356,47 @@ public:
     MAXMARKETID = 2884, NUMMARKETID = 2884 
     };
     
-	MarketId( void ): m_mic(NOMARKETID) {}
-	~MarketId( void ) { m_mic = NOMARKETID; }
+    MarketId( void ): m_mic(NOMARKETID) {}
+    ~MarketId( void ) { m_mic = NOMARKETID; }
 	
-	// non-explicit constructors intentional here
-	MarketId( MarketIdCode i ): m_mic(i) {} // i.e. i = MarketId::XLON
-	MarketId( const std::string& s ): m_mic(NOMARKETID) { setMarketId(s); }
-	MarketId( const char *s ): m_mic(NOMARKETID) { if (s) setMarketId(s); } 
+    // non-explicit constructors intentional here
+    MarketId( MarketIdCode i ): m_mic(i) {} // i.e. i = MarketId::XLON
+    MarketId( const std::string& s ): m_mic(NOMARKETID) { setMarketId(s); }
+    MarketId( const char *s ): m_mic(NOMARKETID) { if (s) setMarketId(s); } 
     
-	// my numeric code for this market i.e. MarketId::XLON = 2550
-	operator short( void ) const { return m_mic; }
-	
-	// The 4 letter MIC code for this market i.e. "XLON"
+    // my numeric code for this market i.e. MarketId::XLON = 2550
+    operator short( void ) const { return m_mic; }
+		
+    // The 4 letter MIC code for this market i.e. "XLON"
     std::string
     toString( void ) const { return m_micNames[m_fromISO[m_mic]]; } 
 	
-	std::string
-	name( void ) const { return m_fullMicNames[m_fromISO[m_mic]]; } // i.e "London Stock Exchange" 
+    std::string
+    name( void ) const { return m_fullMicNames[m_fromISO[m_mic]]; } // i.e "London Stock Exchange" 
 	
-	bool
-	setMarketId( const std::string& s ); // i.e. s = "XLON" 
+    bool
+    setMarketId( const std::string& s ); // i.e. s = "XLON" 
 	
     void
-	setMarketId( const MarketIdCode s ) { m_mic = s; } // i.e. s = MarketId::XLON
+    setMarketId( const MarketIdCode s ) { m_mic = s; } // i.e. s = MarketId::XLON
 
-	static MarketId
-	index(const int i) { return MarketIdCode(m_toISO[i]); }
+    static MarketId
+    index(const int i) { return MarketIdCode(m_toISO[i]); }
 
     static int
-	index(const MarketId c) { return MarketIdCode(m_fromISO[c]); }
+    index(const MarketId c) { return m_fromISO[c]; }
     
-	bool                
-	valid( void ) const { return m_mic != NOMARKETID; }
+	
+    bool                
+    valid( void ) const { return m_mic != NOMARKETID; }
 	
 private:
 	
-	short m_mic; // we use short here as it simplifies streaming
+    short m_mic; // we use short here as it simplifies streaming
 	
-	static const char * const m_micNames[NUMMARKETID];
-	static const char * const m_fullMicNames[NUMMARKETID];
-	static const short        m_toISO[NUMMARKETID];
+    static const char * const m_micNames[NUMMARKETID];
+    static const char * const m_fullMicNames[NUMMARKETID];
+    static const short        m_toISO[NUMMARKETID];
     static const short        m_fromISO[MAXMARKETID]; 
     static const short        m_searchPoints[27];    
 };
