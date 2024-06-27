@@ -130,23 +130,23 @@ public:
 	void
 	setCountry( const CountryCode s ) { m_country = s; } // i.e. s = Country::GBR
 
-	static Country
-	index(const int i)  { return CountryCode(m_toISO[i]); }
+    static Country
+    index(const int i)  { return CountryCode(m_toISO[i]); }
 
     static int
-	index(const Country c) { return CountryCode(m_fromISO[c]); }
+    index(const Country c) { return m_fromISO[c]; }
     
     bool                
-	valid( void ) const { return m_country != NOCOUNTRY; }
+    valid( void ) const { return m_country != NOCOUNTRY; }
 	
 private:
 	
-	short m_country; // we use short here as it simplifies streaming
+    short m_country; // we use short here as it simplifies streaming
 
-	static const char * const m_countryNames[NUMCOUNTRY];
-	static const char * const m_fullCountryNames[NUMCOUNTRY];
-	static const short        m_toISO[NUMCOUNTRY];
-	static const short        m_fromISO[MAXCOUNTRY];    
+    static const char * const m_countryNames[NUMCOUNTRY];
+    static const char * const m_fullCountryNames[NUMCOUNTRY];
+    static const short        m_toISO[NUMCOUNTRY];
+    static const short        m_fromISO[MAXCOUNTRY];    
     static const short        m_searchPoints[27];    
 };
 
