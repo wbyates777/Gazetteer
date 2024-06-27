@@ -371,25 +371,25 @@ public:
     static float
     dist( float lat1, float lon1, float lat2, float lon2 );
     
-	static City
-	index( const int i ) { return CityCode(m_toISO[i]); }
+    static City
+    index( const int i ) { return CityCode(m_toISO[i]); }
     
     static int
-	index( const City c ) { return CityCode(m_fromISO[c]); }
+    index( const City c ) { return m_fromISO[c]; }
     
     bool                
-	valid( void ) const { return m_city != NOCITY; }
+    valid( void ) const { return m_city != NOCITY; }
 	
 private:
 	
-	short m_city; // we use short here as it simplifies streaming 
+    short m_city; // we use short here as it simplifies streaming 
 	
-	static const char * const  m_cityNames[NUMCITY];
-	static const char * const  m_fullCityNames[NUMCITY];
-	static const short         m_toISO[NUMCITY];
+    static const char * const  m_cityNames[NUMCITY];
+    static const char * const  m_fullCityNames[NUMCITY];
+    static const short         m_toISO[NUMCITY];
     static const short         m_fromISO[MAXCITY]; 
-	static const unsigned char m_capital[NUMCITY];
-	static const float         m_position[NUMCITY][2];    
+    static const unsigned char m_capital[NUMCITY];
+    static const float         m_position[NUMCITY][2];    
     static const short         m_searchPoints[27];    
 };
 
