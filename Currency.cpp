@@ -87,42 +87,41 @@ Currency::setCurrency( const std::string& str )
         return false;
     }
     
-	int low   = m_searchPoints[index]; 
-	int high  = m_searchPoints[index + 1]; 
+    int low   = m_searchPoints[index]; 
+    int high  = m_searchPoints[index + 1]; 
     int mid   = m_midPoints[index];
+    int i;
     
-	while (low < high)  
-	{
+    while (low < high)  
+    {
         const char * const ccy = m_ccyNames[mid];
-
-        int i = 1;
         
-        for (; i < 3; ++i)
+        for (i = 1; i < 3; ++i)
         {
-            const char &a = str[i];
-            const char &b = ccy[i];
+             const char &a = str[i];	
+             const char &b = ccy[i];
  
-            if (a < b)
-            {
-                high = mid; 
-                break;
-            }
+             if (a < b)
+             {
+                 high = mid; 
+                 break;
+             }
             
-            if (a > b)
-            {
-                low = mid + 1;
-                break;
-            }
+             if (a > b)
+             {
+                 low = mid + 1;
+                 break;
+             }
         }
         
-        if (i > 2)
+        if (i == 3)
         {
             m_ccy = m_toISO[mid]; 
-			return true;
+            return true;
         }
         
         mid = low + ((high - low) >> 1);
-	} 
+    } 
 
     m_ccy = Currency::XXX; // NOCURRENCY
     return false;
