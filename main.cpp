@@ -18,7 +18,9 @@
 #include "Gazetteer.h"
 #endif
 
-
+#ifndef __NAME_H__
+#include "Name.h"
+#endif
 
 template <typename T>
 std::ostream&
@@ -127,6 +129,7 @@ main(int argc, const char * argv[])
  
     std::string test_str = "M. R. Štəfánik and Č. Ibậñềz amd D. Wąlts and W. Bṙøñel";
 
+    std::cout << test_str << std::endl;
     std::cout << Name::toASCII(test_str) << std::endl;
-    std::cout <<  Name::split(Name::toASCII(test_str), std::regex("( a.d )")) << std::endl;
+    std::cout << Name::split(Name::toASCII(test_str), std::regex("( a.d )")) << std::endl;
 }
