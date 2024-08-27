@@ -26,17 +26,17 @@
 std::ostream&
 operator<<( std::ostream& ostr, const Country& c )
 {
-	ostr << c.toString();
-	return ostr;
+    ostr << c.toString();
+    return ostr;
 }
 
 std::istream&
 operator>>( std::istream& istr, Country& c )
 {
-	std::string str;
-	istr >> str;
-	c.setCountry( str );
-	return istr;
+    std::string str;
+    istr >> str;
+    c.setCountry( str );
+    return istr;
 }
 
 ///
@@ -44,8 +44,7 @@ operator>>( std::istream& istr, Country& c )
 std::string
 Country::name( void ) const 
 {
-	return m_fullCountryNames[m_fromISO[m_country]];
-	
+    return m_fullCountryNames[m_fromISO[m_country]];	
 }
 
 
@@ -65,10 +64,10 @@ Country::setCountry( const std::string& str )
 {	
     //assert(str.size() == 3);
     if (str.size() != 3)
-	{
+    {
         m_country = Country::XXX; // NOCOUNTRY
-		return false;
-	}
+	return false;
+    }
     
     int index = str[0] - 'A'; // 'A' = 65;
     
@@ -79,17 +78,16 @@ Country::setCountry( const std::string& str )
         return false;
     }
     
-	int low   = m_searchPoints[index]; 
-	int high  = m_searchPoints[index + 1]; 
+    int low   = m_searchPoints[index]; 
+    int high  = m_searchPoints[index + 1]; 
+    int i;
 
-	while (low < high) 
-	{
+    while (low < high) 
+    {
         int mid = low + ((high - low) >> 1);
         const char * const cty = m_countryNames[mid];
         
-        int i = 1;
-        
-        for (; i < 3; ++i)
+        for (i = 1; i < 3; ++i)
         {
             const char &a = str[i];
             const char &b = cty[i];
@@ -107,15 +105,15 @@ Country::setCountry( const std::string& str )
             }
         }
         
-        if (i > 2)
+        if (i == 3)
         {
             m_country = m_toISO[mid]; 
-			return true;
+	    return true;
         }
-	}
+    }
 
     m_country = Country::XXX; // NOCOUNTRY
-	return false;
+    return false;
 }
 
 
