@@ -49,10 +49,10 @@ City::setCity( const std::string& str )
 // https://en.wikipedia.org/wiki/Binary_search_algorithm
 {	
     if (str.size() != 3)
-	{
+    {
         m_city = City::XXX; // NOCITY
-		return false;
-	}
+	return false;
+    }
     
     int index = str[0] - 'A'; // 'A' = 65;
     
@@ -63,12 +63,12 @@ City::setCity( const std::string& str )
         return false;
     }
     
-	int low   = m_searchPoints[index]; 
-	int high  = m_searchPoints[index + 1]; 
+    int low   = m_searchPoints[index]; 
+    int high  = m_searchPoints[index + 1]; 
     int i;
     
-	while (low < high) 
-	{
+    while (low < high) 
+    {
         int mid = low + ((high - low) >> 1);
         const char * const cty = m_cityNames[mid];
         
@@ -90,15 +90,15 @@ City::setCity( const std::string& str )
             }
         }
         
-        if (i > 2)
+        if (i == 3)
         {
             m_city = m_toISO[mid]; 
             return true;
         }
-	}
+    }
     
     m_city = City::XXX; // NOCITY
-	return false;
+    return false;
 }
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
