@@ -16,7 +16,7 @@
 #include "Currency.h"
 #endif
 
-#include <assert.h>
+#include <cassert>
 
 std::ostream&
 operator<<( std::ostream& ostr, const Currency& c )
