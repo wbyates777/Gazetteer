@@ -18,10 +18,7 @@
 #include "Gazetteer.h"
 #endif
 
-#define XERCES_NEW_IOSTREAMS
 
-int 
-parseXML( const std::string& fileName, const std::string& outName );
 
 template <typename T>
 std::ostream&
@@ -44,11 +41,7 @@ int
 main(int argc, const char * argv[]) 
 {
     std::cout << "Gazetteer\n" << std::endl;
-
-    //std::string fileName = "/Users/bill/Projects/src/Gazetteer/Scripts/market/market.xml";
-    //std::string outName = "/Users/bill/Projects/src/Gazetteer/Scripts/market/market.sql";
-    //parseXML(fileName, outName);
-    
+  
     Gazetteer g;
     
     std::cout << "The countries of  SubRegion::SouthAmerica" << std::endl;
@@ -126,5 +119,14 @@ main(int argc, const char * argv[])
     std::cout << ccy.toString() << std::endl;
     std::cout << short(ccy) << std::endl;
 
-     
+    // 
+    //
+    //
+ 
+    Name xxx; // must define at least one for setup()
+ 
+    std::string test_str = "M. R. Štəfánik and Č. Ibậñềz amd D. Wąlts and W. Bṙøñel";
+
+    std::cout << Name::toASCII(test_str) << std::endl;
+    std::cout <<  Name::split(Name::toASCII(test_str), std::regex("( a.d )")) << std::endl;
 }
