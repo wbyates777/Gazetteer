@@ -52,3 +52,6 @@ produces the output:
     subregion : Northern America
 
     The distance between London and New York is 5579.86 km
+
+
+Please report any errors, omissions, or suggested extensions to the email above.
