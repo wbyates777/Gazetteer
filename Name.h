@@ -147,7 +147,7 @@ public:
     clip( const std::string &str, const std::string &lsym, const std::string &rsym ) { return rclip(lclip(str, lsym), rsym); }
   
     static std::string 
-    clip( const std::string &str, std::regex &lexp, const std::regex &rexp ) { return rclip(lclip(str, lexp), rexp); }
+    clip( const std::string &str, const std::regex &lexp, const std::regex &rexp ) { return rclip(lclip(str, lexp), rexp); }
     
     
     static std::string 
