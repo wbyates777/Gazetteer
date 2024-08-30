@@ -127,9 +127,27 @@ main(int argc, const char * argv[])
  
     Name xxx; // must define at least one for setup()
  
-    std::string test_str = "M. R. Štəfánik and Č. Ibậñềz amd D. Wąlts and W. Bṙøñel";
-
-    std::cout << test_str << std::endl;
-    std::cout << Name::toASCII(test_str) << std::endl;
-    std::cout << Name::split(Name::toASCII(test_str), std::regex("( a.d )")) << std::endl;
+    std::string test1 = "M. R. Štəfánik and Č. Ibậñềz amd D. Wąlts and W. Bṙøñel";
+    
+    std::cout << std::endl;
+    std::cout << test1 << std::endl;
+    std::cout << Name::deaccent(test1) << std::endl;
+    std::cout << std::endl;
+    
+    std::vector<std::string> results =  Name::split(Name::deaccent(test1), std::regex("( a.d )"));
+    for (auto &str : results)
+        std::cout << str << std::endl;
+    std::cout << std::endl;
+ 
+    std::string test2 = " \"Côte d'Ivoire\"  ";
+    std::string test3 = " \'Côte d'Ivoire\'  ";
+    std::string test4 = " 'Côte d'Ivoire'  ";
+    std::string test5 = " $$Côte d'Ivoire$$  ";
+    
+    std::cout << "[" << test2 << "] --> [" <<  Name::deaccent(Name::clip(test2 ,"\""))      << "]" << std::endl;
+    std::cout << "[" << test3 << "] --> [" <<  Name::clip(test3, "'")       << "]" << std::endl;
+    std::cout << "[" << test4 << "] --> [" <<  Name::clip(test4, "\'")      << "]" << std::endl;
+    std::cout << "[" << test5 << "] --> [" <<  Name::clip(test5, "$$")  << "]" << std::endl;
+    
+    std::cout <<  Name::capitalise("I would like a cup of tea") << std::endl;
 }
