@@ -95,7 +95,7 @@ public:
 	countries( const Currency& c ) const;
     
     std::vector<Country>
-    countries( const std::string& pattern ) const;
+    countries( const std::string& regex_pattern ) const;
 
     
     //

@@ -375,295 +375,299 @@ Gazetteer::subRegion( const MarketId& mic ) const
 // MarketId to City
 const short Gazetteer::m_mic2cty[MarketId::NUMMARKETID] = { 
     City::NOCITY,
-    City::YHM, City::JNB, City::LON, City::FRA, City::FRA, City::JNB, City::PAR, City::ATH, City::EWR, City::MAD, 
-    City::ATH, City::AMS, City::AMS, City::CPH, City::SOF, City::AUA, City::AUH, City::LON, City::BOM, City::NYC, 
-    City::AUH, City::AUH, City::YTO, City::NYC, City::LON, City::BKK, City::EB0, City::KBL, City::AMS, City::AMS, 
-    City::AMS, City::AMS, City::AMS, City::AMS, City::LON, City::MAD, City::LAD, City::AXA, City::DUB, City::LON, 
-    City::BRN, City::TSE, City::MIL, City::MHQ, City::TIA, City::NYC, City::LON, City::MAD, City::CPH, City::JNB, 
-    City::AMS, City::BRU, City::LIS, City::PAR, City::LAX, City::AMM, City::LON, City::LON, City::NYC, City::ALV, 
-    City::LON, City::LON, City::LON, City::VIE, City::SIN, City::SIN, City::SYD, City::PAR, City::PAR, City::PAR, 
-    City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::NYC, City::LON, City::LON, 
-    City::LON, City::LON, City::NYC, City::LON, City::NYC, City::NYC, City::LON, City::AUH, City::DUB, City::AEP, 
-    City::LON, City::NYC, City::EVN, City::LI0, City::HOU, City::ATH, City::PPG, City::ST0, City::ST0, City::ST0, 
-    City::BOM, City::SYD, City::SYD, City::SYD, City::SYD, City::SYD, City::PRG, City::NYC, City::TF0, City::MIL, 
-    City::ANU, City::NIC, City::LON, City::NIC, City::YTO, City::PAR, City::PAR, City::CBR, City::VIE, City::LON, 
-    City::FRA, City::LON, City::LON, City::MEL, City::SYD, City::HEL, City::GYD, City::MUC, City::BUE, City::HKG, 
-    City::HKG, City::LON, City::HKG, City::TYO, City::BGI, City::LON, City::NYC, City::NYC, City::NYC, City::LON, 
-    City::LON, City::AMS, City::VNO, City::NYC, City::LON, City::NYC, City::LON, City::LON, City::AMS, City::NYC, 
-    City::HKG, City::LON, City::HKG, City::TYO, City::LON, City::LON, City::LON, City::CHI, City::LON, City::CHI, 
-    City::CHI, City::DUB, City::DUB, City::SIN, City::NYC, City::NYC, City::LON, City::LON, City::MAD, City::LON, 
-    City::NYC, City::LUX, City::SFN, City::PMI, City::MGF, City::LON, City::QLI, City::MSQ, City::LON, City::LON, 
-    City::LON, City::MUC, City::BJM, City::LUX, City::SOF, City::BRU, City::SOF, City::BKK, City::QPA, City::BRU, 
-    City::BRU, City::BRU, City::COO, City::BER, City::BER, City::BER, City::BON, City::BUD, City::TYO, City::LON, 
-    City::AMS, City::AMS, City::AMS, City::AMS, City::AMS, City::AMS, City::OUA, City::BAH, City::LIS, City::SYD, 
-    City::LON, City::NYC, City::NYC, City::LON, City::TYO, City::LON, City::LON, City::DAC, City::MIL, City::HAM, 
-    City::LON, City::HAM, City::SOF, City::LUX, City::SOF, City::SIN, City::HAM, City::LON, City::BAH, City::NAS, 
-    City::NYC, City::WAW, City::NYC, City::SJJ, City::XXX, City::LUX, City::FRA, City::LON, City::MEX, City::BJS, 
-    City::BRU, City::BRU, City::DUB, City::ATL, City::LON, City::LON, City::KLU, City::MUC, City::BNX, City::MUC, 
-    City::MUC, City::MEL, City::MUC, City::MUC, City::NYC, City::SBH, City::LON, City::LON, City::BRU, City::MSQ, 
-    City::NYC, City::LON, City::NYC, City::LUX, City::SYD, City::BCV, City::MAD, City::LON, City::MAD, City::MAD, 
-    City::SBZ, City::SBZ, City::SBZ, City::LON, City::DUB, City::DUB, City::DUB, City::DUB, City::LON, City::BRU, 
-    City::YHM, City::NYC, City::NYC, City::ROM, City::PAR, City::NYC, City::BRU, City::NYC, City::LON, City::WAW, 
-    City::PAR, City::TYO, City::YTO, City::LON, City::NYC, City::LON, City::LON, City::FRA, City::EDI, City::LPB, 
-    City::ROM, City::LON, City::NYC, City::WAW, City::LON, City::GBE, City::GBE, City::VAP, City::VIX, City::GOA, 
-    City::WAW, City::LON, City::NYC, City::PAR, City::BSB, City::BGI, City::BBU, City::BBU, City::BBU, City::TRN, 
-    City::PAR, City::LON, City::LON, City::SAO, City::BBU, City::BWN, City::LON, City::QSA, City::BAK, City::MUC, 
-    City::LON, City::BOM, City::LON, City::BOS, City::AMS, City::SIN, City::EWR, City::LON, City::NYC, City::AMS, 
-    City::LON, City::PBH, City::CHI, City::AMS, City::LON, City::CLJ, City::TUN, City::OSL, City::OSL, City::OSL, 
-    City::LON, City::CCS, City::SAO, City::LON, City::MVD, City::NYC, City::GBE, City::ZRH, City::CHI, City::CHI, 
-    City::CHI, City::BCN, City::AMS, City::NYC, City::BGF, City::NYC, City::YOW, City::YTO, City::YTO, City::AMS, 
-    City::MAD, City::WRO, City::STO, City::CHI, City::FRA, City::AMS, City::NYC, City::LON, City::AMS, City::LON, 
-    City::FRA, City::FRA, City::FRA, City::FRA, City::FRA, City::FRA, City::FRA, City::NYC, City::PTG, City::LON, 
-    City::ZRH, City::BTS, City::CHI, City::CHI, City::LON, City::TSE, City::CHI, City::SHA, City::CCK, City::LUX, 
-    City::LON, City::GVA, City::NYC, City::LON, City::AMS, City::AMS, City::NYC, City::NYC, City::FRA, City::BOM, 
-    City::MAD, City::NYC, City::AMS, City::PRG, City::DUB, City::LON, City::PRG, City::RIO, City::WAW, City::AMS, 
-    City::AMS, City::AMS, City::AMS, City::SYD, City::SHA, City::HKG, City::LON, City::LCA, City::DUB, City::NYC, 
-    City::TYO, City::TAY, City::ROM, City::ROM, City::ROM, City::FRA, City::FRA, City::FRA, City::ROM, City::ROM, 
-    City::SYD, City::LON, City::FRA, City::LON, City::LON, City::HKG, City::NYC, City::LON, City::LON, City::LON, 
-    City::MEX, City::ROM, City::ROM, City::ROM, City::ROM, City::NYC, City::BRN, City::LON, City::SYD, City::YTO, 
-    City::LON, City::SIN, City::TYO, City::LON, City::TYO, City::TYO, City::LON, City::LON, City::STI, City::BJS, 
-    City::LON, City::BUD, City::LON, City::NYC, City::TYO, City::MAD, City::MAD, City::MAD, City::MAD, City::MAD, 
-    City::NYC, City::NYC, City::TYO, City::TYO, City::ABJ, City::SYD, City::LON, City::HKG, City::TYO, City::UTC, 
-    City::MNL, City::NYC, City::SIN, City::LON, City::MAD, City::PAR, City::LON, City::LON, City::LON, City::LON, 
-    City::CHI, City::TYO, City::LON, City::YAO, City::CHO, City::LON, City::SIN, City::OSL, City::PAR, City::FIH, 
-    City::CHI, City::BZV, City::CHI, City::RAR, City::BOG, City::HAH, City::MLA, City::AMS, City::BUD, City::CHI, 
-    City::NYC, City::YTO, City::NYC, City::AMS, City::RAI, City::LON, City::NYC, City::BLQ, City::SJI, City::STO, 
-    City::LON, City::STO, City::ZRH, City::PRG, City::SYD, City::LON, City::LON, City::NYC, City::FRA, City::YTO, 
-    City::LON, City::LON, City::LON, City::DUB, City::HKG, City::LON, City::TYO, City::LON, City::NYC, City::MAD, 
-    City::PRG, City::ZRH, City::LON, City::WUX, City::STO, City::NYC, City::ZRH, City::CHI, City::HAV, City::NYC, 
-    City::CUR, City::SYD, City::SYD, City::SYD, City::SYD, City::SYD, City::SYD, City::SYD, City::SYD, City::SYD, 
-    City::SYD, City::SYD, City::LON, City::XCH, City::LON, City::GCM, City::NIC, City::PRG, City::LON, City::HS0, 
-    City::AMS, City::FRA, City::CHI, City::CPH, City::LON, City::DUB, City::NYC, City::FRA, City::LON, City::LON, 
-    City::LON, City::FRA, City::FRA, City::HKG, City::LON, City::FRA, City::LUX, City::FRA, City::FRA, City::BRU, 
-    City::LON, City::NYC, City::LON, City::CPH, City::CUR, City::FLR, City::DUB, City::NYC, City::FRA, City::BER, 
-    City::AUH, City::DXB, City::HEL, City::LUX, City::REK, City::DXB, City::JIB, City::STO, City::STO, City::STO, 
-    City::HS0, City::STO, City::LIS, City::DCF, City::MIL, City::CPH, City::HEL, City::REK, City::CPH, City::STO, 
-    City::SDQ, City::STO, City::OSL, City::ZRH, City::MAD, City::LON, City::MAD, City::PAR, City::TYO, City::LON, 
-    City::DOH, City::CPH, City::STO, City::DXB, City::DUS, City::DUS, City::DUS, City::DUS, City::LON, City::EWR, 
-    City::NYC, City::NYC, City::ALG, City::FRA, City::LON, City::BUD, City::FRA, City::ROM, City::STO, City::BTS, 
-    City::ZRH, City::AMS, City::AMS, City::AMS, City::LON, City::AMS, City::LON, City::ZRH, City::LON, City::BOS, 
-    City::FRA, City::SIN, City::AMS, City::FRA, City::LON, City::LON, City::LON, City::UIO, City::AMS, City::DUB, 
-    City::CHI, City::CHI, City::CHI, City::MCI, City::DUB, City::CHI, City::CHI, City::PAR, City::EWR, City::SIN, 
-    City::IEV, City::JNB, City::SW0, City::NYC, City::VIE, City::CAI, City::LON, City::OSL, City::LON, City::OSL, 
-    City::OSL, City::OSL, City::PAR, City::LON, City::BBU, City::LON, City::MIL, City::MIL, City::MIL, City::MIL, 
-    City::PCT, City::LUX, City::LON, City::ATH, City::LON, City::SIN, City::TLS, City::STO, City::LON, City::FRA, 
-    City::BRU, City::LIS, City::HKG, City::PAR, City::PCT, City::PCT, City::YTO, City::DUB, City::LON, City::SIN, 
-    City::SIN, City::SIN, City::DUB, City::LON, City::BER, City::BER, City::BER, City::BER, City::NYC, City::BRN, 
-    City::ATH, City::FRA, City::ASM, City::CHI, City::BUD, City::EUN, City::TLS, City::MAD, City::NYC, City::TLL, 
-    City::STO, City::MIL, City::ADD, City::MIL, City::QLI, City::AMS, City::ALA, City::ATH, City::DUB, City::ZRH, 
-    City::SOF, City::STO, City::ZRH, City::ZRH, City::ZRH, City::STR, City::STO, City::STR, City::LON, City::ANK, 
-    City::MLA, City::VIE, City::LON, City::LON, City::LON, City::LON, City::MIL, City::LON, City::LON, City::LON, 
-    City::LON, City::MIL, City::NYC, City::PAR, City::PAR, City::PAR, City::PAR, City::PAR, City::LON, City::PAR, 
-    City::PAR, City::IST, City::LON, City::PAR, City::LON, City::NYC, City::MIL, City::CHI, City::CHI, City::ES0, 
-    City::SFO, City::FRA, City::STO, City::HEL, City::NYC, City::NYC, City::DCA, City::DCA, City::DCA, City::BGO, 
-    City::LON, City::SUV, City::PSY, City::AMS, City::AMS, City::AMS, City::PAR, City::NYC, City::CPH, City::OSL, 
-    City::TLL, City::HEL, City::NYC, City::NYC, City::REK, City::NYC, City::VNO, City::RIX, City::STO, City::LON, 
-    City::NYC, City::VIE, City::PAR, City::FRA, City::FRA, City::FRA, City::FRA, City::FRA, City::FRA, City::FRA, 
-    City::OSL, City::CHI, City::FAE, City::BRU, City::LON, City::NYC, City::TOS, City::PNI, City::HEL, City::PRG, 
-    City::PRG, City::NYC, City::MIA, City::NYC, City::BOM, City::NYC, City::DUB, City::LON, City::LON, City::NYC, 
-    City::LON, City::NYC, City::DUB, City::DUB, City::SIN, City::BOM, City::CHI, City::LON, City::LBV, City::STO, 
-    City::EB0, City::LON, City::DUB, City::SOF, City::STO, City::LON, City::TBS, City::VNO, City::NYC, City::SYD, 
-    City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::STO, 
-    City::LON, City::PAR, City::SIN, City::LON, City::LON, City::GCI, City::ACC, City::GIB, City::CKY, City::PAR, 
-    City::CHI, City::NYC, City::NYC, City::AUH, City::BBR, City::CHI, City::EWR, City::BJL, City::SOF, City::LON, 
-    City::PAR, City::PAR, City::MUC, City::DXB, City::UTC, City::LON, City::NYC, City::PAR, City::LON, City::OXB, 
-    City::SSG, City::CHI, City::BOS, City::QLI, City::ATH, City::GND, City::CHI, City::LON, City::LON, City::GOH, 
-    City::MAD, City::LON, City::HKG, City::FRA, City::LON, City::GEO, City::NYC, City::NYC, City::FRA, City::LON, 
-    City::LON, City::LON, City::HKG, City::PAR, City::LON, City::BJS, City::HKG, City::SEL, City::GIB, City::HKG, 
-    City::HKG, City::TAY, City::NYC, City::GUA, City::NYC, City::YHM, City::EWR, City::CAY, City::GUM, City::GEO, 
-    City::HS0, City::HS0, City::HS0, City::VLI, City::HAM, City::HAM, City::HAM, City::HAM, City::HAM, City::HAJ, 
+    City::FRA, City::BDA, City::JNB, City::LON, City::FRA, City::FRA, City::JNB, City::PAR, City::ATH, City::EWR, 
+    City::MAD, City::ATH, City::AMS, City::AMS, City::CPH, City::SOF, City::AUA, City::AUH, City::LON, City::BOM, 
+    City::NYC, City::AUH, City::AUH, City::YTO, City::NYC, City::LON, City::BKK, City::EB0, City::KBL, City::AMS, 
+    City::AMS, City::AMS, City::AMS, City::AMS, City::AMS, City::LON, City::MAD, City::LAD, City::AXA, City::DUB, 
+    City::LON, City::BRN, City::TSE, City::MIL, City::MHQ, City::TIA, City::NYC, City::LON, City::MAD, City::CPH, 
+    City::JNB, City::AMS, City::BRU, City::LIS, City::PAR, City::LAX, City::AMM, City::LON, City::LON, City::NYC, 
+    City::ALV, City::LON, City::LON, City::LON, City::VIE, City::SIN, City::SIN, City::SYD, City::PAR, City::PAR, 
+    City::PAR, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::NYC, City::LON, 
+    City::LON, City::LON, City::LON, City::NYC, City::LON, City::NYC, City::NYC, City::LON, City::AUH, City::DUB, 
+    City::AEP, City::LON, City::NYC, City::EVN, City::LI0, City::HOU, City::ATH, City::PPG, City::ST0, City::ST0, 
+    City::ST0, City::BOM, City::SYD, City::SYD, City::SYD, City::SYD, City::SYD, City::PRG, City::NYC, City::TF0, 
+    City::MIL, City::ANU, City::NIC, City::LON, City::NIC, City::YTO, City::PAR, City::PAR, City::CBR, City::VIE, 
+    City::LON, City::FRA, City::LON, City::LON, City::MEL, City::SYD, City::HEL, City::GYD, City::MUC, City::BUE, 
+    City::HKG, City::HKG, City::LON, City::HKG, City::TYO, City::BGI, City::LON, City::NYC, City::NYC, City::NYC, 
+    City::LON, City::LON, City::AMS, City::VNO, City::NYC, City::LON, City::NYC, City::LON, City::LON, City::AMS, 
+    City::NYC, City::HKG, City::LON, City::HKG, City::TYO, City::LON, City::LON, City::LON, City::CHI, City::LON, 
+    City::CHI, City::CHI, City::DUB, City::DUB, City::SIN, City::NYC, City::NYC, City::LON, City::NYC, City::LON, 
+    City::MAD, City::LON, City::NYC, City::LUX, City::SFN, City::PMI, City::MGF, City::LON, City::QLI, City::MSQ, 
+    City::LON, City::LON, City::LON, City::MUC, City::BJM, City::LUX, City::SOF, City::BRU, City::SOF, City::BKK, 
+    City::QPA, City::BRU, City::BRU, City::BRU, City::COO, City::BER, City::BER, City::BER, City::BON, City::BUD, 
+    City::TYO, City::LON, City::AMS, City::AMS, City::AMS, City::AMS, City::AMS, City::AMS, City::OUA, City::BAH, 
+    City::LIS, City::SYD, City::LON, City::NYC, City::NYC, City::LON, City::TYO, City::LON, City::LON, City::DAC, 
+    City::MIL, City::HAM, City::LON, City::HAM, City::SOF, City::LUX, City::SOF, City::SIN, City::HAM, City::LON, 
+    City::BAH, City::NAS, City::NYC, City::WAW, City::NYC, City::SJJ, City::XXX, City::LUX, City::FRA, City::LON, 
+    City::MEX, City::BJS, City::BRU, City::BRU, City::DUB, City::ATL, City::LON, City::LON, City::KLU, City::MUC, 
+    City::BNX, City::MUC, City::MUC, City::MEL, City::MUC, City::MUC, City::NYC, City::SBH, City::LON, City::LON, 
+    City::BRU, City::MSQ, City::NYC, City::LON, City::NYC, City::LUX, City::SYD, City::BCV, City::MAD, City::LON, 
+    City::MAD, City::MAD, City::SBZ, City::SBZ, City::SBZ, City::LON, City::DUB, City::DUB, City::DUB, City::DUB, 
+    City::LON, City::BRU, City::YHM, City::NYC, City::NYC, City::ROM, City::PAR, City::NYC, City::BRU, City::NYC, 
+    City::LON, City::WAW, City::PAR, City::TYO, City::YTO, City::LON, City::NYC, City::LON, City::LON, City::FRA, 
+    City::EDI, City::LPB, City::ROM, City::LON, City::NYC, City::WAW, City::LON, City::GBE, City::GBE, City::VAP, 
+    City::VIX, City::FRA, City::GOA, City::WAW, City::LON, City::NYC, City::PAR, City::BSB, City::BGI, City::BBU, 
+    City::BBU, City::BBU, City::TRN, City::PAR, City::LON, City::LON, City::SAO, City::BBU, City::BWN, City::LON, 
+    City::QSA, City::BAK, City::MUC, City::LON, City::BOM, City::LON, City::BOS, City::AMS, City::SIN, City::EWR, 
+    City::LON, City::NYC, City::AMS, City::LON, City::PBH, City::CHI, City::AMS, City::LON, City::CLJ, City::TUN, 
+    City::OSL, City::OSL, City::OSL, City::LON, City::CCS, City::SAO, City::LON, City::MVD, City::NYC, City::GBE, 
+    City::ZRH, City::CHI, City::CHI, City::CHI, City::BCN, City::AMS, City::NYC, City::BGF, City::NYC, City::YOW, 
+    City::YTO, City::YTO, City::AMS, City::MAD, City::WRO, City::STO, City::CHI, City::FRA, City::AMS, City::NYC, 
+    City::LON, City::AMS, City::LON, City::FRA, City::FRA, City::FRA, City::FRA, City::FRA, City::FRA, City::FRA, 
+    City::NYC, City::PTG, City::LON, City::ZRH, City::BTS, City::CHI, City::CHI, City::LON, City::TSE, City::CHI, 
+    City::SHA, City::CCK, City::LUX, City::LON, City::GVA, City::NYC, City::LON, City::AMS, City::AMS, City::NYC, 
+    City::NYC, City::FRA, City::BOM, City::MAD, City::NYC, City::AMS, City::PRG, City::DUB, City::LON, City::PRG, 
+    City::RIO, City::WAW, City::AMS, City::AMS, City::AMS, City::AMS, City::SYD, City::SHA, City::HKG, City::LON, 
+    City::LCA, City::DUB, City::NYC, City::TYO, City::TAY, City::ROM, City::ROM, City::ROM, City::FRA, City::FRA, 
+    City::FRA, City::ROM, City::ROM, City::SYD, City::LON, City::FRA, City::LON, City::LON, City::HKG, City::NYC, 
+    City::LON, City::LON, City::LON, City::MEX, City::ROM, City::ROM, City::ROM, City::ROM, City::NYC, City::BRN, 
+    City::LON, City::SYD, City::YTO, City::LON, City::SIN, City::TYO, City::LON, City::TYO, City::TYO, City::LON, 
+    City::LON, City::STI, City::BJS, City::LON, City::BUD, City::LON, City::NYC, City::TYO, City::MAD, City::MAD, 
+    City::MAD, City::MAD, City::MAD, City::NYC, City::NYC, City::TYO, City::TYO, City::ABJ, City::SYD, City::LON, 
+    City::HKG, City::TYO, City::UTC, City::MNL, City::NYC, City::SIN, City::LON, City::MAD, City::PAR, City::LON, 
+    City::LON, City::LON, City::LON, City::CHI, City::TYO, City::LON, City::YAO, City::CHO, City::LON, City::SIN, 
+    City::OSL, City::PAR, City::FIH, City::CHI, City::BZV, City::CHI, City::RAR, City::BOG, City::HAH, City::MLA, 
+    City::AMS, City::BUD, City::CHI, City::NYC, City::YTO, City::NYC, City::AMS, City::RAI, City::LON, City::NYC, 
+    City::BLQ, City::SJI, City::STO, City::LON, City::STO, City::ZRH, City::PRG, City::SYD, City::LON, City::LON, 
+    City::NYC, City::FRA, City::YTO, City::LON, City::LON, City::LON, City::DUB, City::HKG, City::LON, City::TYO, 
+    City::LON, City::NYC, City::MAD, City::PRG, City::ZRH, City::LON, City::WUX, City::STO, City::NYC, City::ZRH, 
+    City::CHI, City::HAV, City::NYC, City::CUR, City::SYD, City::SYD, City::SYD, City::SYD, City::SYD, City::SYD, 
+    City::SYD, City::SYD, City::SYD, City::SYD, City::SYD, City::LON, City::XCH, City::LON, City::GCM, City::NIC, 
+    City::PRG, City::AMS, City::AMS, City::LON, City::HS0, City::AMS, City::FRA, City::CHI, City::CPH, City::LON, 
+    City::DUB, City::NYC, City::FRA, City::LON, City::LON, City::LON, City::FRA, City::FRA, City::HKG, City::LON, 
+    City::FRA, City::LUX, City::FRA, City::FRA, City::BRU, City::LON, City::NYC, City::LON, City::CPH, City::CUR, 
+    City::FLR, City::DUB, City::NYC, City::FRA, City::BER, City::AUH, City::DXB, City::HEL, City::LUX, City::REK, 
+    City::DXB, City::JIB, City::STO, City::STO, City::STO, City::HS0, City::STO, City::LIS, City::DCF, City::MAD, 
+    City::MIL, City::CPH, City::HEL, City::REK, City::CPH, City::STO, City::SDQ, City::STO, City::OSL, City::ZRH, 
+    City::MAD, City::LON, City::MAD, City::PAR, City::TYO, City::LON, City::DOH, City::CPH, City::STO, City::DXB, 
+    City::DUS, City::DUS, City::DUS, City::DUS, City::LON, City::EWR, City::NYC, City::NYC, City::ALG, City::FRA, 
+    City::LON, City::BUD, City::FRA, City::ROM, City::STO, City::BTS, City::ZRH, City::AMS, City::AMS, City::AMS, 
+    City::LON, City::AMS, City::LON, City::ZRH, City::LON, City::BOS, City::FRA, City::SIN, City::AMS, City::FRA, 
+    City::LON, City::LON, City::LON, City::UIO, City::AMS, City::DUB, City::CHI, City::CHI, City::CHI, City::MCI, 
+    City::DUB, City::CHI, City::CHI, City::PAR, City::EWR, City::SIN, City::IEV, City::JNB, City::SW0, City::NYC, 
+    City::VIE, City::CAI, City::LON, City::OSL, City::LON, City::OSL, City::OSL, City::OSL, City::PAR, City::LON, 
+    City::BBU, City::LON, City::MIL, City::MIL, City::MIL, City::MIL, City::PCT, City::LUX, City::LON, City::ATH, 
+    City::LON, City::SIN, City::TLS, City::STO, City::LON, City::FRA, City::BRU, City::LIS, City::HKG, City::PAR, 
+    City::PCT, City::PCT, City::YTO, City::DUB, City::LON, City::SIN, City::SIN, City::SIN, City::DUB, City::LON, 
+    City::BER, City::BER, City::BER, City::BER, City::NYC, City::BRN, City::ATH, City::FRA, City::ASM, City::CHI, 
+    City::BUD, City::EUN, City::TLS, City::MAD, City::NYC, City::TLL, City::STO, City::MIL, City::ADD, City::MIL, 
+    City::QLI, City::AMS, City::ALA, City::ATH, City::DUB, City::ZRH, City::SOF, City::STO, City::ZRH, City::ZRH, 
+    City::ZRH, City::STR, City::STO, City::STR, City::LON, City::ANK, City::MLA, City::VIE, City::LON, City::LON, 
+    City::LON, City::LON, City::MIL, City::LON, City::LON, City::LON, City::LON, City::MIL, City::NYC, City::PAR, 
+    City::PAR, City::PAR, City::PAR, City::PAR, City::LON, City::PAR, City::PAR, City::IST, City::LON, City::PAR, 
+    City::LON, City::NYC, City::MIL, City::CHI, City::CHI, City::ES0, City::SFO, City::FRA, City::STO, City::HEL, 
+    City::NYC, City::NYC, City::DCA, City::DCA, City::DCA, City::BGO, City::LON, City::SUV, City::PSY, City::AMS, 
+    City::AMS, City::AMS, City::PAR, City::SIN, City::NYC, City::CPH, City::OSL, City::TLL, City::HEL, City::NYC, 
+    City::NYC, City::REK, City::NYC, City::VNO, City::RIX, City::STO, City::LON, City::NYC, City::VIE, City::PAR, 
+    City::FRA, City::FRA, City::FRA, City::FRA, City::FRA, City::FRA, City::FRA, City::OSL, City::CHI, City::FAE, 
+    City::BRU, City::LON, City::NYC, City::TOS, City::PNI, City::HEL, City::PRG, City::PRG, City::NYC, City::MIA, 
+    City::NYC, City::BOM, City::NYC, City::DUB, City::LON, City::LON, City::NYC, City::LON, City::NYC, City::DUB, 
+    City::DUB, City::SIN, City::BOM, City::CHI, City::LON, City::LBV, City::STO, City::EB0, City::LON, City::DUB, 
+    City::SOF, City::STO, City::LON, City::TBS, City::VNO, City::NYC, City::SYD, City::LON, City::LON, City::LON, 
+    City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::STO, City::LON, City::PAR, City::SIN, 
+    City::LON, City::LON, City::GCI, City::ACC, City::GIB, City::CKY, City::PAR, City::ZRH, City::NYC, City::NYC, 
+    City::AUH, City::BBR, City::CHI, City::EWR, City::BJL, City::SOF, City::LON, City::PAR, City::PAR, City::MUC, 
+    City::DXB, City::AMS, City::LON, City::NYC, City::PAR, City::LON, City::OXB, City::SSG, City::CHI, City::BOS, 
+    City::QLI, City::ATH, City::GND, City::CHI, City::LON, City::LON, City::GOH, City::MAD, City::LON, City::HKG, 
+    City::FRA, City::LON, City::GEO, City::NYC, City::NYC, City::FRA, City::LON, City::LON, City::LON, City::HKG, 
+    City::PAR, City::LON, City::BJS, City::HKG, City::SEL, City::GIB, City::HKG, City::HKG, City::TAY, City::NYC, 
+    City::GUA, City::NYC, City::BDA, City::EWR, City::CAY, City::GUM, City::GEO, City::HS0, City::HS0, City::HS0, 
+    City::VLI, City::HAM, City::HAM, City::HAM, City::HAM, City::HAM, City::HAJ, City::HAJ, City::HAJ, City::HAJ, 
     City::HAJ, City::PAR, City::WAW, City::MIL, City::AMS, City::ATH, City::ATH, City::CHI, City::FRA, City::ATH, 
     City::ATH, City::ATH, City::HKG, City::HKG, City::MIL, City::MIL, City::TGU, City::ATH, City::PAR, City::PAR, 
     City::PAR, City::PAR, City::BOS, City::LON, City::LON, City::DUB, City::MIL, City::LON, City::NYC, City::NYC, 
     City::ZAG, City::LON, City::DUS, City::NYC, City::HAN, City::HKG, City::LON, City::PAP, City::BUD, City::BUD, 
-    City::LON, City::BUD, City::GW0, City::LON, City::FLR, City::ZAZ, City::SOF, City::BIO, City::FLR, City::GW0, 
-    City::NYC, City::DUB, City::SOF, City::LON, City::LON, City::BGO, City::LON, City::NYC, City::JKT, City::NYC, 
-    City::LON, City::LON, City::NYC, City::LON, City::TYO, City::TYO, City::PAR, City::PAR, City::LON, City::NYC, 
-    City::LON, City::TYO, City::EWR, City::TYO, City::LON, City::TYO, City::DUB, City::NYC, City::BOM, City::DUB, 
-    City::CGK, City::NYC, City::AMS, City::LON, City::LON, City::WAW, City::GW0, City::ATL, City::NYC, City::NYC, 
-    City::NYC, City::AUH, City::THR, City::YWG, City::NYC, City::LON, City::LON, City::OSL, City::LON, City::LON, 
-    City::LON, City::LON, City::SIN, City::MLA, City::NYC, City::LON, City::DUB, City::DUB, City::DUB, City::LON, 
-    City::NYC, City::GC0, City::DUS, City::LON, City::ATL, City::ATL, City::NYC, City::LON, City::LON, City::NYC, 
-    City::LON, City::AMS, City::ATL, City::CHI, City::AMS, City::LON, City::ATL, City::AMS, City::LON, City::THR, 
-    City::LON, City::ATL, City::LON, City::LON, City::ATL, City::MIL, City::LON, City::IOM, City::LON, City::LON, 
-    City::LON, City::LON, City::NYC, City::ST0, City::DEL, City::OSL, City::AMS, City::AMS, City::AMS, City::LON, 
-    City::WAW, City::GH0, City::WP0, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, 
-    City::LON, City::LON, City::LON, City::NKW, City::LON, City::LON, City::AMS, City::LON, City::LON, City::LON, 
-    City::DUB, City::THR, City::BGW, City::TRN, City::QIC, City::NYC, City::LON, City::REK, City::BOM, City::RKV, 
-    City::TLV, City::LON, City::LON, City::LON, City::LON, City::LON, City::AMS, City::AMS, City::AMS, City::LON, 
-    City::AMS, City::LON, City::ROM, City::NYC, City::DUB, City::TSE, City::MIL, City::LON, City::YTO, City::LED, 
-    City::SIN, City::KIN, City::TYO, City::TYO, City::SI0, City::SOF, City::TYO, City::FRA, City::LON, City::NYC, 
-    City::FRA, City::JER, City::LON, City::CHI, City::AMS, City::CHI, City::LON, City::AMS, City::NYC, City::AMM, 
-    City::NYC, City::LON, City::FRA, City::LON, City::HKG, City::NYC, City::NYC, City::TYO, City::LON, City::JNB, 
-    City::NYC, City::JNB, City::NYC, City::NYC, City::LON, City::GR0, City::TYO, City::TYO, City::TSE, City::BRU, 
-    City::LUX, City::LUX, City::LON, City::LUX, City::LUX, City::BUD, City::WAW, City::BUD, City::NBO, City::FRU, 
-    City::BUD, City::PNH, City::TRW, City::LON, City::NYC, City::LON, City::ZRH, City::SKB, City::EWR, City::EWR, 
-    City::EWR, City::EWR, City::EWR, City::SEL, City::PRG, City::SEL, City::PAR, City::AUH, City::KWI, City::NYC, 
-    City::NYC, City::NYC, City::BCT, City::VTE, City::NYC, City::CPH, City::NYC, City::NYC, City::STR, City::LON, 
-    City::FRA, City::BEY, City::MLW, City::SOF, City::STR, City::STR, City::TIP, City::SLU, City::PAR, City::LON, 
-    City::AMS, City::NYC, City::LON, City::NYC, City::DUB, City::DUB, City::BOS, City::YTO, City::LI0, City::NYC, 
-    City::RB0, City::LON, City::LON, City::LON, City::LON, City::AMS, City::NYC, City::NYC, City::CMB, City::VIE, 
-    City::LON, City::LON, City::LON, City::LON, City::SIN, City::LON, City::LON, City::TLL, City::BOS, City::LON, 
-    City::PAR, City::PAR, City::LON, City::LON, City::LON, City::LON, City::NYC, City::NYC, City::NYC, City::MSU, 
-    City::DUS, City::BOS, City::SFO, City::VNO, City::LUX, City::RIX, City::TYO, City::YTO, City::MAD, City::MFM, 
-    City::SYD, City::MIL, City::LON, City::SFG, City::EWR, City::LON, City::SIN, City::MLE, City::AMS, City::DUB, 
-    City::HKG, City::LON, City::TYO, City::LON, City::LON, City::SYD, City::RBA, City::MAD, City::SIN, City::YTO, 
-    City::AUH, City::ESH, City::OPO, City::WAW, City::LON, City::SOF, City::ROM, City::DUB, City::MCM, City::NYC, 
-    City::CPH, City::LON, City::LON, City::LON, City::BOM, City::LON, City::KIV, City::TNR, City::LIS, City::MAD, 
-    City::MLE, City::SYD, City::HKG, City::NYC, City::EWR, City::EWR, City::EWR, City::OSL, City::MAD, City::OSL, 
-    City::FRA, City::KUL, City::LON, City::MEX, City::LON, City::LIS, City::LON, City::LON, City::LON, City::DUS, 
-    City::AMS, City::LON, City::PAR, City::HEL, City::FRA, City::LON, City::MAJ, City::MAD, City::LUX, City::REK, 
-    City::AUH, City::PCT, City::MOW, City::MIL, City::TYO, City::NYC, City::QLI, City::SKP, City::PAR, City::LON, 
-    City::NYC, City::PAR, City::PAR, City::LON, City::PAR, City::BKO, City::LON, City::LON, City::LON, City::LON, 
-    City::MLA, City::LON, City::NYC, City::BRU, City::LON, City::RGN, City::CPH, City::TGD, City::HEL, City::ULN, 
-    City::REK, City::SPN, City::STO, City::NYC, City::STO, City::MIL, City::MPM, City::PCT, City::NKC, City::SYD, 
-    City::PAR, City::LON, City::NYC, City::PAR, City::WAW, City::DUB, City::FRA, City::LON, City::NYC, City::NYC, 
-    City::TYO, City::PAR, City::NYC, City::MNI, City::NYC, City::LON, City::NYC, City::STO, City::NYC, City::ROM, 
-    City::MCT, City::MCT, City::MIL, City::MIL, City::MIL, City::PAR, City::FDF, City::LON, City::NYC, City::ROM, 
-    City::BRU, City::BRU, City::LON, City::ROM, City::ROM, City::WAW, City::LON, City::LON, City::NYC, City::NYC, 
-    City::NYC, City::NYC, City::NYC, City::NYC, City::AMS, City::LON, City::MIL, City::PAR, City::TYO, City::LON, 
-    City::MUC, City::MUC, City::MUC, City::MUC, City::MRU, City::LON, City::AMS, City::LON, City::COR, City::LLW, 
-    City::LON, City::AMS, City::EWR, City::KUL, City::DZA, City::LON, City::LON, City::LON, City::LON, City::LON, 
-    City::PAR, City::LON, City::WDH, City::MOW, City::STO, City::VNO, City::NYC, City::STO, City::LOS, City::PAR, 
-    City::LON, City::LON, City::NYC, City::IDR, City::DCA, City::KHI, City::NOU, City::FRA, City::LON, City::LON, 
-    City::AMS, City::AMS, City::NTL, City::BJS, City::YTO, City::YTO, City::YTO, City::YTO, City::NIM, City::FRA, 
-    City::LON, City::LON, City::LON, City::LON, City::LON, City::OSL, City::LON, City::LON, City::LON, City::AMS, 
-    City::NLK, City::BOS, City::BOS, City::BOS, City::ABV, City::YYC, City::HAG, City::OSL, City::MGA, City::CAI, 
-    City::IUE, City::NYC, City::HAJ, City::AMS, City::AMS, City::AMD, City::NYC, City::TYO, City::TYO, City::STO, 
-    City::LON, City::GOJ, City::STO, City::VN0, City::STO, City::LON, City::STO, City::LON, City::STO, City::TRD, 
-    City::OSL, City::HAM, City::OSL, City::OSL, City::LON, City::OSL, City::STO, City::PAR, City::HAG, City::CPH, 
-    City::KTM, City::NYC, City::INU, City::STO, City::STO, City::KRK, City::MEL, City::ST0, City::LON, City::LON, 
-    City::LON, City::EDI, City::AMS, City::TYO, City::LON, City::TYO, City::TYO, City::TYO, City::NYC, City::TYO, 
-    City::NYC, City::NYC, City::LON, City::NYC, City::NYC, City::CPH, City::SYD, City::WLG, City::OSL, City::LNZ, 
-    City::EWR, City::LON, City::NYC, City::PAR, City::PAR, City::TYO, City::TYO, City::LON, City::AMS, City::LON, 
-    City::OB0, City::NYC, City::MAD, City::YTO, City::LIS, City::LIS, City::MCT, City::NYC, City::STO, City::DCA, 
-    City::HEL, City::LIS, City::CHI, City::HKG, City::OSL, City::SIN, City::NYC, City::LON, City::NYC, City::NYC, 
-    City::NYC, City::NYC, City::BOM, City::BUD, City::BBU, City::BRN, City::LON, City::ISB, City::PAC, City::WAW, 
-    City::LON, City::PRG, City::BCN, City::ATH, City::SOF, City::LON, City::PN0, City::MC0, City::CHI, City::CHI, 
-    City::LON, City::STO, City::STO, City::STO, City::STO, City::STO, City::LIM, City::IEV, City::IEV, City::LON, 
-    City::MNL, City::LON, City::LON, City::NYC, City::NYC, City::NYC, City::NYC, City::NYC, City::GW0, City::LON, 
-    City::GW0, City::WAW, City::LON, City::WAW, City::WAW, City::WAW, City::WAW, City::LON, City::MUC, City::ROR, 
-    City::LIS, City::STO, City::POM, City::WAW, City::WAW, City::LON, City::MAD, City::VLI, City::SYD, City::LON, 
-    City::SJU, City::FNJ, City::LON, City::MLA, City::NYC, City::LIS, City::ASU, City::PS0, City::NYC, City::NYC, 
-    City::WAW, City::NYC, City::NYC, City::NYC, City::NYC, City::YTO, City::LON, City::BOM, City::PPT, City::DOH, 
-    City::BUD, City::LON, City::OSL, City::LON, City::LON, City::LON, City::UTC, City::NYC, City::EA0, City::PAR, 
-    City::LON, City::FRA, City::LON, City::LON, City::BUD, City::VIE, City::EA0, City::LON, City::NYC, City::NYC, 
-    City::NIC, City::AMS, City::AMS, City::LON, City::RUN, City::PRG, City::DXB, City::AMS, City::SIN, City::LON, 
-    City::PHL, City::PHL, City::BOM, City::LNZ, City::JNB, City::JNB, City::DUB, City::LON, City::TAY, City::ROS, 
-    City::ZRH, City::KGL, City::BBU, City::MOW, City::WAW, City::AMS, City::BBU, City::KGL, City::LON, City::LON, 
-    City::SIN, City::MOW, City::NYC, City::ZRH, City::MOW, City::MOW, City::SZG, City::KGL, City::LU0, City::SFO, 
-    City::SDR, City::RUH, City::OSL, City::BCN, City::LON, City::TYO, City::BIO, City::TYO, City::TYO, City::SBZ, 
-    City::AB0, City::FRA, City::MAD, City::EDI, City::CHI, City::CHI, City::CHI, City::CHI, City::CHI, City::KRT, 
-    City::FRA, City::VNO, City::STO, City::STO, City::SEZ, City::SEZ, City::SEZ, City::LON, City::SEZ, City::LON, 
-    City::MIL, City::STO, City::RIO, City::DUB, City::DKR, City::MAD, City::STO, City::DNK, City::STO, City::LON, 
-    City::LAX, City::NYC, City::NYC, City::SHA, City::NYC, City::NYC, City::PAR, City::PAR, City::PAR, City::LON, 
-    City::LON, City::LON, City::PAR, City::SIN, City::GS0, City::NYC, City::AY0, City::NYC, City::ASI, City::HKG, 
-    City::WAW, City::NIC, City::LON, City::DUB, City::LON, City::SYD, City::HKG, City::TYO, City::BOS, City::MAD, 
-    City::SYD, City::DUB, City::LON, City::LYR, City::LJU, City::RA0, City::LON, City::HIR, City::FNA, City::SZG, 
-    City::LON, City::SAL, City::LON, City::BRU, City::TYO, City::DUS, City::LON, City::LON, City::PAR, City::SIN, 
-    City::CHI, City::FRA, City::SM0, City::LON, City::AAL, City::LON, City::NYC, City::MGQ, City::PRG, City::NYC, 
-    City::MOW, City::STO, City::LON, City::LON, City::STO, City::FRA, City::STO, City::PCT, City::LED, City::FSP, 
-    City::STO, City::LON, City::TRD, City::EWR, City::ILZ, City::LON, City::BEG, City::MUC, City::MUC, City::LON, 
-    City::JUB, City::LON, City::LON, City::LON, City::STO, City::ROM, City::BOS, City::HAM, City::LON, City::LON, 
-    City::OSL, City::LON, City::NYC, City::NYC, City::ZRH, City::TMS, City::NYC, City::PRG, City::LON, City::STR, 
-    City::STR, City::STR, City::STR, City::STR, City::STR, City::AMS, City::LON, City::LON, City::LON, City::CHI, 
-    City::PBM, City::STO, City::STO, City::BTS, City::LJU, City::SVD, City::LON, City::STO, City::BMA, City::TLL, 
-    City::VNO, City::RIX, City::QMN, City::SXM, City::CPH, City::SEZ, City::SIN, City::DAM, City::HKG, City::SOF, 
+    City::LON, City::BUD, City::BGO, City::GW0, City::LON, City::GW0, City::FLR, City::ZAZ, City::SOF, City::BIO, 
+    City::FLR, City::GW0, City::NYC, City::DUB, City::SOF, City::LON, City::LON, City::BGO, City::LON, City::NYC, 
+    City::JKT, City::NYC, City::LON, City::LON, City::NYC, City::LON, City::TYO, City::TYO, City::PAR, City::PAR, 
+    City::LON, City::SIN, City::NYC, City::LON, City::TYO, City::EWR, City::TYO, City::LON, City::TYO, City::DUB, 
+    City::NYC, City::BOM, City::DUB, City::CGK, City::NYC, City::AMS, City::LON, City::LON, City::WAW, City::GW0, 
+    City::ATL, City::NYC, City::NYC, City::NYC, City::NYC, City::AUH, City::THR, City::YWG, City::NYC, City::LON, 
+    City::LON, City::OSL, City::LON, City::LON, City::LON, City::LON, City::SIN, City::MLA, City::NYC, City::LON, 
+    City::DUB, City::DUB, City::DUB, City::LON, City::NYC, City::GC0, City::DUS, City::LON, City::ATL, City::ATL, 
+    City::NYC, City::LON, City::LON, City::NYC, City::LON, City::AMS, City::ATL, City::CHI, City::AMS, City::LON, 
+    City::ATL, City::AMS, City::LON, City::THR, City::LON, City::ATL, City::LON, City::LON, City::ATL, City::MIL, 
+    City::LON, City::IOM, City::LON, City::LON, City::LON, City::LON, City::NYC, City::ST0, City::DEL, City::OSL, 
+    City::AMS, City::AMS, City::AMS, City::LON, City::WAW, City::GH0, City::WP0, City::LON, City::LON, City::LON, 
+    City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::NKW, City::LON, City::LON, 
+    City::AMS, City::LON, City::LON, City::LON, City::DUB, City::THR, City::BGW, City::TRN, City::QIC, City::NYC, 
+    City::LON, City::REK, City::BOM, City::RKV, City::TLV, City::LON, City::LON, City::LON, City::LON, City::LON, 
+    City::AMS, City::AMS, City::AMS, City::LON, City::AMS, City::LON, City::ROM, City::NYC, City::DUB, City::TSE, 
+    City::MIL, City::LON, City::YTO, City::LED, City::SIN, City::KIN, City::TYO, City::TYO, City::SI0, City::SOF, 
+    City::TYO, City::FRA, City::LON, City::NYC, City::FRA, City::JER, City::LON, City::CHI, City::AMS, City::CHI, 
+    City::LON, City::AMS, City::NYC, City::AMM, City::NYC, City::LON, City::FRA, City::LON, City::HKG, City::NYC, 
+    City::NYC, City::TYO, City::LON, City::JNB, City::NYC, City::JNB, City::NYC, City::NYC, City::LON, City::GR0, 
+    City::TYO, City::TYO, City::TSE, City::BRU, City::LUX, City::LUX, City::LON, City::LUX, City::LUX, City::BUD, 
+    City::WAW, City::BUD, City::NBO, City::FRU, City::BUD, City::PNH, City::TRW, City::LON, City::NYC, City::LON, 
+    City::ZRH, City::SKB, City::EWR, City::EWR, City::EWR, City::EWR, City::EWR, City::SEL, City::PRG, City::SEL, 
+    City::PAR, City::AUH, City::KWI, City::NYC, City::NYC, City::NYC, City::NYC, City::BCT, City::VTE, City::NYC, 
+    City::CPH, City::NYC, City::NYC, City::STR, City::LON, City::FRA, City::BEY, City::MLW, City::SOF, City::STR, 
+    City::STR, City::TIP, City::SLU, City::PAR, City::LON, City::AMS, City::NYC, City::LON, City::NYC, City::DUB, 
+    City::DUB, City::BOS, City::YTO, City::LI0, City::NYC, City::RB0, City::LON, City::LON, City::LON, City::LON, 
+    City::AMS, City::NYC, City::NYC, City::CMB, City::VIE, City::LON, City::LON, City::LON, City::LON, City::SIN, 
+    City::LON, City::LON, City::TLL, City::BOS, City::LON, City::PAR, City::PAR, City::LON, City::LON, City::LON, 
+    City::LON, City::NYC, City::NYC, City::NYC, City::MSU, City::DUS, City::BOS, City::SFO, City::VNO, City::LUX, 
+    City::RIX, City::TYO, City::YTO, City::MAD, City::MFM, City::SYD, City::MIL, City::LON, City::SFG, City::EWR, 
+    City::LON, City::SIN, City::MLE, City::AMS, City::DUB, City::HKG, City::LON, City::TYO, City::LON, City::LON, 
+    City::SYD, City::RBA, City::MAD, City::SIN, City::YTO, City::AUH, City::ESH, City::OPO, City::WAW, City::LON, 
+    City::SOF, City::ROM, City::DUB, City::MCM, City::NYC, City::CPH, City::LON, City::LON, City::LON, City::BOM, 
+    City::LON, City::KIV, City::TNR, City::LIS, City::MAD, City::MLE, City::SYD, City::HKG, City::NYC, City::EWR, 
+    City::EWR, City::EWR, City::OSL, City::MAD, City::OSL, City::FRA, City::KUL, City::LON, City::MEX, City::LON, 
+    City::LIS, City::LON, City::LON, City::LON, City::DUS, City::AMS, City::LON, City::PAR, City::HEL, City::FRA, 
+    City::LON, City::MAJ, City::MAD, City::LUX, City::REK, City::AUH, City::PCT, City::MOW, City::MIL, City::TYO, 
+    City::NYC, City::QLI, City::SKP, City::PAR, City::LON, City::NYC, City::PAR, City::PAR, City::LON, City::PAR, 
+    City::BKO, City::LON, City::LON, City::LON, City::LON, City::MLA, City::LON, City::NYC, City::BRU, City::LON, 
+    City::RGN, City::CPH, City::TGD, City::HEL, City::ULN, City::REK, City::SPN, City::STO, City::NYC, City::STO, 
+    City::MIL, City::MPM, City::PCT, City::NKC, City::SYD, City::PAR, City::LON, City::NYC, City::PAR, City::WAW, 
+    City::DUB, City::FRA, City::LON, City::NYC, City::NYC, City::TYO, City::PAR, City::NYC, City::MNI, City::NYC, 
+    City::PAR, City::LON, City::NYC, City::STO, City::NYC, City::ROM, City::MCT, City::MCT, City::MIL, City::MIL, 
+    City::MIL, City::PAR, City::FDF, City::LON, City::NYC, City::ROM, City::BRU, City::BRU, City::LON, City::ROM, 
+    City::ROM, City::WAW, City::LON, City::LON, City::NYC, City::NYC, City::NYC, City::NYC, City::NYC, City::NYC, 
+    City::AMS, City::LON, City::MIL, City::PAR, City::TYO, City::LON, City::MUC, City::MUC, City::MUC, City::MUC, 
+    City::MRU, City::LON, City::AMS, City::LON, City::COR, City::LLW, City::LON, City::AMS, City::EWR, City::KUL, 
+    City::DZA, City::LON, City::LON, City::LON, City::LON, City::LON, City::PAR, City::LON, City::WDH, City::MOW, 
+    City::STO, City::VNO, City::NYC, City::STO, City::LOS, City::PAR, City::LON, City::LON, City::NYC, City::IDR, 
+    City::DCA, City::KHI, City::NOU, City::FRA, City::LON, City::LON, City::AMS, City::AMS, City::NTL, City::BJS, 
+    City::YTO, City::YTO, City::YTO, City::YTO, City::NIM, City::FRA, City::LON, City::LON, City::LON, City::LON, 
+    City::LON, City::OSL, City::LON, City::LON, City::LON, City::AMS, City::NLK, City::BOS, City::BOS, City::BOS, 
+    City::ABV, City::YYC, City::HAG, City::OSL, City::MGA, City::CAI, City::IUE, City::NYC, City::HAJ, City::AMS, 
+    City::AMS, City::AMD, City::NYC, City::TYO, City::TYO, City::STO, City::LON, City::GOJ, City::STO, City::VN0, 
+    City::STO, City::LON, City::STO, City::LON, City::STO, City::TRD, City::OSL, City::HAM, City::OSL, City::OSL, 
+    City::LON, City::OSL, City::STO, City::PAR, City::HAG, City::CPH, City::KTM, City::NYC, City::INU, City::STO, 
+    City::STO, City::KRK, City::MEL, City::ST0, City::LON, City::LON, City::LON, City::EDI, City::AMS, City::TYO, 
+    City::LON, City::TYO, City::TYO, City::TYO, City::SEL, City::NYC, City::TYO, City::NYC, City::NYC, City::LON, 
+    City::NYC, City::NYC, City::CPH, City::SYD, City::WLG, City::AKL, City::AKL, City::OSL, City::LNZ, City::EWR, 
+    City::NYC, City::LON, City::NYC, City::NYC, City::AMS, City::LON, City::PAR, City::PAR, City::TYO, City::TYO, 
+    City::LON, City::AMS, City::LON, City::OB0, City::NYC, City::MAD, City::YTO, City::LIS, City::LIS, City::MCT, 
+    City::NYC, City::STO, City::DCA, City::HEL, City::LIS, City::CHI, City::LON, City::HKG, City::OSL, City::SIN, 
+    City::NYC, City::LON, City::NYC, City::NYC, City::NYC, City::NYC, City::BOM, City::BUD, City::BBU, City::BRN, 
+    City::LON, City::ISB, City::PAC, City::WAW, City::LON, City::PRG, City::BCN, City::ATH, City::SOF, City::LON, 
+    City::PN0, City::MC0, City::CHI, City::CHI, City::LON, City::STO, City::STO, City::STO, City::STO, City::STO, 
+    City::LIM, City::IEV, City::IEV, City::LON, City::MNL, City::LON, City::LON, City::NYC, City::NYC, City::NYC, 
+    City::NYC, City::NYC, City::GW0, City::LON, City::GW0, City::WAW, City::LON, City::WAW, City::WAW, City::WAW, 
+    City::WAW, City::LON, City::MUC, City::ROR, City::LIS, City::STO, City::POM, City::WAW, City::WAW, City::LON, 
+    City::MAD, City::VLI, City::SYD, City::LON, City::SJU, City::FNJ, City::LON, City::MLA, City::NYC, City::LIS, 
+    City::ASU, City::PS0, City::NYC, City::NYC, City::WAW, City::NYC, City::NYC, City::NYC, City::NYC, City::YTO, 
+    City::NYC, City::LON, City::BOM, City::PPT, City::DOH, City::BUD, City::LON, City::OSL, City::LON, City::LON, 
+    City::LON, City::UTC, City::NYC, City::EA0, City::PAR, City::LON, City::FRA, City::LON, City::NYC, City::LON, 
+    City::BUD, City::VIE, City::EA0, City::LON, City::NYC, City::NYC, City::NIC, City::AMS, City::AMS, City::LON, 
+    City::RUN, City::PRG, City::DXB, City::AMS, City::SIN, City::LON, City::PHL, City::PHL, City::BOM, City::LNZ, 
+    City::JNB, City::JNB, City::DUB, City::LON, City::TAY, City::ROS, City::ZRH, City::KGL, City::BBU, City::MOW, 
+    City::WAW, City::AMS, City::BBU, City::KGL, City::LON, City::LON, City::SIN, City::MOW, City::NYC, City::ZRH, 
+    City::MOW, City::MOW, City::SZG, City::KGL, City::LU0, City::SFO, City::SDR, City::RUH, City::OSL, City::BCN, 
+    City::LON, City::TYO, City::BIO, City::TYO, City::TYO, City::SBZ, City::AB0, City::FRA, City::MUC, City::MAD, 
+    City::EDI, City::CHI, City::CHI, City::CHI, City::CHI, City::CHI, City::KRT, City::FRA, City::VNO, City::STO, 
+    City::STO, City::SEZ, City::SEZ, City::SEZ, City::LON, City::SEZ, City::LON, City::MIL, City::STO, City::RIO, 
+    City::DUB, City::DKR, City::MAD, City::STO, City::DNK, City::STO, City::LON, City::LON, City::LAX, City::NYC, 
+    City::NYC, City::SHA, City::NYC, City::NYC, City::PAR, City::PAR, City::PAR, City::LON, City::LON, City::LON, 
+    City::PAR, City::SIN, City::GS0, City::NYC, City::AY0, City::NYC, City::ASI, City::HKG, City::WAW, City::NIC, 
+    City::LON, City::DUB, City::LON, City::SYD, City::HKG, City::TYO, City::BOS, City::MAD, City::SYD, City::DUB, 
+    City::LON, City::LYR, City::LJU, City::RA0, City::LON, City::HIR, City::FNA, City::SZG, City::LON, City::SAL, 
+    City::LON, City::BRU, City::TYO, City::DUS, City::LON, City::LON, City::PAR, City::SIN, City::CHI, City::FRA, 
+    City::SM0, City::LON, City::AAL, City::LON, City::NYC, City::MGQ, City::PRG, City::NYC, City::MOW, City::STO, 
+    City::LON, City::LON, City::STO, City::FRA, City::STO, City::PCT, City::LED, City::FSP, City::STO, City::LON, 
+    City::TRD, City::EWR, City::ILZ, City::LON, City::BEG, City::MUC, City::MUC, City::LON, City::JUB, City::LON, 
+    City::LON, City::LON, City::STO, City::ROM, City::BOS, City::HAM, City::LON, City::LON, City::OSL, City::LON, 
+    City::NYC, City::NYC, City::ZRH, City::TMS, City::NYC, City::PRG, City::LON, City::STR, City::STR, City::STR, 
+    City::STR, City::STR, City::STR, City::STR, City::AMS, City::LON, City::LON, City::LON, City::CHI, City::PBM, 
+    City::STO, City::STO, City::BTS, City::LJU, City::SVD, City::LON, City::STO, City::BMA, City::TLL, City::VNO, 
+    City::RIX, City::QMN, City::SXM, City::CPH, City::SEZ, City::SIN, City::FLR, City::DAM, City::HKG, City::SOF, 
     City::LON, City::LON, City::WAW, City::WAW, City::GDT, City::NDJ, City::LON, City::LON, City::LON, City::LON, 
-    City::DUB, City::PAR, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, 
-    City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::PAR, City::PAR, City::PAR, 
-    City::PAR, City::PAR, City::PAR, City::EWR, City::LON, City::SIN, City::MAD, City::BKK, City::SIN, City::LON, 
-    City::HKG, City::LON, City::LON, City::LON, City::NYC, City::LON, City::BER, City::LFW, City::BER, City::BKK, 
-    City::EWR, City::CHI, City::NYC, City::TYO, City::LON, City::DYU, City::TK0, City::ASB, City::MIL, City::PAR, 
-    City::DIL, City::NYC, City::QLI, City::DUB, City::ANK, City::NYC, City::LON, City::LON, City::YTO, City::AMS, 
-    City::BRU, City::BRU, City::LON, City::HKG, City::AMS, City::MAD, City::MAD, City::AMS, City::TBU, City::AMS, 
-    City::LON, City::LON, City::FRA, City::PAR, City::LON, City::LON, City::LON, City::PAR, City::MAD, City::PAR, 
-    City::LON, City::PAR, City::PAR, City::LON, City::LON, City::LON, City::PAR, City::PAR, City::LON, City::LON, 
-    City::LON, City::LON, City::LON, City::LON, City::EWR, City::LON, City::LON, City::LON, City::EWR, City::LON, 
-    City::AMS, City::AMS, City::AMS, City::AMS, City::ILG, City::LON, City::HKG, City::LON, City::NYC, City::NYC, 
-    City::SIN, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::EWR, City::AMS, City::SEZ, 
-    City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::NYC, City::NYC, 
-    City::LON, City::NYC, City::EWR, City::PAR, City::NYC, City::PAR, City::ILG, City::LON, City::LON, City::LON, 
-    City::NYC, City::FRA, City::FRA, City::LON, City::LON, City::LON, City::LON, City::SIN, City::LON, City::LON, 
-    City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::POS, City::TUN, City::LON, 
-    City::ESB, City::FUN, City::AMS, City::AMS, City::AMS, City::AMS, City::LON, City::HKG, City::TYO, City::TYO, 
-    City::TSA, City::NYC, City::SIN, City::DAR, City::NYC, City::PRG, City::ATL, City::BGY, City::LON, City::BLQ, 
-    City::NYC, City::LON, City::ZRH, City::FRA, City::LON, City::ZRH, City::ZRH, City::FRA, City::FRA, City::NYC, 
-    City::NYC, City::ZRH, City::HKG, City::LON, City::VIE, City::SOF, City::MUC, City::BUD, City::MIL, City::MVD, 
-    City::KLA, City::LBA, City::IEV, City::LON, City::IEV, City::LON, City::LON, City::LON, City::IEV, City::LON, 
-    City::KLA, City::LON, City::LON, City::SVX, City::MVD, City::DCA, City::NYC, City::STO, City::STO, City::LON, 
-    City::TYO, City::TAS, City::NYC, City::LON, City::LON, City::NYC, City::VA0, City::LON, City::NYC, City::SVD, 
-    City::YTO, City::LON, City::CCS, City::NYC, City::NYC, City::VFA, City::LON, City::DUB, City::NYC, City::DUB, 
-    City::LON, City::DUB, City::EIS, City::STT, City::NYC, City::LON, City::TYO, City::ZRH, City::AUH, City::FAE, 
-    City::LON, City::NYC, City::HAN, City::LON, City::FRA, City::BRU, City::PAR, City::LON, City::NYC, City::FRA, 
-    City::FRA, City::BTS, City::NYC, City::VLI, City::FRA, City::FRA, City::NYC, City::VIE, City::WAW, City::VIE, 
-    City::VIE, City::WRO, City::WAW, City::WAW, City::WAW, City::LON, City::WAW, City::GW0, City::LON, City::NYC, 
-    City::CHO, City::WAW, City::LON, City::PAR, City::WAW, City::WAW, City::LON, City::LON, City::WAW, City::WLS, 
-    City::WAW, City::PRG, City::WAW, City::LIS, City::NYC, City::LON, City::LON, City::APW, City::BUE, City::STO, 
-    City::OSL, City::ABJ, City::SIN, City::AMS, City::ATH, City::DCA, City::AUH, City::AMS, City::PAR, City::EB0, 
-    City::MIL, City::YYC, City::ALG, City::TIA, City::LON, City::AMM, City::AMS, City::SIN, City::SIN, City::ANR, 
-    City::SYD, City::PAR, City::VVO, City::NYC, City::CHI, City::EVN, City::NYC, City::DUB, City::SYD, City::ATH, 
-    City::DUB, City::YTO, City::YTO, City::AKL, City::PHX, City::NAS, City::BGI, City::BAH, City::BLR, City::BCN, 
-    City::BCN, City::RIO, City::JKT, City::YTO, City::COR, City::BUD, City::STI, City::MDZ, City::TGU, City::MDZ, 
-    City::YHM, City::LAD, City::BEG, City::BER, City::JNB, City::BEY, City::BRU, City::BIO, City::BGI, City::BKK, 
-    City::BKK, City::BNX, City::PAR, City::PAR, City::SAO, City::NYC, City::BUD, City::SJO, City::BOG, City::LPB, 
-    City::BOM, City::NYC, City::GBE, City::BOS, City::BTS, City::BRU, City::BRE, City::BBU, City::BRN, City::NYC, 
-    City::BRU, City::ABJ, City::WAW, City::BBU, City::BBU, City::SAO, City::EWR, City::ZRH, City::BUD, City::BUE, 
-    City::SOF, City::RAI, City::MPM, City::CWB, City::SDQ, City::NYC, City::CAI, City::CCU, City::BBU, City::CCS, 
-    City::CAS, City::GCM, City::CHI, City::CHI, City::CHI, City::CHI, City::NGO, City::CHI, City::DUB, City::NYC, 
-    City::VIE, City::TAS, City::SHA, City::NYC, City::HKG, City::CGP, City::CHI, City::GCI, City::NYC, City::CHI, 
-    City::CNQ, City::YTO, City::CMB, City::LON, City::CHI, City::ZAG, City::NYC, City::CPH, City::PNH, City::TAS, 
-    City::NYC, City::SDQ, City::YTO, City::YTO, City::NIC, City::NIC, City::DAR, City::FRA, City::FRA, City::FRA, 
-    City::DLC, City::DEL, City::STR, City::IEV, City::DXB, City::DAC, City::ZRH, City::MIL, City::OSL, City::MAD, 
-    City::MAD, City::YTO, City::DAM, City::IST, City::DLA, City::FRA, City::DUB, City::DUS, City::FRA, City::LV0, 
-    City::DUB, City::LON, City::FRA, City::LEJ, City::NIC, City::SKB, City::IST, City::LON, City::LEJ, City::LEJ, 
-    City::LEJ, City::FRA, City::IST, City::NYC, City::MEX, City::SH0, City::BER, City::IST, City::FRA, City::FRA, 
-    City::DUB, City::FRA, City::FRA, City::FRA, City::FRA, City::FRA, City::PAR, City::FRA, City::FRA, City::FRA, 
-    City::FRA, City::FRA, City::FRA, City::FRA, City::FRA, City::AMS, City::AMS, City::AMS, City::FRA, City::FRA, 
-    City::FRA, City::CHI, City::DUB, City::SFO, City::VLC, City::SFO, City::SYD, City::FUK, City::FUK, City::PAR, 
-    City::CPH, City::IST, City::DUB, City::HEL, City::FRA, City::AMS, City::ANU, City::BUD, City::BER, City::LON, 
-    City::LON, City::LON, City::HKG, City::LON, City::ACC, City::WAW, City::ROM, City::SJU, City::BER, City::TBS, 
-    City::LON, City::GUA, City::GYE, City::HAM, City::HAJ, City::HAJ, City::HEL, City::OSA, City::AMS, City::HIJ, 
-    City::HKG, City::HKG, City::HAN, City::HAN, City::SAP, City::IST, City::BAK, City::ZRH, City::REK, City::YTO, 
-    City::JKT, City::LON, City::DUB, City::FRA, City::HKG, City::TYO, City::OSL, City::BOM, City::TAY, City::CHI, 
-    City::SHA, City::NYC, City::FRA, City::CHI, City::LON, City::ATH, City::BGW, City::NYC, City::NYC, City::ISB, 
-    City::IST, City::NYC, City::KIN, City::TYO, City::JKT, City::JKT, City::TYO, City::JNB, City::LON, City::OSA, 
-    City::KHI, City::ALA, City::MCI, City::TAS, City::SEL, City::SEL, City::SEL, City::SEL, City::UKB, City::KRT, 
-    City::HRK, City::IEV, City::IEV, City::UKB, City::KUL, City::SEL, City::SEL, City::SEL, City::SEL, City::FRU, 
-    City::SK0, City::KWI, City::UKY, City::LHE, City::VTE, City::MAD, City::LON, City::LON, City::LON, City::LON, 
-    City::LON, City::LBU, City::LI0, City::LON, City::LIM, City::LIS, City::VNO, City::LJU, City::LJU, City::LJU, 
-    City::LI0, City::LON, City::LON, City::KUL, City::LON, City::LON, City::SYD, City::TIP, City::LON, City::LUN, 
-    City::LUX, City::BUE, City::CHI, City::MAD, City::SKP, City::BKK, City::MLA, City::MGA, City::MPM, City::PAR, 
-    City::MRU, City::MAD, City::TNR, City::MAA, City::BCN, City::CHI, City::BUE, City::MEX, City::MAD, City::MSP, 
-    City::MOW, City::CHI, City::MIL, City::MIL, City::PCT, City::PAR, City::LON, City::NIC, City::MVD, City::TGD, 
-    City::YMQ, City::YMQ, City::KIV, City::PAR, City::YMQ, City::MOW, City::MIL, City::MAD, City::MAD, City::DUB, 
-    City::BLZ, City::BUE, City::LON, City::MUC, City::MCT, City::SFN, City::MAD, City::NBO, City::WDH, City::NYC, 
-    City::BOM, City::NYC, City::WAW, City::NYC, City::IEV, City::STO, City::NTL, City::AKL, City::KTM, City::FRA, 
-    City::NYC, City::STO, City::NGO, City::NYC, City::KIJ, City::NYC, City::NGO, City::NYC, City::LON, City::STO, 
-    City::NYC, City::LI0, City::HEL, City::NYC, City::LOS, City::BOM, City::NGO, City::AMS, City::AMS, City::NYC, 
-    City::NYC, City::NYC, City::NYC, City::NYC, City::NYC, City::WLG, City::OSL, City::OSL, City::OSL, City::OSL, 
-    City::OSL, City::CHI, City::ODS, City::XXX, City::STO, City::STO, City::OSL, City::OSL, City::OSL, City::OSA, 
-    City::OSA, City::OSL, City::OSA, City::OSA, City::VIE, City::DCA, City::SPU, City::DUB, City::PS0, City::LON, 
-    City::PAR, City::PHL, City::LED, City::PHL, City::PHL, City::PC0, City::LON, City::LED, City::ST0, City::LON, 
-    City::IST, City::LON, City::POM, City::DCA, City::DUB, City::LEJ, City::PAR, City::PRG, City::DNK, City::PRG, 
-    City::SFO, City::LEJ, City::HKG, City::NYC, City::PAC, City::LON, City::NYC, City::PRG, City::BUD, City::ZRH, 
-    City::ZRH, City::DUS, City::UIO, City::BBU, City::KUL, City::VIE, City::ZRH, City::DUB, City::RIO, City::RIX, 
-    City::PRG, City::BTS, City::PRG, City::ROS, City::ZRH, City::ROV, City::ROS, City::BBU, City::LON, City::FRA, 
-    City::MOW, City::JNB, City::KUF, City::OKD, City::STO, City::RUH, City::TYO, City::SIN, City::FRA, City::FRA, 
-    City::FRA, City::SIN, City::SIN, City::SIN, City::FRA, City::ZRH, City::ZRH, City::ZRH, City::SZX, City::NYC, 
-    City::SIN, City::JNB, City::SYD, City::PAR, City::LON, City::SHA, City::STI, City::SZX, City::SHA, City::OVB, 
-    City::OVB, City::SIN, City::ZRH, City::SZX, City::LON, City::SAO, City::LJU, City::PAR, City::SUV, City::GRX, 
-    City::SHA, City::SJJ, City::SGN, City::TAS, City::STR, City::BOS, City::STO, City::STR, City::STR, City::ZRH, 
-    City::ZRH, City::SUB, City::SAL, City::QMN, City::LON, City::ZRH, City::ZRH, City::ZRH, City::TLL, City::TAY, 
-    City::TLV, City::TAY, City::TAY, City::TLL, City::TYO, City::TLL, City::THR, City::YTO, City::TYO, City::LON, 
-    City::TIA, City::TYO, City::TYO, City::TYO, City::NGO, City::TYO, City::TYO, City::TYO, City::MIL, City::BUD, 
-    City::YVR, City::YTO, City::LON, City::NYC, City::CPH, City::NYC, City::POS, City::ZAG, City::YTO, City::YTO, 
-    City::TUC, City::TUN, City::LON, City::IZM, City::NYC, City::PAR, City::LON, City::IEV, City::LON, City::KLA, 
-    City::IEV, City::ULN, City::LON, City::TAS, City::BOM, City::VLC, City::VZ0, City::LUX, City::VNO, City::VIE, 
-    City::VVO, City::ASU, City::LI0, City::YVR, City::ZRH, City::WAW, City::VIE, City::YWG, City::GW0, City::FRA, 
-    City::XXX, City::XXX, City::SYD, City::TYO, City::ZAG, City::ZAG, City::ZAG, City::CGO, City::HRE, City::SAH, 
-    City::CHI, City::JNB, City::PRY, City::ZAG, City::JNB, City::SOF, City::CHI, City::JNB, City::ZRH, City::LUN, 
-    City::BER, City::LON, City::HRE
+    City::DUB, City::PAR, City::GVA, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, 
+    City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::PAR, City::PAR, 
+    City::PAR, City::PAR, City::PAR, City::PAR, City::EWR, City::LON, City::SIN, City::MAD, City::BKK, City::SIN, 
+    City::LON, City::HKG, City::LON, City::LON, City::LON, City::NYC, City::LON, City::BER, City::LFW, City::BER, 
+    City::BKK, City::EWR, City::CHI, City::NYC, City::TYO, City::LON, City::DYU, City::TK0, City::ASB, City::MIL, 
+    City::PAR, City::DIL, City::NYC, City::QLI, City::DUB, City::ANK, City::NYC, City::LON, City::LON, City::YTO, 
+    City::AMS, City::BRU, City::BRU, City::LON, City::HKG, City::AMS, City::MAD, City::MAD, City::AMS, City::TBU, 
+    City::AMS, City::LON, City::LON, City::FRA, City::PAR, City::LON, City::LON, City::LON, City::PAR, City::MAD, 
+    City::PAR, City::LON, City::PAR, City::PAR, City::LON, City::LON, City::LON, City::PAR, City::PAR, City::LON, 
+    City::LON, City::LON, City::LON, City::LON, City::NYC, City::LON, City::EWR, City::SIN, City::LON, City::LON, 
+    City::LON, City::EWR, City::LON, City::AMS, City::AMS, City::AMS, City::AMS, City::ILG, City::LON, City::HKG, 
+    City::LON, City::BER, City::NYC, City::NYC, City::SIN, City::LON, City::LON, City::LON, City::LON, City::LON, 
+    City::LON, City::EWR, City::AMS, City::SEZ, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, 
+    City::LON, City::LON, City::NYC, City::NYC, City::LON, City::NYC, City::EWR, City::PAR, City::NYC, City::PAR, 
+    City::ILG, City::LON, City::LON, City::LON, City::NYC, City::FRA, City::FRA, City::LON, City::LON, City::LON, 
+    City::LON, City::SIN, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, City::LON, 
+    City::LON, City::POS, City::TUN, City::LON, City::ESB, City::FUN, City::AMS, City::AMS, City::AMS, City::AMS, 
+    City::LON, City::HKG, City::TYO, City::TYO, City::TSA, City::NYC, City::SIN, City::DAR, City::NYC, City::PRG, 
+    City::ATL, City::BGY, City::LON, City::BLQ, City::NYC, City::LON, City::ZRH, City::FRA, City::LON, City::ZRH, 
+    City::ZRH, City::FRA, City::FRA, City::NYC, City::NYC, City::ZRH, City::HKG, City::LON, City::VIE, City::SOF, 
+    City::MUC, City::BUD, City::MIL, City::MVD, City::KLA, City::LBA, City::IEV, City::LON, City::IEV, City::LON, 
+    City::LON, City::LON, City::IEV, City::LON, City::KLA, City::LON, City::LON, City::SVX, City::MVD, City::DCA, 
+    City::NYC, City::STO, City::STO, City::LON, City::TYO, City::TAS, City::NYC, City::LON, City::LON, City::NYC, 
+    City::VA0, City::LON, City::NYC, City::SVD, City::YTO, City::LON, City::CCS, City::NYC, City::NYC, City::VFA, 
+    City::LON, City::DUB, City::NYC, City::DUB, City::LON, City::DUB, City::EIS, City::STT, City::NYC, City::LON, 
+    City::TYO, City::ZRH, City::AUH, City::FAE, City::LON, City::NYC, City::HAN, City::LON, City::FRA, City::BRU, 
+    City::PAR, City::LON, City::NYC, City::FRA, City::FRA, City::BTS, City::NYC, City::VLI, City::AMS, City::FRA, 
+    City::FRA, City::NYC, City::VIE, City::WAW, City::VIE, City::VIE, City::WRO, City::WAW, City::VIE, City::WAW, 
+    City::WAW, City::LON, City::WAW, City::GW0, City::LON, City::NYC, City::CHO, City::WAW, City::LON, City::NYC, 
+    City::PAR, City::WAW, City::WAW, City::LON, City::LON, City::WAW, City::WLS, City::WAW, City::PRG, City::WAW, 
+    City::LIS, City::NYC, City::LON, City::LON, City::APW, City::BUE, City::STO, City::OSL, City::ABJ, City::SIN, 
+    City::AMS, City::ATH, City::DCA, City::AUH, City::AMS, City::PAR, City::EB0, City::MIL, City::YYC, City::ALG, 
+    City::TIA, City::LON, City::AMM, City::AMS, City::SIN, City::SIN, City::SIN, City::ANR, City::SYD, City::PAR, 
+    City::VVO, City::NYC, City::CHI, City::EVN, City::NYC, City::DUB, City::SYD, City::ATH, City::DUB, City::YTO, 
+    City::YTO, City::AKL, City::PHX, City::NAS, City::BGI, City::BAH, City::BLR, City::BCN, City::BCN, City::RIO, 
+    City::JKT, City::YTO, City::COR, City::BUD, City::STI, City::MDZ, City::TGU, City::MDZ, City::BDA, City::LAD, 
+    City::BEG, City::BER, City::JNB, City::BEY, City::BRU, City::BIO, City::BGI, City::BKK, City::BKK, City::BNX, 
+    City::PAR, City::PAR, City::SAO, City::NYC, City::BUD, City::SJO, City::BOG, City::LPB, City::BOM, City::NYC, 
+    City::GBE, City::BOS, City::BTS, City::BRU, City::BRE, City::BBU, City::BRN, City::NYC, City::BRU, City::ABJ, 
+    City::WAW, City::BBU, City::BBU, City::SAO, City::EWR, City::ZRH, City::BUD, City::BUE, City::SOF, City::RAI, 
+    City::MPM, City::CWB, City::SDQ, City::NYC, City::CAI, City::CCU, City::BBU, City::CCS, City::CAS, City::XXX, 
+    City::CHI, City::CHI, City::CHI, City::CHI, City::NGO, City::CHI, City::DUB, City::NYC, City::VIE, City::TAS, 
+    City::SHA, City::NYC, City::HKG, City::CGP, City::CHI, City::GCI, City::NYC, City::CHI, City::CNQ, City::YTO, 
+    City::CMB, City::LON, City::CHI, City::ZAG, City::NYC, City::CPH, City::PNH, City::STR, City::TAS, City::NYC, 
+    City::SDQ, City::YTO, City::YTO, City::NIC, City::NIC, City::DAR, City::FRA, City::FRA, City::FRA, City::DLC, 
+    City::DEL, City::STR, City::IEV, City::DXB, City::DAC, City::ZRH, City::MIL, City::OSL, City::MAD, City::MAD, 
+    City::YTO, City::DAM, City::IST, City::DLA, City::FRA, City::DUB, City::DUS, City::FRA, City::LV0, City::DUB, 
+    City::LON, City::FRA, City::LEJ, City::NIC, City::SKB, City::IST, City::LON, City::LEJ, City::LEJ, City::LEJ, 
+    City::FRA, City::IST, City::NYC, City::FRA, City::FRA, City::MEX, City::FRA, City::SH0, City::BER, City::IST, 
+    City::FRA, City::FRA, City::DUB, City::FRA, City::FRA, City::FRA, City::FRA, City::FRA, City::PAR, City::FRA, 
+    City::FRA, City::FRA, City::FRA, City::FRA, City::FRA, City::FRA, City::FRA, City::AMS, City::AMS, City::AMS, 
+    City::FRA, City::FRA, City::FRA, City::CHI, City::DUB, City::SFO, City::VLC, City::SFO, City::SYD, City::FUK, 
+    City::FUK, City::PAR, City::CPH, City::IST, City::DUB, City::HEL, City::FRA, City::AMS, City::ANU, City::DXB, 
+    City::BUD, City::BER, City::LON, City::LON, City::LON, City::HKG, City::LON, City::DXB, City::ACC, City::WAW, 
+    City::ROM, City::SJU, City::BER, City::TBS, City::LON, City::GUA, City::GYE, City::HAM, City::HAJ, City::HAJ, 
+    City::HEL, City::OSA, City::AMS, City::HIJ, City::HKG, City::HKG, City::HAN, City::HAN, City::SAP, City::IST, 
+    City::BAK, City::ZRH, City::REK, City::YTO, City::JKT, City::LON, City::DUB, City::FRA, City::HKG, City::TYO, 
+    City::OSL, City::BOM, City::TAY, City::CHI, City::CHI, City::SHA, City::NYC, City::FRA, City::CHI, City::LON, 
+    City::ATH, City::BGW, City::NYC, City::NYC, City::ISB, City::IST, City::NYC, City::KIN, City::TYO, City::JKT, 
+    City::JKT, City::TYO, City::JNB, City::LON, City::OSA, City::KHI, City::ALA, City::MCI, City::TAS, City::SEL, 
+    City::SEL, City::SEL, City::SEL, City::UKB, City::KRT, City::HRK, City::IEV, City::IEV, City::UKB, City::KUL, 
+    City::SEL, City::SEL, City::SEL, City::SEL, City::FRU, City::SK0, City::KWI, City::UKY, City::LHE, City::VTE, 
+    City::MAD, City::LON, City::LON, City::LON, City::LON, City::LON, City::LBU, City::LI0, City::LON, City::LIM, 
+    City::LIS, City::VNO, City::LJU, City::LJU, City::LJU, City::LI0, City::LON, City::LON, City::KUL, City::LON, 
+    City::LON, City::SYD, City::TIP, City::LON, City::LUN, City::LUX, City::BUE, City::CHI, City::MAD, City::SKP, 
+    City::BKK, City::MLA, City::MGA, City::MPM, City::PAR, City::MRU, City::MAD, City::TNR, City::MAA, City::BCN, 
+    City::CHI, City::BUE, City::MEX, City::MAD, City::MSP, City::MOW, City::CHI, City::MIL, City::MIL, City::PCT, 
+    City::PAR, City::LON, City::NIC, City::MVD, City::TGD, City::YMQ, City::YMQ, City::KIV, City::PAR, City::YMQ, 
+    City::MOW, City::MIL, City::MAD, City::MAD, City::DUB, City::BLZ, City::BUE, City::LON, City::MUC, City::MCT, 
+    City::SFN, City::MAD, City::NBO, City::WDH, City::NYC, City::BOM, City::NYC, City::WAW, City::NYC, City::IEV, 
+    City::STO, City::NTL, City::AKL, City::KTM, City::FRA, City::NYC, City::STO, City::NGO, City::NYC, City::KIJ, 
+    City::NYC, City::NGO, City::NYC, City::LON, City::STO, City::NYC, City::LI0, City::HEL, City::NYC, City::LOS, 
+    City::BOM, City::NGO, City::AMS, City::AMS, City::NYC, City::NYC, City::NYC, City::NYC, City::NYC, City::NYC, 
+    City::AKL, City::OSL, City::OSL, City::OSL, City::OSL, City::OSL, City::CHI, City::ODS, City::XXX, City::STO, 
+    City::STO, City::OSL, City::OSL, City::OSL, City::OSA, City::OSA, City::OSL, City::OSA, City::OSA, City::VIE, 
+    City::DCA, City::SPU, City::DUB, City::PS0, City::LON, City::PAR, City::PHL, City::LED, City::PHL, City::PHL, 
+    City::PC0, City::LON, City::LED, City::ST0, City::LON, City::IST, City::LON, City::POM, City::DCA, City::DUB, 
+    City::LEJ, City::PAR, City::PRG, City::DNK, City::PRG, City::SFO, City::LEJ, City::HKG, City::NYC, City::PAC, 
+    City::LON, City::NYC, City::PRG, City::BUD, City::ZRH, City::ZRH, City::DUS, City::UIO, City::BBU, City::KUL, 
+    City::VIE, City::ZRH, City::DUB, City::RIO, City::RIX, City::PRG, City::BTS, City::PRG, City::ROS, City::ZRH, 
+    City::ROV, City::ROS, City::BBU, City::LON, City::FRA, City::MOW, City::JNB, City::KUF, City::OKD, City::STO, 
+    City::RUH, City::TYO, City::SIN, City::FRA, City::FRA, City::FRA, City::SIN, City::SIN, City::SIN, City::FRA, 
+    City::ZRH, City::ZRH, City::ZRH, City::SZX, City::NYC, City::SIN, City::JNB, City::SYD, City::PAR, City::LON, 
+    City::SHA, City::STI, City::SZX, City::SHA, City::OVB, City::OVB, City::SIN, City::ZRH, City::SZX, City::LON, 
+    City::SAO, City::LJU, City::PAR, City::SUV, City::GRX, City::SHA, City::SJJ, City::SGN, City::TAS, City::STR, 
+    City::BOS, City::STO, City::STR, City::STR, City::ZRH, City::ZRH, City::SUB, City::SAL, City::QMN, City::LON, 
+    City::ZRH, City::ZRH, City::ZRH, City::TLL, City::TAY, City::TLV, City::TAY, City::TAY, City::TLL, City::TYO, 
+    City::TLL, City::THR, City::YTO, City::TYO, City::LON, City::TIA, City::TYO, City::TYO, City::TYO, City::NGO, 
+    City::TYO, City::TYO, City::TYO, City::MIL, City::BUD, City::YVR, City::YTO, City::LON, City::NYC, City::CPH, 
+    City::NYC, City::POS, City::ZAG, City::YTO, City::YTO, City::TUC, City::TUN, City::LON, City::IZM, City::NYC, 
+    City::PAR, City::LON, City::IEV, City::LON, City::KLA, City::IEV, City::ULN, City::LON, City::TAS, City::BOM, 
+    City::VLC, City::VZ0, City::LUX, City::VNO, City::VIE, City::VVO, City::ASU, City::LI0, City::YVR, City::ZRH, 
+    City::LON, City::WAW, City::VIE, City::YWG, City::GW0, City::FRA, City::XXX, City::XXX, City::SYD, City::TYO, 
+    City::ZAG, City::ZAG, City::ZAG, City::CGO, City::HRE, City::SAH, City::CHI, City::JNB, City::PRY, City::ZAG, 
+    City::JNB, City::SOF, City::CHI, City::JNB, City::ZRH, City::LUN, City::BER, City::LON, City::HRE    
 };
 
 // Country to capital City
@@ -694,7 +698,7 @@ const short Gazetteer::m_cid2cap[Country::NUMCOUNTRY] = {
     City::DYU, City::TK0, City::ASB, City::DIL, City::TBU, City::POS, City::TUN, City::ESB, City::FUN, City::TSA, 
     City::DAR, City::KLA, City::IEV, City::DCA, City::MVD, City::DCA, City::TAS, City::VA0, City::SVD, City::CCS, 
     City::EIS, City::STT, City::HAN, City::VLI, City::WLS, City::APW, City::XXX, City::XXX, City::XXX, City::XXX, 
-    City::XXX, City::SAH, City::PRY, City::LUN, City::HRE
+    City::XXX, City::SAH, City::PRY, City::LUN, City::HRE    
 };
 
 // City to Country
@@ -786,126 +790,130 @@ const short Gazetteer::m_cty2cid[City::NUMCITY] = {
     Country::DJI, Country::ETH, Country::CHN, Country::ETH, Country::UGA, Country::ECU, Country::NPL, Country::CHN, Country::PAK, Country::PER, 
     Country::CHN, Country::SWE, Country::GRC, Country::NPL, Country::IDN, Country::USA, Country::USA, Country::IND, Country::BRA, Country::AGO, 
     Country::GRC, Country::NPL, Country::USA, Country::CHN, Country::BRA, Country::ZAF, Country::CHN, Country::ARG, Country::USA, Country::GRC, 
-    Country::CHN, Country::FIN, Country::BRA, Country::PHL, Country::USA, Country::NGA, Country::BRA, Country::PAN, Country::IND, Country::TZA, 
-    Country::ISR, Country::IND, Country::GRC, Country::ARG, Country::ISR, Country::USA, Country::BRA, Country::GRC, Country::SSD, Country::DEU, 
-    Country::ARG, Country::PER, Country::NPL, Country::AUS, Country::HND, Country::GRL, Country::USA, Country::BWA, Country::USA, Country::FIN, 
-    Country::FIN, Country::NGA, Country::FIN, Country::AFG, Country::UKR, Country::AUS, Country::USA, Country::AUS, Country::MYS, Country::TUR, 
-    Country::JPN, Country::PAK, Country::PAK, Country::ISL, Country::DEU, Country::FIN, Country::AUS, Country::RUS, Country::AUS, Country::RWA, 
-    Country::GRC, Country::TWN, Country::PAK, Country::FIN, Country::RUS, Country::SWE, Country::JPN, Country::IRQ, Country::ZAF, Country::JAM, 
-    Country::IRL, Country::MDA, Country::ZMB, Country::JPN, Country::NOR, Country::UGA, Country::SWE, Country::AUT, Country::USA, Country::GRC, 
-    Country::ZAF, Country::JPN, Country::JPN, Country::NAM, Country::JPN, Country::IDN, Country::AUS, Country::IND, Country::AUS, Country::USA, 
-    Country::GBR, Country::JPN, Country::FIN, Country::AUS, Country::POL, Country::SWE, Country::DNK, Country::NOR, Country::SDN, Country::SWE, 
-    Country::SDN, Country::NOR, Country::AUS, Country::USA, Country::NPL, Country::USA, Country::AUS, Country::FIN, Country::MYS, Country::RUS, 
-    Country::JPN, Country::MYS, Country::FIN, Country::GRC, Country::KWT, Country::CHN, Country::AUS, Country::TUR, Country::TUR, Country::RUS, 
-    Country::AGO, Country::PNG, Country::USA, Country::FRA, Country::USA, Country::MEX, Country::USA, Country::USA, Country::USA, Country::USA, 
-    Country::GBR, Country::USA, Country::USA, Country::FRA, Country::FRA, Country::GAB, Country::MYS, Country::GAB, Country::CYP, Country::ESP, 
-    Country::USA, Country::GBR, Country::AUS, Country::FRA, Country::SWE, Country::GBR, Country::AUS, Country::USA, Country::RUS, Country::ESP, 
-    Country::DEU, Country::GIN, Country::GBR, Country::AUS, Country::USA, Country::NLD, Country::USA, Country::TGO, Country::USA, Country::USA, 
-    Country::BEL, Country::MYS, Country::GBR, Country::PAK, Country::GBR, Country::LIE, Country::NCL, Country::FRA, Country::USA, Country::USA, 
-    Country::FRA, Country::PER, Country::ITA, Country::COD, Country::PRT, Country::USA, Country::SVN, Country::NOR, Country::IND, Country::SWE, 
-    Country::MWI, Country::MEX, Country::ITA, Country::USA, Country::USA, Country::AUS, Country::USA, Country::USA, Country::AUT, Country::GBR, 
-    Country::NGA, Country::ESP, Country::BOL, Country::GBR, Country::FIN, Country::USA, Country::AUS, Country::USA, Country::FRA, Country::DOM, 
-    Country::FRA, Country::USA, Country::GBR, Country::AUS, Country::AUS, Country::HRV, Country::GBR, Country::MEX, Country::CHE, Country::NAM, 
-    Country::CHE, Country::ZAF, Country::CHN, Country::ZMB, Country::LUX, Country::BEL, Country::AUS, Country::USA, Country::GBR, Country::UKR, 
-    Country::USA, Country::USA, Country::EGY, Country::USA, Country::USA, Country::PAK, Country::SJM, Country::FRA, Country::GBR, Country::MEX, 
-    Country::AUS, Country::IND, Country::ESP, Country::USA, Country::ESP, Country::MHL, Country::GBR, Country::BRA, Country::VEN, Country::PYF, 
-    Country::PRI, Country::KEN, Country::AUS, Country::JAM, Country::ZAF, Country::USA, Country::SVN, Country::PHL, Country::USA, Country::USA, 
-    Country::USA, Country::MCO, Country::USA, Country::USA, Country::BRA, Country::OMN, Country::USA, Country::AUS, Country::BRA, Country::IDN, 
-    Country::COL, Country::MMR, Country::ARG, Country::USA, Country::USA, Country::USA, Country::ARG, Country::SAU, Country::NCL, Country::USA, 
-    Country::AUS, Country::USA, Country::IDN, Country::MEX, Country::ZAF, Country::USA, Country::GAB, Country::PAK, Country::MAC, Country::NZL, 
-    Country::PNG, Country::NER, Country::USA, Country::ZMB, Country::NIC, Country::AUS, Country::BRA, Country::ZAF, Country::USA, Country::SOM, 
-    Country::USA, Country::USA, Country::BHS, Country::ALA, Country::USA, Country::USA, Country::MEX, Country::FIN, Country::ITA, Country::AUS, 
-    Country::TUN, Country::CIV, Country::PAK, Country::GAB, Country::MDG, Country::USA, Country::GRC, Country::ESP, Country::USA, Country::USA, 
-    Country::USA, Country::USA, Country::AUS, Country::AUS, Country::MLT, Country::USA, Country::MDV, Country::FRA, Country::USA, Country::MEX, 
-    Country::USA, Country::USA, Country::LBR, Country::TUR, Country::SWE, Country::GBR, Country::AUS, Country::JPN, Country::RUS, Country::AUS, 
-    Country::SWE, Country::JPN, Country::MSR, Country::PHL, Country::USA, Country::USA, Country::USA, Country::AUS, Country::RUS, Country::PYF, 
-    Country::NAM, Country::PAK, Country::FRA, Country::MOZ, Country::AUS, Country::TUR, Country::ZAF, Country::TCD, Country::USA, Country::USA, 
-    Country::FRA, Country::MUS, Country::RUS, Country::USA, Country::AUS, Country::GBR, Country::USA, Country::USA, Country::USA, Country::USA, 
-    Country::BLR, Country::TUR, Country::NLD, Country::LSO, Country::USA, Country::USA, Country::USA, Country::AUS, Country::USA, Country::USA, 
-    Country::SWZ, Country::MEX, Country::MEX, Country::BWA, Country::DEU, Country::USA, Country::EGY, Country::PAK, Country::USA, Country::GAB, 
-    Country::URY, Country::CMR, Country::USA, Country::ZWE, Country::PAK, Country::USA, Country::MEX, Country::ITA, Country::AUS, Country::KEN, 
-    Country::JPN, Country::IND, Country::USA, Country::MYS, Country::ZAF, Country::TWN, Country::FRA, Country::MEX, Country::ZAF, Country::AUS, 
-    Country::IND, Country::AZE, Country::FJI, Country::ITA, Country::BHS, Country::BRA, Country::CHN, Country::KEN, Country::FRA, Country::GBR, 
-    Country::ZAF, Country::FRA, Country::MRT, Country::TCD, Country::NAM, Country::KNA, Country::CMR, Country::JPN, Country::JPN, Country::CYP, 
-    Country::NER, Country::USA, Country::MRT, Country::IOT, Country::ZMB, Country::MEX, Country::NFK, Country::ZAF, Country::MEX, Country::UKR, 
-    Country::CHN, Country::IRL, Country::PHL, Country::NCL, Country::GBR, Country::AUS, Country::SWE, Country::JPN, Country::AUS, Country::NZL, 
-    Country::AUS, Country::THA, Country::FRA, Country::AUS, Country::MEX, Country::ZAF, Country::DEU, Country::GBR, Country::USA, Country::USA, 
-    Country::AUS, Country::USA, Country::USA, Country::MEX, Country::DEU, Country::CAF, Country::ESP, Country::DNK, Country::UKR, Country::USA, 
-    Country::MKD, Country::PAK, Country::JPN, Country::JPN, Country::USA, Country::JPN, Country::JPN, Country::NAM, Country::ITA, Country::USA, 
-    Country::USA, Country::AUS, Country::USA, Country::NAM, Country::USA, Country::IRN, Country::BIH, Country::NAM, Country::USA, Country::AUS, 
-    Country::AUS, Country::PRT, Country::SWE, Country::USA, Country::USA, Country::USA, Country::IRL, Country::USA, Country::DZA, Country::AUS, 
-    Country::FRA, Country::JPN, Country::USA, Country::HRV, Country::NOR, Country::IRQ, Country::USA, Country::ROU, Country::USA, Country::BFA, 
-    Country::MAR, Country::ZAF, Country::GBR, Country::FIN, Country::MRT, Country::RUS, Country::ESP, Country::USA, Country::GNB, Country::USA, 
-    Country::MAR, Country::PAN, Country::DEU, Country::USA, Country::HTI, Country::FRA, Country::IND, Country::MEX, Country::BTN, Country::USA, 
-    Country::SUR, Country::AUS, Country::ZAF, Country::PHL, Country::USA, Country::PRT, Country::USA, Country::USA, Country::ITA, Country::COL, 
-    Country::CHN, Country::MYS, Country::AUS, Country::PAK, Country::USA, Country::CYP, Country::USA, Country::FRA, Country::USA, Country::NGA, 
-    Country::AUS, Country::USA, Country::USA, Country::ZAF, Country::USA, Country::USA, Country::USA, Country::USA, Country::GBR, Country::USA, 
-    Country::FRA, Country::USA, Country::PAK, Country::USA, Country::BWA, Country::USA, Country::USA, Country::AUS, Country::ZAF, Country::USA, 
-    Country::ESP, Country::ITA, Country::NZL, Country::VEN, Country::BRA, Country::PCN, Country::KHM, Country::FSM, Country::ITA, Country::IND, 
-    Country::COG, Country::USA, Country::BRA, Country::GAB, Country::PNG, Country::DOM, Country::FIN, Country::TTO, Country::USA, Country::POL, 
-    Country::ASM, Country::AUS, Country::PYF, Country::USA, Country::AUS, Country::CZE, Country::XXX, Country::ZAF, Country::PSE, Country::ITA, 
-    Country::USA, Country::EGY, Country::PRI, Country::USA, Country::PAK, Country::USA, Country::ITA, Country::FLK, Country::ZAF, Country::AUS, 
-    Country::GLP, Country::PAN, Country::USA, Country::FRA, Country::AUS, Country::DOM, Country::CHL, Country::KOR, Country::USA, Country::HRV, 
-    Country::USA, Country::CHN, Country::BRA, Country::GRC, Country::MEX, Country::USA, Country::MEX, Country::PRT, Country::IND, Country::THA, 
-    Country::ZAF, Country::PAK, Country::VEN, Country::JPN, Country::DEU, Country::BRA, Country::ITA, Country::CYP, Country::PAK, Country::SWZ, 
-    Country::IND, Country::SRB, Country::ITA, Country::SGP, Country::ESP, Country::EST, Country::DNK, Country::CPV, Country::IND, Country::MAR, 
-    Country::USA, Country::COK, Country::PAK, Country::DEU, Country::MAR, Country::BRA, Country::ZAF, Country::USA, Country::USA, Country::USA, 
-    Country::USA, Country::FRA, Country::BRA, Country::ITA, Country::ISL, Country::ESP, Country::USA, Country::PYF, Country::PYF, Country::MMR, 
-    Country::USA, Country::GRC, Country::USA, Country::BRA, Country::LVA, Country::CHN, Country::HRV, Country::USA, Country::USA, Country::ARE, 
-    Country::ISL, Country::NER, Country::EGY, Country::ITA, Country::SWE, Country::FRA, Country::DNK, Country::USA, Country::FRA, Country::USA, 
-    Country::LBR, Country::USA, Country::AUS, Country::ITA, Country::PLW, Country::ARG, Country::NZL, Country::BGR, Country::RUS, Country::MUS, 
-    Country::ARG, Country::BHS, Country::USA, Country::USA, Country::HND, Country::NLD, Country::SAU, Country::REU, Country::RUS, Country::FIN, 
-    Country::USA, Country::PAK, Country::PAK, Country::USA, Country::YEM, Country::SLV, Country::USA, Country::BRA, Country::HND, Country::USA, 
-    Country::USA, Country::TUR, Country::ZWE, Country::USA, Country::BLM, Country::FRA, Country::USA, Country::USA, Country::ZAF, Country::MYS, 
-    Country::USA, Country::ROU, Country::USA, Country::USA, Country::USA, Country::USA, Country::CHL, Country::DEU, Country::ESP, Country::CUB, 
-    Country::USA, Country::HND, Country::JPN, Country::SWE, Country::DOM, Country::ESP, Country::JPN, Country::PAK, Country::BRA, Country::USA, 
-    Country::USA, Country::LBY, Country::KOR, Country::GBR, Country::EGY, Country::SYC, Country::TUN, Country::MAF, Country::GRL, Country::ARG, 
-    Country::USA, Country::DNK, Country::USA, Country::VNM, Country::USA, Country::USA, Country::NLD, Country::CHN, Country::USA, Country::CHN, 
-    Country::ARE, Country::USA, Country::USA, Country::DNK, Country::CPV, Country::SGP, Country::UKR, Country::ZAF, Country::USA, Country::AUS, 
-    Country::USA, Country::MEX, Country::CRI, Country::BIH, Country::CRI, Country::USA, Country::PRI, Country::FIN, Country::JPN, Country::KNA, 
-    Country::UZB, Country::GRC, Country::MKD, Country::DNK, Country::EGY, Country::RUS, Country::PAK, Country::ARG, Country::USA, Country::USA, 
-    Country::OMN, Country::MEX, Country::BGR, Country::LCA, Country::BRA, Country::SMR, Country::PRT, Country::USA, Country::GRC, Country::USA, 
-    Country::USA, Country::ECU, Country::IRL, Country::USA, Country::BGR, Country::NOR, Country::AUS, Country::VUT, Country::FIN, Country::GBR, 
-    Country::ESP, Country::USA, Country::JPN, Country::MNP, Country::USA, Country::HRV, Country::CIV, Country::BRA, Country::BOL, Country::MEX, 
-    Country::USA, Country::BOL, Country::BRA, Country::GNQ, Country::EGY, Country::COL, Country::USA, Country::CHL, Country::USA, Country::GBR, 
-    Country::SWE, Country::USA, Country::DEU, Country::USA, Country::VIR, Country::IND, Country::VIR, Country::IDN, Country::ITA, Country::PAK, 
-    Country::GUM, Country::USA, Country::FJI, Country::USA, Country::VCT, Country::NOR, Country::FIN, Country::RUS, Country::ESP, Country::RUS, 
-    Country::DEU, Country::USA, Country::NAM, Country::GBR, Country::FRA, Country::DEU, Country::IRL, Country::SXM, Country::IND, Country::AUS, 
-    Country::USA, Country::GBR, Country::MYS, Country::GBR, Country::TUR, Country::AUT, Country::ZAF, Country::CHN, Country::POL, Country::TTO, 
-    Country::JPN, Country::MEX, Country::CHN, Country::UZB, Country::TWN, Country::GEO, Country::TON, Country::AUS, Country::BHS, Country::ESP, 
-    Country::USA, Country::ZAF, Country::DNK, Country::AUS, Country::TUR, Country::PRT, Country::NZL, Country::USA, Country::ATF, Country::ESP, 
-    Country::ESP, Country::MNE, Country::HND, Country::BGR, Country::MEX, Country::BRA, Country::DEU, Country::IRN, Country::ALB, Country::SAU, 
-    Country::MEX, Country::LBY, Country::AUS, Country::MNE, Country::TKL, Country::USA, Country::JPN, Country::FIN, Country::USA, Country::EST, 
-    Country::FRA, Country::ISR, Country::FIN, Country::STP, Country::AUS, Country::UZB, Country::CHN, Country::MAR, Country::MDG, Country::MYS, 
-    Country::USA, Country::NOR, Country::NCL, Country::VGB, Country::JPN, Country::USA, Country::TWN, Country::AUS, Country::ITA, Country::NOR, 
-    Country::NOR, Country::USA, Country::ITA, Country::AUS, Country::ITA, Country::IND, Country::KIR, Country::IND, Country::TWN, Country::NAM, 
-    Country::KAZ, Country::ITA, Country::CHN, Country::AUS, Country::USA, Country::ARG, Country::PAK, Country::USA, Country::TUN, Country::USA, 
-    Country::USA, Country::SAU, Country::USA, Country::USA, Country::USA, Country::AUS, Country::USA, Country::MYS, Country::USA, Country::DEU, 
-    Country::CHN, Country::JPN, Country::USA, Country::USA, Country::TUR, Country::PYF, Country::GRL, Country::PYF, Country::BRA, Country::JPN, 
-    Country::THA, Country::USA, Country::RUS, Country::NLD, Country::BRA, Country::UKR, Country::IND, Country::AUS, Country::PAK, Country::RUS, 
-    Country::UZB, Country::AGO, Country::CZE, Country::HND, Country::USA, Country::ECU, Country::FRA, Country::MHL, Country::JPN, Country::USA, 
-    Country::JPN, Country::VUT, Country::ZAF, Country::MNG, Country::UGA, Country::GRL, Country::SWE, Country::AUS, Country::VCT, Country::USA, 
-    Country::GBR, Country::IDN, Country::CRI, Country::MEX, Country::USA, Country::BRA, Country::CHN, Country::BRA, Country::VEN, Country::AFG, 
-    Country::ARG, Country::KOR, Country::NLD, Country::THA, Country::ZAF, Country::THA, Country::ZAF, Country::RUS, Country::GAB, Country::LCA, 
-    Country::EGY, Country::VAT, Country::FIN, Country::TUR, Country::CHL, Country::BGR, Country::TUR, Country::ITA, Country::SWE, Country::ITA, 
-    Country::BRA, Country::ISR, Country::ESP, Country::USA, Country::USA, Country::MEX, Country::ZWE, Country::ESP, Country::BGR, Country::AUT, 
-    Country::VGB, Country::USA, Country::ESP, Country::BRA, Country::RUS, Country::ESP, Country::USA, Country::VUT, Country::ESP, Country::VEN, 
-    Country::RUS, Country::USA, Country::LTU, Country::IND, Country::RUS, Country::USA, Country::CUB, Country::USA, Country::FIN, Country::ITA, 
-    Country::MEX, Country::SWE, Country::LAO, Country::RUS, Country::SWE, Country::ZAF, Country::HRV, Country::USA, Country::POL, Country::NAM, 
-    Country::AUS, Country::ZAF, Country::AUS, Country::NZL, Country::AUS, Country::GBR, Country::DEU, Country::USA, Country::NZL, Country::WLF, 
-    Country::AUS, Country::PAK, Country::AUS, Country::USA, Country::NZL, Country::USA, Country::USA, Country::POL, Country::CHN, Country::AUS, 
-    Country::CHN, Country::ZAF, Country::AUS, Country::AUS, Country::USA, Country::CXR, Country::CHN, Country::CAN, Country::PYF, Country::CHN, 
-    Country::CAN, Country::ESP, Country::CAN, Country::SGP, Country::XXX, Country::USA, Country::CMR, Country::CAN, Country::CAN, Country::CAN, 
+    Country::CHN, Country::FIN, Country::BRA, Country::PHL, Country::UMI, Country::NGA, Country::BRA, Country::PAN, Country::IND, Country::TZA, 
+    Country::ISR, Country::IND, Country::GRC, Country::ARG, Country::USA, Country::BRA, Country::GRC, Country::SSD, Country::DEU, Country::ARG, 
+    Country::PER, Country::NPL, Country::AUS, Country::HND, Country::GRL, Country::USA, Country::BWA, Country::USA, Country::FIN, Country::FIN, 
+    Country::NGA, Country::FIN, Country::AFG, Country::UKR, Country::AUS, Country::USA, Country::AUS, Country::MYS, Country::TUR, Country::JPN, 
+    Country::PAK, Country::PAK, Country::ISL, Country::DEU, Country::FIN, Country::AUS, Country::RUS, Country::AUS, Country::RWA, Country::GRC, 
+    Country::TWN, Country::PAK, Country::FIN, Country::RUS, Country::SWE, Country::JPN, Country::IRQ, Country::ZAF, Country::JAM, Country::IRL, 
+    Country::MDA, Country::ZMB, Country::JPN, Country::NOR, Country::UGA, Country::SWE, Country::AUT, Country::USA, Country::GRC, Country::ZAF, 
+    Country::JPN, Country::JPN, Country::NAM, Country::JPN, Country::IDN, Country::AUS, Country::IND, Country::AUS, Country::USA, Country::GBR, 
+    Country::JPN, Country::FIN, Country::AUS, Country::POL, Country::SWE, Country::DNK, Country::NOR, Country::SDN, Country::SWE, Country::SDN, 
+    Country::NOR, Country::AUS, Country::USA, Country::NPL, Country::USA, Country::AUS, Country::FIN, Country::MYS, Country::RUS, Country::JPN, 
+    Country::MYS, Country::FIN, Country::GRC, Country::KWT, Country::CHN, Country::AUS, Country::TUR, Country::TUR, Country::RUS, Country::AGO, 
+    Country::PNG, Country::USA, Country::FRA, Country::USA, Country::MEX, Country::USA, Country::USA, Country::USA, Country::USA, Country::GBR, 
+    Country::USA, Country::USA, Country::FRA, Country::FRA, Country::GAB, Country::MYS, Country::GAB, Country::CYP, Country::ESP, Country::USA, 
+    Country::GBR, Country::AUS, Country::FRA, Country::SWE, Country::GBR, Country::AUS, Country::USA, Country::RUS, Country::ESP, Country::DEU, 
+    Country::GIN, Country::GBR, Country::AUS, Country::USA, Country::NLD, Country::USA, Country::TGO, Country::USA, Country::USA, Country::BEL, 
+    Country::MYS, Country::GBR, Country::PAK, Country::GBR, Country::LIE, Country::NCL, Country::FRA, Country::USA, Country::USA, Country::FRA, 
+    Country::PER, Country::ITA, Country::COD, Country::PRT, Country::USA, Country::SVN, Country::NOR, Country::IND, Country::SWE, Country::MWI, 
+    Country::MEX, Country::ITA, Country::USA, Country::USA, Country::AUS, Country::USA, Country::USA, Country::AUT, Country::GBR, Country::NGA, 
+    Country::ESP, Country::BOL, Country::GBR, Country::FIN, Country::USA, Country::AUS, Country::USA, Country::FRA, Country::DOM, Country::FRA, 
+    Country::USA, Country::GBR, Country::AUS, Country::AUS, Country::HRV, Country::GBR, Country::MEX, Country::CHE, Country::NAM, Country::CHE, 
+    Country::ZAF, Country::CHN, Country::ZMB, Country::LUX, Country::BEL, Country::AUS, Country::USA, Country::GBR, Country::UKR, Country::USA, 
+    Country::USA, Country::EGY, Country::USA, Country::USA, Country::PAK, Country::SJM, Country::FRA, Country::GBR, Country::MEX, Country::AUS, 
+    Country::IND, Country::ESP, Country::USA, Country::ESP, Country::MHL, Country::GBR, Country::BRA, Country::VEN, Country::PYF, Country::PRI, 
+    Country::KEN, Country::AUS, Country::JAM, Country::ZAF, Country::USA, Country::SVN, Country::PHL, Country::USA, Country::USA, Country::USA, 
+    Country::MCO, Country::USA, Country::USA, Country::BRA, Country::OMN, Country::USA, Country::AUS, Country::BRA, Country::IDN, Country::COL, 
+    Country::MMR, Country::ARG, Country::USA, Country::USA, Country::UMI, Country::ARG, Country::SAU, Country::NCL, Country::USA, Country::AUS, 
+    Country::USA, Country::IDN, Country::MEX, Country::ZAF, Country::USA, Country::GAB, Country::PAK, Country::MAC, Country::NZL, Country::PNG, 
+    Country::NER, Country::USA, Country::ZMB, Country::NIC, Country::AUS, Country::BRA, Country::ZAF, Country::USA, Country::SOM, Country::USA, 
+    Country::USA, Country::BHS, Country::ALA, Country::USA, Country::USA, Country::MEX, Country::FIN, Country::ITA, Country::AUS, Country::TUN, 
+    Country::CIV, Country::PAK, Country::GAB, Country::MDG, Country::USA, Country::GRC, Country::ESP, Country::USA, Country::USA, Country::USA, 
+    Country::USA, Country::AUS, Country::AUS, Country::MLT, Country::USA, Country::MDV, Country::FRA, Country::USA, Country::MEX, Country::USA, 
+    Country::USA, Country::LBR, Country::TUR, Country::SWE, Country::GBR, Country::AUS, Country::JPN, Country::RUS, Country::AUS, Country::SWE, 
+    Country::JPN, Country::MSR, Country::PHL, Country::USA, Country::USA, Country::USA, Country::AUS, Country::RUS, Country::PYF, Country::NAM, 
+    Country::PAK, Country::FRA, Country::MOZ, Country::AUS, Country::TUR, Country::ZAF, Country::TCD, Country::USA, Country::USA, Country::FRA, 
+    Country::MUS, Country::RUS, Country::USA, Country::AUS, Country::GBR, Country::USA, Country::USA, Country::USA, Country::USA, Country::BLR, 
+    Country::TUR, Country::NLD, Country::LSO, Country::USA, Country::USA, Country::USA, Country::AUS, Country::USA, Country::USA, Country::SWZ, 
+    Country::MEX, Country::MEX, Country::BWA, Country::DEU, Country::USA, Country::EGY, Country::PAK, Country::USA, Country::GAB, Country::URY, 
+    Country::CMR, Country::USA, Country::ZWE, Country::PAK, Country::USA, Country::MEX, Country::ITA, Country::AUS, Country::KEN, Country::JPN, 
+    Country::IND, Country::USA, Country::MYS, Country::ZAF, Country::TWN, Country::FRA, Country::MEX, Country::ZAF, Country::AUS, Country::IND, 
+    Country::AZE, Country::FJI, Country::ITA, Country::BHS, Country::BRA, Country::CHN, Country::KEN, Country::FRA, Country::GBR, Country::ZAF, 
+    Country::FRA, Country::MRT, Country::TCD, Country::NAM, Country::KNA, Country::CMR, Country::JPN, Country::JPN, Country::CYP, Country::NER, 
+    Country::USA, Country::MRT, Country::IOT, Country::ZMB, Country::MEX, Country::NFK, Country::ZAF, Country::MEX, Country::UKR, Country::CHN, 
+    Country::IRL, Country::PHL, Country::NCL, Country::GBR, Country::AUS, Country::SWE, Country::JPN, Country::AUS, Country::NZL, Country::AUS, 
+    Country::THA, Country::FRA, Country::AUS, Country::MEX, Country::ZAF, Country::DEU, Country::GBR, Country::USA, Country::USA, Country::AUS, 
+    Country::USA, Country::USA, Country::MEX, Country::DEU, Country::CAF, Country::ESP, Country::DNK, Country::UKR, Country::USA, Country::MKD, 
+    Country::PAK, Country::JPN, Country::JPN, Country::USA, Country::JPN, Country::JPN, Country::NAM, Country::ITA, Country::USA, Country::USA, 
+    Country::AUS, Country::USA, Country::NAM, Country::USA, Country::IRN, Country::BIH, Country::NAM, Country::USA, Country::AUS, Country::AUS, 
+    Country::PRT, Country::SWE, Country::USA, Country::USA, Country::USA, Country::IRL, Country::USA, Country::DZA, Country::AUS, Country::FRA, 
+    Country::JPN, Country::USA, Country::HRV, Country::NOR, Country::IRQ, Country::USA, Country::ROU, Country::USA, Country::BFA, Country::MAR, 
+    Country::ZAF, Country::GBR, Country::FIN, Country::MRT, Country::RUS, Country::ESP, Country::USA, Country::GNB, Country::USA, Country::MAR, 
+    Country::PAN, Country::DEU, Country::USA, Country::HTI, Country::FRA, Country::IND, Country::MEX, Country::BTN, Country::USA, Country::SUR, 
+    Country::AUS, Country::ZAF, Country::PHL, Country::USA, Country::PRT, Country::USA, Country::USA, Country::ITA, Country::COL, Country::CHN, 
+    Country::MYS, Country::AUS, Country::PAK, Country::USA, Country::CYP, Country::USA, Country::FRA, Country::USA, Country::NGA, Country::AUS, 
+    Country::USA, Country::USA, Country::ZAF, Country::USA, Country::USA, Country::USA, Country::USA, Country::GBR, Country::USA, Country::FRA, 
+    Country::USA, Country::PAK, Country::USA, Country::BWA, Country::USA, Country::USA, Country::AUS, Country::ZAF, Country::USA, Country::ESP, 
+    Country::ITA, Country::NZL, Country::VEN, Country::BRA, Country::PCN, Country::KHM, Country::FSM, Country::ITA, Country::IND, Country::COG, 
+    Country::USA, Country::BRA, Country::GAB, Country::PNG, Country::DOM, Country::FIN, Country::TTO, Country::USA, Country::POL, Country::ASM, 
+    Country::AUS, Country::PYF, Country::USA, Country::AUS, Country::CZE, Country::XXX, Country::ZAF, Country::PSE, Country::ITA, Country::USA, 
+    Country::EGY, Country::PRI, Country::USA, Country::PAK, Country::USA, Country::ITA, Country::FLK, Country::ZAF, Country::AUS, Country::GLP, 
+    Country::PAN, Country::USA, Country::FRA, Country::AUS, Country::DOM, Country::CHL, Country::KOR, Country::USA, Country::HRV, Country::USA, 
+    Country::CHN, Country::BRA, Country::GRC, Country::MEX, Country::USA, Country::MEX, Country::PRT, Country::IND, Country::THA, Country::ZAF, 
+    Country::PAK, Country::VEN, Country::JPN, Country::DEU, Country::BRA, Country::ITA, Country::CYP, Country::PAK, Country::SWZ, Country::IND, 
+    Country::SRB, Country::ITA, Country::SGP, Country::ESP, Country::EST, Country::DNK, Country::CPV, Country::IND, Country::MAR, Country::USA, 
+    Country::COK, Country::PAK, Country::DEU, Country::MAR, Country::BRA, Country::ZAF, Country::USA, Country::USA, Country::USA, Country::USA, 
+    Country::FRA, Country::BRA, Country::ITA, Country::ISL, Country::ESP, Country::USA, Country::PYF, Country::PYF, Country::MMR, Country::USA, 
+    Country::GRC, Country::USA, Country::BRA, Country::LVA, Country::CHN, Country::HRV, Country::USA, Country::USA, Country::ARE, Country::ISL, 
+    Country::NER, Country::EGY, Country::ITA, Country::SWE, Country::FRA, Country::DNK, Country::USA, Country::FRA, Country::USA, Country::LBR, 
+    Country::USA, Country::AUS, Country::ITA, Country::PLW, Country::ARG, Country::NZL, Country::BGR, Country::RUS, Country::MUS, Country::ARG, 
+    Country::BHS, Country::USA, Country::USA, Country::HND, Country::NLD, Country::SAU, Country::REU, Country::RUS, Country::FIN, Country::USA, 
+    Country::PAK, Country::PAK, Country::USA, Country::YEM, Country::SLV, Country::USA, Country::BRA, Country::HND, Country::USA, Country::USA, 
+    Country::TUR, Country::USA, Country::BLM, Country::FRA, Country::USA, Country::USA, Country::ZAF, Country::MYS, Country::USA, Country::ROU, 
+    Country::USA, Country::USA, Country::USA, Country::USA, Country::CHL, Country::DEU, Country::ESP, Country::CUB, Country::USA, Country::HND, 
+    Country::JPN, Country::SWE, Country::DOM, Country::ESP, Country::JPN, Country::PAK, Country::BRA, Country::USA, Country::USA, Country::LBY, 
+    Country::KOR, Country::GBR, Country::EGY, Country::SYC, Country::TUN, Country::MAF, Country::GRL, Country::ARG, Country::USA, Country::DNK, 
+    Country::USA, Country::VNM, Country::USA, Country::USA, Country::NLD, Country::CHN, Country::USA, Country::CHN, Country::ARE, Country::USA, 
+    Country::USA, Country::DNK, Country::CPV, Country::SGP, Country::UKR, Country::ZAF, Country::USA, Country::AUS, Country::USA, Country::MEX, 
+    Country::CRI, Country::BIH, Country::CRI, Country::USA, Country::PRI, Country::FIN, Country::JPN, Country::KNA, Country::UZB, Country::GRC, 
+    Country::MKD, Country::DNK, Country::EGY, Country::RUS, Country::PAK, Country::ARG, Country::USA, Country::USA, Country::OMN, Country::MEX, 
+    Country::BGR, Country::LCA, Country::BRA, Country::SMR, Country::PRT, Country::USA, Country::GRC, Country::USA, Country::USA, Country::ECU, 
+    Country::IRL, Country::USA, Country::BGR, Country::NOR, Country::AUS, Country::VUT, Country::FIN, Country::GBR, Country::ESP, Country::USA, 
+    Country::JPN, Country::MNP, Country::USA, Country::HRV, Country::CIV, Country::BRA, Country::BOL, Country::MEX, Country::USA, Country::BOL, 
+    Country::BRA, Country::GNQ, Country::EGY, Country::COL, Country::USA, Country::CHL, Country::USA, Country::GBR, Country::SWE, Country::USA, 
+    Country::DEU, Country::USA, Country::VIR, Country::IND, Country::VIR, Country::IDN, Country::ITA, Country::PAK, Country::GUM, Country::USA, 
+    Country::FJI, Country::USA, Country::VCT, Country::NOR, Country::FIN, Country::RUS, Country::ESP, Country::RUS, Country::DEU, Country::USA, 
+    Country::NAM, Country::GBR, Country::FRA, Country::DEU, Country::IRL, Country::SXM, Country::IND, Country::AUS, Country::USA, Country::GBR, 
+    Country::MYS, Country::GBR, Country::TUR, Country::AUT, Country::ZAF, Country::CHN, Country::POL, Country::TTO, Country::JPN, Country::MEX, 
+    Country::CHN, Country::UZB, Country::TWN, Country::GEO, Country::TON, Country::AUS, Country::BHS, Country::ESP, Country::USA, Country::ZAF, 
+    Country::DNK, Country::AUS, Country::TUR, Country::PRT, Country::NZL, Country::USA, Country::ATF, Country::ESP, Country::ESP, Country::MNE, 
+    Country::HND, Country::BGR, Country::MEX, Country::BRA, Country::DEU, Country::IRN, Country::ALB, Country::SAU, Country::MEX, Country::LBY, 
+    Country::AUS, Country::MNE, Country::TKL, Country::USA, Country::JPN, Country::FIN, Country::USA, Country::EST, Country::FRA, Country::ISR, 
+    Country::FIN, Country::STP, Country::AUS, Country::UZB, Country::CHN, Country::MAR, Country::MDG, Country::MYS, Country::USA, Country::NOR, 
+    Country::NCL, Country::VGB, Country::JPN, Country::USA, Country::TWN, Country::AUS, Country::ITA, Country::NOR, Country::NOR, Country::USA, 
+    Country::ITA, Country::AUS, Country::ITA, Country::IND, Country::KIR, Country::IND, Country::TWN, Country::NAM, Country::KAZ, Country::ITA, 
+    Country::CHN, Country::AUS, Country::USA, Country::ARG, Country::PAK, Country::USA, Country::TUN, Country::USA, Country::USA, Country::SAU, 
+    Country::USA, Country::USA, Country::USA, Country::AUS, Country::USA, Country::MYS, Country::USA, Country::DEU, Country::CHN, Country::JPN, 
+    Country::USA, Country::USA, Country::TUR, Country::PYF, Country::GRL, Country::PYF, Country::BRA, Country::JPN, Country::THA, Country::USA, 
+    Country::RUS, Country::NLD, Country::BRA, Country::UKR, Country::IND, Country::AUS, Country::PAK, Country::RUS, Country::UZB, Country::AGO, 
+    Country::CZE, Country::HND, Country::USA, Country::ECU, Country::FRA, Country::MHL, Country::JPN, Country::USA, Country::JPN, Country::VUT, 
+    Country::ZAF, Country::MNG, Country::UGA, Country::GRL, Country::SWE, Country::AUS, Country::VCT, Country::USA, Country::GBR, Country::IDN, 
+    Country::CRI, Country::MEX, Country::USA, Country::BRA, Country::CHN, Country::BRA, Country::VEN, Country::AFG, Country::ARG, Country::KOR, 
+    Country::NLD, Country::THA, Country::ZAF, Country::THA, Country::ZAF, Country::RUS, Country::GAB, Country::LCA, Country::EGY, Country::VAT, 
+    Country::FIN, Country::TUR, Country::CHL, Country::BGR, Country::TUR, Country::ITA, Country::SWE, Country::ITA, Country::BRA, Country::ISR, 
+    Country::ESP, Country::USA, Country::USA, Country::MEX, Country::ZWE, Country::ESP, Country::BGR, Country::AUT, Country::VGB, Country::USA, 
+    Country::ESP, Country::BRA, Country::RUS, Country::ESP, Country::USA, Country::VUT, Country::ESP, Country::VEN, Country::RUS, Country::USA, 
+    Country::LTU, Country::IND, Country::RUS, Country::USA, Country::CUB, Country::USA, Country::FIN, Country::ITA, Country::MEX, Country::SWE, 
+    Country::LAO, Country::RUS, Country::SWE, Country::ZAF, Country::HRV, Country::USA, Country::POL, Country::NAM, Country::AUS, Country::ZAF, 
+    Country::AUS, Country::NZL, Country::AUS, Country::GBR, Country::DEU, Country::USA, Country::NZL, Country::WLF, Country::AUS, Country::PAK, 
+    Country::AUS, Country::USA, Country::NZL, Country::USA, Country::USA, Country::POL, Country::CHN, Country::AUS, Country::CHN, Country::ZAF, 
+    Country::AUS, Country::AUS, Country::USA, Country::CXR, Country::CHN, Country::CAN, Country::PYF, Country::CHN, Country::CAN, Country::ESP, 
+    Country::CAN, Country::SGP, Country::XXX, Country::USA, Country::CMR, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, 
+    Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::BMU, 
+    Country::CAN, Country::CAN, Country::CAN, Country::CHN, Country::CAN, Country::USA, Country::RUS, Country::CAN, Country::CAN, Country::CAN, 
+    Country::CAN, Country::CAN, Country::SAU, Country::JPN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, 
     Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, 
-    Country::CAN, Country::BMU, Country::CAN, Country::CAN, Country::CAN, Country::CHN, Country::CAN, Country::USA, Country::RUS, Country::CAN, 
-    Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::SAU, Country::JPN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, 
-    Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, 
-    Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::USA, Country::CAN, Country::CAN, Country::CAN, 
+    Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::USA, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, 
     Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, 
     Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, Country::CAN, 
-    Country::CAN, Country::CAN, Country::HRV, Country::HRV, Country::ESP, Country::AUS, Country::MEX, Country::MEX, Country::HKG, Country::CAN, 
-    Country::MEX, Country::NER, Country::AUS, Country::NZL, Country::CHE, Country::BHS, Country::CIV, Country::GRC, Country::CAN, Country::BGD
+    Country::HRV, Country::HRV, Country::ESP, Country::AUS, Country::MEX, Country::MEX, Country::HKG, Country::CAN, Country::MEX, Country::NER, 
+    Country::AUS, Country::NZL, Country::CHE, Country::BHS, Country::CIV, Country::GRC, Country::CAN, Country::BGD    
 };
+
+
+
+
 
 // Country to Principle Currency
 const short Gazetteer::m_cid2ccy[Country::NUMCOUNTRY] = { 
@@ -1644,7 +1652,7 @@ static const short c_IRL[9] = { 8, City::CFN, City::DUB, City::GWY, City::KIR, C
 static const short c_IRN[4] = { 3, City::ABD, City::OMH, City::THR };
 static const short c_IRQ[5] = { 4, City::BGW, City::BSR, City::KIK, City::OSM };
 static const short c_ISL[5] = { 4, City::EGS, City::KEF, City::REK, City::RKV };
-static const short c_ISR[7] = { 6, City::ETH, City::HFA, City::JRS, City::JSR, City::TLV, City::VDA };
+static const short c_ISR[6] = { 5, City::ETH, City::HFA, City::JRS, City::TLV, City::VDA };
 static const short c_ITA[38] = { 37, City::AHO, City::AOI, City::BDS, City::BGY, City::BLQ, City::BRI, City::CAG, City::CIA, City::CTA, City::EBA, City::FCO, City::FLR, City::GOA, City::LIN, City::LMP, City::MIL, City::MXP, City::NAP, City::OLB, City::PEG, City::PMO, City::PNL, City::PSA, City::PSR, City::QIC, City::QPA, City::REG, City::RMI, City::ROM, City::SUF, City::TPS, City::TRN, City::TRS, City::TSF, City::VBS, City::VCE, City::VRN };
 static const short c_JAM[3] = { 2, City::KIN, City::MBJ };
 static const short c_JEY[2] = { 1, City::JER };
@@ -1766,9 +1774,9 @@ static const short c_TWN[6] = { 5, City::KHH, City::MZG, City::TAY, City::TPE, C
 static const short c_TZA[5] = { 4, City::ARK, City::DAR, City::DOD, City::JRO };
 static const short c_UGA[5] = { 4, City::EBB, City::JIN, City::KLA, City::ULU };
 static const short c_UKR[10] = { 9, City::DNK, City::HRK, City::IEV, City::KBP, City::LWO, City::NLV, City::ODS, City::SIP, City::UDJ };
-static const short c_UMI[2] = { 1, City::DCA };
+static const short c_UMI[3] = { 2, City::JON, City::MDY };
 static const short c_URY[2] = { 1, City::MVD };
-static const short c_USA[477] = { 476, City::ABE, City::ABI, City::ABQ, City::ABR, City::ABY, City::ACK, City::ACT, City::ACV, City::ACY, City::ADQ, City::AGS, City::AHN, City::AKN, City::ALB, City::ALO, City::ALW, City::AMA, City::ANB, City::ANC, City::ANP, City::AOO, City::APF, City::ARB, City::ASE, City::ATL, City::ATO, City::ATW, City::ATY, City::AUG, City::AUS, City::AVL, City::AVP, City::AXS, City::AZO, City::BCT, City::BDL, City::BDR, City::BEH, City::BET, City::BFD, City::BFL, City::BGM, City::BGR, City::BHC, City::BHM, City::BIL, City::BIS, City::BJI, City::BKL, City::BKW, City::BKX, City::BLF, City::BLI, City::BMG, City::BMI, City::BNA, City::BOI, City::BOS, City::BPT, City::BQK, City::BRD, City::BRL, City::BTM, City::BTR, City::BTV, City::BUF, City::BUR, City::BWI, City::BXS, City::BZN, City::CAE, City::CAK, City::CCR, City::CDC, City::CDV, City::CEC, City::CGA, City::CHA, City::CHI, City::CHO, City::CHS, City::CIC, City::CID, City::CKB, City::CLD, City::CLE, City::CLL, City::CLM, City::CLT, City::CMH, City::CMI, City::CMX, City::COD, City::CON, City::COS, City::CPR, City::CRE, City::CRG, City::CRP, City::CRW, City::CSG, City::CSN, City::CVG, City::CWA, City::CYS, City::DAB, City::DAL, City::DAN, City::DAY, City::DBQ, City::DCA, City::DEC, City::DEN, City::DET, City::DFW, City::DHN, City::DLG, City::DLH, City::DOV, City::DRO, City::DSM, City::DTT, City::DTW, City::DUJ, City::DUT, City::DVL, City::EAT, City::EAU, City::EGE, City::EKI, City::EKO, City::ELM, City::ELP, City::ELY, City::ENA, City::ERI, City::ESC, City::ESF, City::EUG, City::EVV, City::EWN, City::EWR, City::EYW, City::FAI, City::FAR, City::FAT, City::FAY, City::FC0, City::FCA, City::FFT, City::FHU, City::FKL, City::FLG, City::FLL, City::FLO, City::FMN, City::FMY, City::FNT, City::FOD, City::FOE, City::FRI, City::FSD, City::FSM, City::FWA, City::FYV, City::GAD, City::GCC, City::GCN, City::GDV, City::GEG, City::GFK, City::GGG, City::GGW, City::GJT, City::GLH, City::GNV, City::GON, City::GPT, City::GPZ, City::GRB, City::GRR, City::GSO, City::GSP, City::GTF, City::GUC, City::GW0, City::HAR, City::HDN, City::HHH, City::HIB, City::HII, City::HKS, City::HKY, City::HLN, City::HNH, City::HNL, City::HNS, City::HOM, City::HON, City::HOU, City::HPN, City::HRL, City::HSV, City::HTS, City::HUF, City::HVN, City::HVR, City::HYA, City::HYG, City::IAD, City::IAG, City::IAH, City::ICT, City::IDA, City::IJX, City::ILE, City::ILG, City::ILI, City::ILM, City::IND, City::INL, City::IPL, City::IPT, City::ISL, City::ISO, City::ISP, City::ITH, City::ITO, City::IYK, City::JAC, City::JAN, City::JAX, City::JBR, City::JEF, City::JFK, City::JHM, City::JHW, City::JKV, City::JLN, City::JMS, City::JNU, City::JON, City::JST, City::JVL, City::JXN, City::KCC, City::KLW, City::KOA, City::KTB, City::KTN, City::LAF, City::LAN, City::LAR, City::LAS, City::LAW, City::LAX, City::LBB, City::LBE, City::LCH, City::LEB, City::LEX, City::LFT, City::LGA, City::LGB, City::LIH, City::LIJ, City::LIT, City::LMT, City::LNK, City::LNS, City::LNY, City::LRD, City::LRF, City::LSE, City::LWB, City::LWS, City::LWT, City::LYH, City::LYO, City::MAF, City::MBS, City::MCE, City::MCI, City::MCL, City::MCN, City::MCO, City::MCW, City::MDT, City::MDW, City::MDY, City::MEI, City::MEM, City::MFE, City::MFR, City::MGM, City::MGW, City::MHE, City::MHT, City::MIA, City::MJQ, City::MKE, City::MKG, City::MKK, City::MKL, City::MLB, City::MLI, City::MLS, City::MLU, City::MOB, City::MOD, City::MOT, City::MQT, City::MRB, City::MRY, City::MSL, City::MSN, City::MSO, City::MSP, City::MSY, City::MTH, City::MTJ, City::MTM, City::MTO, City::MUE, City::MV0, City::MVY, City::MWH, City::MYR, City::NIP, City::NYC, City::NZC, City::OAJ, City::OAK, City::OGG, City::OKC, City::OLF, City::OLM, City::OMA, City::OME, City::ONT, City::ORD, City::ORF, City::ORH, City::ORL, City::OSH, City::OTH, City::OTZ, City::OWB, City::OXR, City::PAH, City::PBI, City::PCT, City::PDT, City::PDX, City::PFN, City::PGA, City::PGV, City::PHF, City::PHL, City::PHX, City::PIA, City::PIB, City::PIH, City::PIR, City::PIT, City::PKB, City::PLB, City::PLN, City::PMD, City::PNS, City::POU, City::PQI, City::PSC, City::PSG, City::PSP, City::PUB, City::PUW, City::PVD, City::PWM, City::RAP, City::RDD, City::RDG, City::RDM, City::RDU, City::RFD, City::RHI, City::RIC, City::RKD, City::RKS, City::RNO, City::ROA, City::ROC, City::RST, City::RSW, City::RWI, City::SAF, City::SAN, City::SAT, City::SAV, City::SBA, City::SBN, City::SBP, City::SBY, City::SCC, City::SCE, City::SCF, City::SCK, City::SDF, City::SDY, City::SEA, City::SFO, City::SGF, City::SGU, City::SGY, City::SHD, City::SHR, City::SHV, City::SIT, City::SJC, City::SJT, City::SLC, City::SLE, City::SMF, City::SMX, City::SNA, City::SNS, City::SPI, City::SPS, City::SRQ, City::ST0, City::STL, City::STP, City::STS, City::SUN, City::SUX, City::SWF, City::SYR, City::TCL, City::TEX, City::TKA, City::TLH, City::TOL, City::TPA, City::TRI, City::TTN, City::TUL, City::TUP, City::TUS, City::TVC, City::TVF, City::TVL, City::TWF, City::TXK, City::TYR, City::TYS, City::UCA, City::UIN, City::UKI, City::UNK, City::UPP, City::VDZ, City::VEL, City::VIS, City::VLD, City::VN0, City::VPS, City::VRB, City::WAS, City::WLB, City::WP0, City::WRG, City::WRL, City::WYS, City::YAK, City::YKM, City::YUM };
+static const short c_USA[475] = { 474, City::ABE, City::ABI, City::ABQ, City::ABR, City::ABY, City::ACK, City::ACT, City::ACV, City::ACY, City::ADQ, City::AGS, City::AHN, City::AKN, City::ALB, City::ALO, City::ALW, City::AMA, City::ANB, City::ANC, City::ANP, City::AOO, City::APF, City::ARB, City::ASE, City::ATL, City::ATO, City::ATW, City::ATY, City::AUG, City::AUS, City::AVL, City::AVP, City::AXS, City::AZO, City::BCT, City::BDL, City::BDR, City::BEH, City::BET, City::BFD, City::BFL, City::BGM, City::BGR, City::BHC, City::BHM, City::BIL, City::BIS, City::BJI, City::BKL, City::BKW, City::BKX, City::BLF, City::BLI, City::BMG, City::BMI, City::BNA, City::BOI, City::BOS, City::BPT, City::BQK, City::BRD, City::BRL, City::BTM, City::BTR, City::BTV, City::BUF, City::BUR, City::BWI, City::BXS, City::BZN, City::CAE, City::CAK, City::CCR, City::CDC, City::CDV, City::CEC, City::CGA, City::CHA, City::CHI, City::CHO, City::CHS, City::CIC, City::CID, City::CKB, City::CLD, City::CLE, City::CLL, City::CLM, City::CLT, City::CMH, City::CMI, City::CMX, City::COD, City::CON, City::COS, City::CPR, City::CRE, City::CRG, City::CRP, City::CRW, City::CSG, City::CSN, City::CVG, City::CWA, City::CYS, City::DAB, City::DAL, City::DAN, City::DAY, City::DBQ, City::DCA, City::DEC, City::DEN, City::DET, City::DFW, City::DHN, City::DLG, City::DLH, City::DOV, City::DRO, City::DSM, City::DTT, City::DTW, City::DUJ, City::DUT, City::DVL, City::EAT, City::EAU, City::EGE, City::EKI, City::EKO, City::ELM, City::ELP, City::ELY, City::ENA, City::ERI, City::ESC, City::ESF, City::EUG, City::EVV, City::EWN, City::EWR, City::EYW, City::FAI, City::FAR, City::FAT, City::FAY, City::FC0, City::FCA, City::FFT, City::FHU, City::FKL, City::FLG, City::FLL, City::FLO, City::FMN, City::FMY, City::FNT, City::FOD, City::FOE, City::FRI, City::FSD, City::FSM, City::FWA, City::FYV, City::GAD, City::GCC, City::GCN, City::GDV, City::GEG, City::GFK, City::GGG, City::GGW, City::GJT, City::GLH, City::GNV, City::GON, City::GPT, City::GPZ, City::GRB, City::GRR, City::GSO, City::GSP, City::GTF, City::GUC, City::GW0, City::HAR, City::HDN, City::HHH, City::HIB, City::HII, City::HKS, City::HKY, City::HLN, City::HNH, City::HNL, City::HNS, City::HOM, City::HON, City::HOU, City::HPN, City::HRL, City::HSV, City::HTS, City::HUF, City::HVN, City::HVR, City::HYA, City::HYG, City::IAD, City::IAG, City::IAH, City::ICT, City::IDA, City::IJX, City::ILE, City::ILG, City::ILI, City::ILM, City::IND, City::INL, City::IPL, City::IPT, City::ISL, City::ISO, City::ISP, City::ITH, City::ITO, City::IYK, City::JAC, City::JAN, City::JAX, City::JBR, City::JEF, City::JFK, City::JHM, City::JHW, City::JKV, City::JLN, City::JMS, City::JNU, City::JST, City::JVL, City::JXN, City::KCC, City::KLW, City::KOA, City::KTB, City::KTN, City::LAF, City::LAN, City::LAR, City::LAS, City::LAW, City::LAX, City::LBB, City::LBE, City::LCH, City::LEB, City::LEX, City::LFT, City::LGA, City::LGB, City::LIH, City::LIJ, City::LIT, City::LMT, City::LNK, City::LNS, City::LNY, City::LRD, City::LRF, City::LSE, City::LWB, City::LWS, City::LWT, City::LYH, City::LYO, City::MAF, City::MBS, City::MCE, City::MCI, City::MCL, City::MCN, City::MCO, City::MCW, City::MDT, City::MDW, City::MEI, City::MEM, City::MFE, City::MFR, City::MGM, City::MGW, City::MHE, City::MHT, City::MIA, City::MJQ, City::MKE, City::MKG, City::MKK, City::MKL, City::MLB, City::MLI, City::MLS, City::MLU, City::MOB, City::MOD, City::MOT, City::MQT, City::MRB, City::MRY, City::MSL, City::MSN, City::MSO, City::MSP, City::MSY, City::MTH, City::MTJ, City::MTM, City::MTO, City::MUE, City::MV0, City::MVY, City::MWH, City::MYR, City::NIP, City::NYC, City::NZC, City::OAJ, City::OAK, City::OGG, City::OKC, City::OLF, City::OLM, City::OMA, City::OME, City::ONT, City::ORD, City::ORF, City::ORH, City::ORL, City::OSH, City::OTH, City::OTZ, City::OWB, City::OXR, City::PAH, City::PBI, City::PCT, City::PDT, City::PDX, City::PFN, City::PGA, City::PGV, City::PHF, City::PHL, City::PHX, City::PIA, City::PIB, City::PIH, City::PIR, City::PIT, City::PKB, City::PLB, City::PLN, City::PMD, City::PNS, City::POU, City::PQI, City::PSC, City::PSG, City::PSP, City::PUB, City::PUW, City::PVD, City::PWM, City::RAP, City::RDD, City::RDG, City::RDM, City::RDU, City::RFD, City::RHI, City::RIC, City::RKD, City::RKS, City::RNO, City::ROA, City::ROC, City::RST, City::RSW, City::RWI, City::SAF, City::SAN, City::SAT, City::SAV, City::SBA, City::SBN, City::SBP, City::SBY, City::SCC, City::SCE, City::SCF, City::SCK, City::SDF, City::SDY, City::SEA, City::SFO, City::SGF, City::SGU, City::SGY, City::SHD, City::SHR, City::SHV, City::SIT, City::SJC, City::SJT, City::SLC, City::SLE, City::SMF, City::SMX, City::SNA, City::SNS, City::SPI, City::SPS, City::SRQ, City::ST0, City::STL, City::STP, City::STS, City::SUN, City::SUX, City::SWF, City::SYR, City::TCL, City::TEX, City::TKA, City::TLH, City::TOL, City::TPA, City::TRI, City::TTN, City::TUL, City::TUP, City::TUS, City::TVC, City::TVF, City::TVL, City::TWF, City::TXK, City::TYR, City::TYS, City::UCA, City::UIN, City::UKI, City::UNK, City::UPP, City::VDZ, City::VEL, City::VIS, City::VLD, City::VN0, City::VPS, City::VRB, City::WAS, City::WLB, City::WP0, City::WRG, City::WRL, City::WYS, City::YAK, City::YKM, City::YUM };
 static const short c_UZB[5] = { 4, City::SKD, City::TAS, City::TMZ, City::UGC };
 static const short c_VAT[2] = { 1, City::VA0 };
 static const short c_VCT[4] = { 3, City::CIW, City::SVD, City::UNI };
@@ -1787,9 +1795,10 @@ static const short c_XXX[3] = { 2, City::PRN, City::XXX };
 static const short c_YEM[3] = { 2, City::ADE, City::SAH };
 static const short c_ZAF[42] = { 41, City::ADY, City::AGZ, City::ALJ, City::BFN, City::CPT, City::DUR, City::ELL, City::ELS, City::GRJ, City::HLA, City::JNB, City::KIM, City::KLZ, City::LUJ, City::MBM, City::MEZ, City::MGH, City::MQP, City::MZF, City::MZY, City::NCS, City::NLP, City::NTY, City::OUH, City::PBZ, City::PHW, City::PLZ, City::PRY, City::PTG, City::PZB, City::RCB, City::SBU, City::SIS, City::SZK, City::TCU, City::ULD, City::UTN, City::UTT, City::VYD, City::WEL, City::WVB };
 static const short c_ZMB[6] = { 5, City::CIP, City::KIW, City::LUN, City::MFU, City::NLA };
-static const short c_ZWE[9] = { 8, City::BFO, City::BUQ, City::GWE, City::HRE, City::HWN, City::MVZ, City::SAY, City::VFA };
+static const short c_ZWE[8] = { 7, City::BFO, City::BUQ, City::GWE, City::HRE, City::HWN, City::MVZ, City::VFA };
 
-const short * const Gazetteer::m_cid2ctys[Country::NUMCOUNTRY] = { 
+const short * const Gazetteer::m_cid2ctys[Country::NUMCOUNTRY] = 
+{ 
     c_NOCOUNTRY,
     c_ABW, c_AFG, c_AGO, c_AIA, c_ALA, c_ALB, c_AND, c_ARE, c_ARG, c_ARM, 
     c_ASM, c_ATA, c_ATF, c_ATG, c_AUS, c_AUT, c_AZE, c_BDI, c_BEL, c_BEN, 
@@ -1816,7 +1825,7 @@ const short * const Gazetteer::m_cid2ctys[Country::NUMCOUNTRY] = {
     c_TJK, c_TKL, c_TKM, c_TLS, c_TON, c_TTO, c_TUN, c_TUR, c_TUV, c_TWN, 
     c_TZA, c_UGA, c_UKR, c_UMI, c_URY, c_USA, c_UZB, c_VAT, c_VCT, c_VEN, 
     c_VGB, c_VIR, c_VNM, c_VUT, c_WLF, c_WSM, c_XAF, c_XCD, c_XOF, c_XPF, 
-    c_XXX, c_YEM, c_ZAF, c_ZMB, c_ZWE
+    c_XXX, c_YEM, c_ZAF, c_ZMB, c_ZWE  
 };
 
 static const short d_NOCITY[2] = { 1, MarketId::NOMARKETID };
@@ -1877,7 +1886,7 @@ static const short d_AJF[2] = { 1, MarketId::XXXX };
 static const short d_AJN[2] = { 1, MarketId::XXXX };
 static const short d_AJU[2] = { 1, MarketId::XXXX };
 static const short d_AJY[2] = { 1, MarketId::XXXX };
-static const short d_AKL[3] = { 2, MarketId::XAUK, MarketId::XNEE };
+static const short d_AKL[6] = { 5, MarketId::NZXC, MarketId::NZXM, MarketId::XAUK, MarketId::XNEE, MarketId::XNZE };
 static const short d_AKN[2] = { 1, MarketId::XXXX };
 static const short d_AKT[2] = { 1, MarketId::XXXX };
 static const short d_ALA[3] = { 2, MarketId::ETSC, MarketId::XKAZ };
@@ -1895,7 +1904,7 @@ static const short d_ALY[2] = { 1, MarketId::XXXX };
 static const short d_AMA[2] = { 1, MarketId::XXXX };
 static const short d_AMD[2] = { 1, MarketId::NMCE };
 static const short d_AMM[4] = { 3, MarketId::AMNL, MarketId::JOR0, MarketId::XAMM };
-static const short d_AMS[102] = { 101, MarketId::ABNA, MarketId::ABNC, MarketId::AFSA, MarketId::AFSE, MarketId::AFSI, MarketId::AFSL, MarketId::AFSO, MarketId::AFSX, MarketId::ALXA, MarketId::BAPE, MarketId::BARU, MarketId::BEUD, MarketId::BEUE, MarketId::BEUF, MarketId::BEUO, MarketId::BEUP, MarketId::BEUT, MarketId::BTAM, MarketId::BTFE, MarketId::BTQE, MarketId::CABV, MarketId::CAPA, MarketId::CAVD, MarketId::CBAE, MarketId::CCRM, MarketId::CCXE, MarketId::CEDX, MarketId::CEUD, MarketId::CEUE, MarketId::CEUO, MarketId::CEUX, MarketId::COMM, MarketId::CPTX, MarketId::DAMS, MarketId::EBSD, MarketId::EBSF, MarketId::EBSI, MarketId::EBSN, MarketId::ECEU, MarketId::ECXE, MarketId::ETPA, MarketId::FLTB, MarketId::FLTR, MarketId::FLWX, MarketId::HCHC, MarketId::IEBS, MarketId::IMCO, MarketId::IMCT, MarketId::IMEQ, MarketId::INGB, MarketId::INGE, MarketId::INGF, MarketId::IPNL, MarketId::ISWN, MarketId::ISWO, MarketId::ISWP, MarketId::ISWT, MarketId::JLEU, MarketId::JNSI, MarketId::LEBV, MarketId::LISZ, MarketId::MANL, MarketId::MHBE, MarketId::MUBE, MarketId::MUSN, MarketId::MXNL, MarketId::NDEX, MarketId::NDXS, MarketId::NEXY, MarketId::NLD0, MarketId::NLPX, MarketId::NWNV, MarketId::OHVO, MarketId::RESE, MarketId::RESF, MarketId::RFQN, MarketId::RR4G, MarketId::STXS, MarketId::TNLA, MarketId::TOMD, MarketId::TOMX, MarketId::TOWR, MarketId::TQEA, MarketId::TQEB, MarketId::TQEM, MarketId::TQEX, MarketId::TRNL, MarketId::TWEA, MarketId::TWEM, MarketId::TWEO, MarketId::TWEU, MarketId::XACE, MarketId::XAEX, MarketId::XAMS, MarketId::XEUC, MarketId::XEUE, MarketId::XEUI, MarketId::XFTA, MarketId::XHFT, MarketId::XNXC, MarketId::XNXD };
+static const short d_AMS[107] = { 106, MarketId::ABNA, MarketId::ABNC, MarketId::AFSA, MarketId::AFSE, MarketId::AFSI, MarketId::AFSL, MarketId::AFSO, MarketId::AFSX, MarketId::ALXA, MarketId::BAPE, MarketId::BARU, MarketId::BEUD, MarketId::BEUE, MarketId::BEUF, MarketId::BEUO, MarketId::BEUP, MarketId::BEUT, MarketId::BTAM, MarketId::BTFE, MarketId::BTQE, MarketId::CABV, MarketId::CAPA, MarketId::CAVD, MarketId::CBAE, MarketId::CCRM, MarketId::CCXE, MarketId::CEDX, MarketId::CEUD, MarketId::CEUE, MarketId::CEUO, MarketId::CEUX, MarketId::COMM, MarketId::CPTX, MarketId::D2XC, MarketId::D2XG, MarketId::DAMS, MarketId::EBSD, MarketId::EBSF, MarketId::EBSI, MarketId::EBSN, MarketId::ECEU, MarketId::ECXE, MarketId::ETPA, MarketId::FLTB, MarketId::FLTR, MarketId::FLWX, MarketId::GMGE, MarketId::HCHC, MarketId::IEBS, MarketId::IMCO, MarketId::IMCT, MarketId::IMEQ, MarketId::INGB, MarketId::INGE, MarketId::INGF, MarketId::IPNL, MarketId::ISWN, MarketId::ISWO, MarketId::ISWP, MarketId::ISWT, MarketId::JLEU, MarketId::JNSI, MarketId::LEBV, MarketId::LISZ, MarketId::MANL, MarketId::MHBE, MarketId::MUBE, MarketId::MUSN, MarketId::MXNL, MarketId::NDEX, MarketId::NDXS, MarketId::NEXY, MarketId::NLD0, MarketId::NLPX, MarketId::NWNV, MarketId::OCXE, MarketId::OHVO, MarketId::RESE, MarketId::RESF, MarketId::RFQN, MarketId::RR4G, MarketId::STXS, MarketId::TNLA, MarketId::TOMD, MarketId::TOMX, MarketId::TOWR, MarketId::TQEA, MarketId::TQEB, MarketId::TQEM, MarketId::TQEX, MarketId::TRNL, MarketId::TWEA, MarketId::TWEM, MarketId::TWEO, MarketId::TWEU, MarketId::VWAP, MarketId::XACE, MarketId::XAEX, MarketId::XAMS, MarketId::XEUC, MarketId::XEUE, MarketId::XEUI, MarketId::XFTA, MarketId::XHFT, MarketId::XNXC, MarketId::XNXD };
 static const short d_ANB[2] = { 1, MarketId::XXXX };
 static const short d_ANC[2] = { 1, MarketId::XXXX };
 static const short d_ANK[3] = { 2, MarketId::EWRM, MarketId::TMEX };
@@ -1963,7 +1972,7 @@ static const short d_BCN[7] = { 6, MarketId::CABK, MarketId::PAVE, MarketId::SBA
 static const short d_BCO[2] = { 1, MarketId::XXXX };
 static const short d_BCT[2] = { 1, MarketId::LAMP };
 static const short d_BCV[2] = { 1, MarketId::BLZ0 };
-static const short d_BDA[2] = { 1, MarketId::XXXX };
+static const short d_BDA[4] = { 3, MarketId::A24EX, MarketId::GTXE, MarketId::XBDA };
 static const short d_BDB[2] = { 1, MarketId::XXXX };
 static const short d_BDL[2] = { 1, MarketId::XXXX };
 static const short d_BDO[2] = { 1, MarketId::XXXX };
@@ -1977,7 +1986,7 @@ static const short d_BEH[2] = { 1, MarketId::XXXX };
 static const short d_BEL[2] = { 1, MarketId::XXXX };
 static const short d_BEN[2] = { 1, MarketId::XXXX };
 static const short d_BEO[2] = { 1, MarketId::XXXX };
-static const short d_BER[16] = { 15, MarketId::BERA, MarketId::BERB, MarketId::BERC, MarketId::DEU0, MarketId::EQTA, MarketId::EQTB, MarketId::EQTC, MarketId::EQTD, MarketId::TGAT, MarketId::TGSI, MarketId::XBER, MarketId::XEQT, MarketId::XGAT, MarketId::XGRM, MarketId::ZOBX };
+static const short d_BER[17] = { 16, MarketId::BERA, MarketId::BERB, MarketId::BERC, MarketId::DEU0, MarketId::EQTA, MarketId::EQTB, MarketId::EQTC, MarketId::EQTD, MarketId::TGAT, MarketId::TGSI, MarketId::TRBX, MarketId::XBER, MarketId::XEQT, MarketId::XGAT, MarketId::XGRM, MarketId::ZOBX };
 static const short d_BES[2] = { 1, MarketId::XXXX };
 static const short d_BET[2] = { 1, MarketId::XXXX };
 static const short d_BEW[2] = { 1, MarketId::XXXX };
@@ -1991,7 +2000,7 @@ static const short d_BGA[2] = { 1, MarketId::XXXX };
 static const short d_BGF[2] = { 1, MarketId::CAF0 };
 static const short d_BGI[5] = { 4, MarketId::BAJM, MarketId::BRB0, MarketId::XBAB, MarketId::XBIS };
 static const short d_BGM[2] = { 1, MarketId::XXXX };
-static const short d_BGO[3] = { 2, MarketId::FISH, MarketId::ICAS };
+static const short d_BGO[4] = { 3, MarketId::FISH, MarketId::HWHE, MarketId::ICAS };
 static const short d_BGR[2] = { 1, MarketId::XXXX };
 static const short d_BGU[2] = { 1, MarketId::XXXX };
 static const short d_BGW[3] = { 2, MarketId::IRQ0, MarketId::XIQS };
@@ -2140,7 +2149,7 @@ static const short d_CGU[2] = { 1, MarketId::XXXX };
 static const short d_CHA[2] = { 1, MarketId::XXXX };
 static const short d_CHC[2] = { 1, MarketId::XXXX };
 static const short d_CHG[2] = { 1, MarketId::XXXX };
-static const short d_CHI[65] = { 64, MarketId::BATO, MarketId::BATS, MarketId::BATY, MarketId::BTNL, MarketId::BYXD, MarketId::BZXD, MarketId::C2OX, MarketId::CAST, MarketId::CBSX, MarketId::CBTS, MarketId::CCFE, MarketId::CMES, MarketId::CODA, MarketId::COHR, MarketId::CONE, MarketId::CTWO, MarketId::DASH, MarketId::EDDP, MarketId::EDGA, MarketId::EDGD, MarketId::EDGO, MarketId::EDGX, MarketId::ERIS, MarketId::FCBT, MarketId::FCME, MarketId::FREX, MarketId::G1XX, MarketId::GLBX, MarketId::GLPS, MarketId::GOTC, MarketId::GREE, MarketId::HEGX, MarketId::IMCS, MarketId::JLEQ, MarketId::JLQD, MarketId::OPRA, MarketId::PDQD, MarketId::PDQX, MarketId::SCXA, MarketId::SCXF, MarketId::SCXM, MarketId::SCXO, MarketId::SCXS, MarketId::SMFE, MarketId::SUNT, MarketId::THRD, MarketId::XARC, MarketId::XCBD, MarketId::XCBF, MarketId::XCBO, MarketId::XCBT, MarketId::XCCX, MarketId::XCHI, MarketId::XCME, MarketId::XCRC, MarketId::XEUS, MarketId::XIMM, MarketId::XIOM, MarketId::XMAC, MarketId::XMER, MarketId::XMID, MarketId::XOCH, MarketId::YKNA, MarketId::ZERO };
+static const short d_CHI[65] = { 64, MarketId::BATO, MarketId::BATS, MarketId::BATY, MarketId::BTNL, MarketId::BYXD, MarketId::BZXD, MarketId::C2OX, MarketId::CAST, MarketId::CBSX, MarketId::CBTS, MarketId::CCFE, MarketId::CMES, MarketId::CODA, MarketId::COHR, MarketId::CONE, MarketId::CTWO, MarketId::DASH, MarketId::EDDP, MarketId::EDGA, MarketId::EDGD, MarketId::EDGO, MarketId::EDGX, MarketId::ERIS, MarketId::FCBT, MarketId::FCME, MarketId::FREX, MarketId::G1XX, MarketId::GLPS, MarketId::GOTC, MarketId::GREE, MarketId::HEGX, MarketId::IMCS, MarketId::JLEQ, MarketId::JLQD, MarketId::OPRA, MarketId::PDQD, MarketId::PDQX, MarketId::SCXA, MarketId::SCXF, MarketId::SCXM, MarketId::SCXO, MarketId::SCXS, MarketId::SMFE, MarketId::SUNT, MarketId::THRD, MarketId::XARC, MarketId::XCBD, MarketId::XCBF, MarketId::XCBO, MarketId::XCBT, MarketId::XCCX, MarketId::XCHI, MarketId::XCME, MarketId::XCRC, MarketId::XEUS, MarketId::XIMM, MarketId::XIMX, MarketId::XIOM, MarketId::XMAC, MarketId::XMER, MarketId::XMID, MarketId::XOCH, MarketId::YKNA, MarketId::ZERO };
 static const short d_CHO[3] = { 2, MarketId::CMSF, MarketId::WELX };
 static const short d_CHQ[2] = { 1, MarketId::XXXX };
 static const short d_CHS[2] = { 1, MarketId::XXXX };
@@ -2284,7 +2293,7 @@ static const short d_DUR[2] = { 1, MarketId::XXXX };
 static const short d_DUS[12] = { 11, MarketId::DUSA, MarketId::DUSB, MarketId::DUSC, MarketId::DUSD, MarketId::HSBT, MarketId::IKBS, MarketId::LSSI, MarketId::MHBD, MarketId::SMBD, MarketId::XDUS, MarketId::XQTX };
 static const short d_DUT[2] = { 1, MarketId::XXXX };
 static const short d_DVL[2] = { 1, MarketId::XXXX };
-static const short d_DXB[7] = { 6, MarketId::DGCX, MarketId::DIFX, MarketId::DUMX, MarketId::GMGD, MarketId::RFIM, MarketId::XDFM };
+static const short d_DXB[9] = { 8, MarketId::DGCX, MarketId::DIFX, MarketId::DUMX, MarketId::GMGD, MarketId::RFIM, MarketId::XDFM, MarketId::XGAI, MarketId::XGGI };
 static const short d_DYA[2] = { 1, MarketId::XXXX };
 static const short d_DYU[2] = { 1, MarketId::TJK0 };
 static const short d_DZA[2] = { 1, MarketId::MYT0 };
@@ -2371,7 +2380,7 @@ static const short d_FLG[2] = { 1, MarketId::XXXX };
 static const short d_FLL[2] = { 1, MarketId::XXXX };
 static const short d_FLN[2] = { 1, MarketId::XXXX };
 static const short d_FLO[2] = { 1, MarketId::XXXX };
-static const short d_FLR[4] = { 3, MarketId::DDTX, MarketId::IBEQ, MarketId::IBIS };
+static const short d_FLR[5] = { 4, MarketId::DDTX, MarketId::IBEQ, MarketId::IBIS, MarketId::SYNK };
 static const short d_FMN[2] = { 1, MarketId::XXXX };
 static const short d_FMO[2] = { 1, MarketId::XXXX };
 static const short d_FMY[2] = { 1, MarketId::XXXX };
@@ -2385,7 +2394,7 @@ static const short d_FOE[2] = { 1, MarketId::XXXX };
 static const short d_FOR[2] = { 1, MarketId::XXXX };
 static const short d_FOU[2] = { 1, MarketId::XXXX };
 static const short d_FPO[2] = { 1, MarketId::XXXX };
-static const short d_FRA[105] = { 104, MarketId::A360T, MarketId::A360X, MarketId::AUTO, MarketId::BINV, MarketId::BOCF, MarketId::CATS, MarketId::CBKA, MarketId::CBKC, MarketId::CBKD, MarketId::CBKE, MarketId::CBKF, MarketId::CBKG, MarketId::CBKS, MarketId::CDSI, MarketId::CGEC, MarketId::CGEE, MarketId::CGET, MarketId::CGMD, MarketId::CSDA, MarketId::DAPA, MarketId::DBAG, MarketId::DBDX, MarketId::DBES, MarketId::DBLN, MarketId::DBMO, MarketId::DBOX, MarketId::DEKA, MarketId::DZBK, MarketId::EBLX, MarketId::ECAG, MarketId::ECGS, MarketId::ENTW, MarketId::ERFQ, MarketId::FICX, MarketId::FRAA, MarketId::FRAB, MarketId::FRAD, MarketId::FRAS, MarketId::FRAU, MarketId::FRAV, MarketId::FRAW, MarketId::GSBE, MarketId::GSEI, MarketId::HELA, MarketId::JEFE, MarketId::JESI, MarketId::JPEU, MarketId::LBCW, MarketId::MESI, MarketId::MHEU, MarketId::MSEU, MarketId::NCME, MarketId::NESI, MarketId::RBCG, MarketId::SCAG, MarketId::SEBA, MarketId::SMFF, MarketId::SPEX, MarketId::TPDE, MarketId::TSFF, MarketId::TSFG, MarketId::UBSD, MarketId::UBSI, MarketId::UBSL, MarketId::VONT, MarketId::VTLS, MarketId::VTPS, MarketId::VWDA, MarketId::VWDX, MarketId::XDBC, MarketId::XDBV, MarketId::XDBX, MarketId::XDTB, MarketId::XDWZ, MarketId::XECB, MarketId::XEHQ, MarketId::XERE, MarketId::XERT, MarketId::XETA, MarketId::XETB, MarketId::XETC, MarketId::XETD, MarketId::XETE, MarketId::XETI, MarketId::XETR, MarketId::XETS, MarketId::XETU, MarketId::XETV, MarketId::XETW, MarketId::XETX, MarketId::XEUB, MarketId::XEUM, MarketId::XEUP, MarketId::XEUR, MarketId::XFRA, MarketId::XIGG, MarketId::XINV, MarketId::XNEW, MarketId::XRTR, MarketId::XSC1, MarketId::XSC2, MarketId::XSC3, MarketId::XSCO, MarketId::XXSC };
+static const short d_FRA[110] = { 109, MarketId::A21XX, MarketId::A360T, MarketId::A360X, MarketId::AUTO, MarketId::BINV, MarketId::BOCF, MarketId::BPAG, MarketId::CATS, MarketId::CBKA, MarketId::CBKC, MarketId::CBKD, MarketId::CBKE, MarketId::CBKF, MarketId::CBKG, MarketId::CBKS, MarketId::CDSI, MarketId::CGEC, MarketId::CGEE, MarketId::CGET, MarketId::CGMD, MarketId::CSDA, MarketId::DAPA, MarketId::DBAG, MarketId::DBDX, MarketId::DBES, MarketId::DBLN, MarketId::DBMO, MarketId::DBOX, MarketId::DEKA, MarketId::DZBK, MarketId::EBLX, MarketId::ECAG, MarketId::ECGS, MarketId::ENTW, MarketId::ERFQ, MarketId::FICX, MarketId::FRAA, MarketId::FRAB, MarketId::FRAD, MarketId::FRAS, MarketId::FRAU, MarketId::FRAV, MarketId::FRAW, MarketId::GSBE, MarketId::GSEI, MarketId::HELA, MarketId::JEFE, MarketId::JESI, MarketId::JPEU, MarketId::LBCW, MarketId::MESI, MarketId::MHEU, MarketId::MSEU, MarketId::NCME, MarketId::NESI, MarketId::RBCG, MarketId::SCAG, MarketId::SEBA, MarketId::SMFF, MarketId::SPEX, MarketId::TPDE, MarketId::TSFF, MarketId::TSFG, MarketId::UBSD, MarketId::UBSI, MarketId::UBSL, MarketId::VONT, MarketId::VTLS, MarketId::VTPS, MarketId::VWDA, MarketId::VWDX, MarketId::XDBC, MarketId::XDBV, MarketId::XDBX, MarketId::XDTB, MarketId::XDWZ, MarketId::XECB, MarketId::XEHQ, MarketId::XEMA, MarketId::XEMB, MarketId::XEMI, MarketId::XERE, MarketId::XERT, MarketId::XETA, MarketId::XETB, MarketId::XETC, MarketId::XETD, MarketId::XETE, MarketId::XETI, MarketId::XETR, MarketId::XETS, MarketId::XETU, MarketId::XETV, MarketId::XETW, MarketId::XETX, MarketId::XEUB, MarketId::XEUM, MarketId::XEUP, MarketId::XEUR, MarketId::XFRA, MarketId::XIGG, MarketId::XINV, MarketId::XNEW, MarketId::XRTR, MarketId::XSC1, MarketId::XSC2, MarketId::XSC3, MarketId::XSCO, MarketId::XXSC };
 static const short d_FRI[2] = { 1, MarketId::XXXX };
 static const short d_FRJ[2] = { 1, MarketId::XXXX };
 static const short d_FRO[2] = { 1, MarketId::XXXX };
@@ -2408,7 +2417,7 @@ static const short d_GBE[5] = { 4, MarketId::BOTE, MarketId::BOTV, MarketId::BWA
 static const short d_GC0[2] = { 1, MarketId::IINX };
 static const short d_GCC[2] = { 1, MarketId::XXXX };
 static const short d_GCI[3] = { 2, MarketId::GGY0, MarketId::XCIE };
-static const short d_GCM[3] = { 2, MarketId::CYM0, MarketId::XCAY };
+static const short d_GCM[2] = { 1, MarketId::CYM0 };
 static const short d_GCN[2] = { 1, MarketId::XXXX };
 static const short d_GDL[2] = { 1, MarketId::XXXX };
 static const short d_GDN[2] = { 1, MarketId::XXXX };
@@ -2470,8 +2479,8 @@ static const short d_GTN[2] = { 1, MarketId::XXXX };
 static const short d_GUA[3] = { 2, MarketId::GTM0, MarketId::XGTG };
 static const short d_GUC[2] = { 1, MarketId::XXXX };
 static const short d_GUM[2] = { 1, MarketId::GUM0 };
-static const short d_GVA[2] = { 1, MarketId::CCMS };
-static const short d_GW0[8] = { 7, MarketId::IATS, MarketId::IBKR, MarketId::IEOS, MarketId::PIPR, MarketId::PJCX, MarketId::WEED, MarketId::XWEE };
+static const short d_GVA[3] = { 2, MarketId::CCMS, MarketId::TDXS };
+static const short d_GW0[9] = { 8, MarketId::IATS, MarketId::IBCO, MarketId::IBKR, MarketId::IEOS, MarketId::PIPR, MarketId::PJCX, MarketId::WEED, MarketId::XWEE };
 static const short d_GWD[2] = { 1, MarketId::XXXX };
 static const short d_GWE[2] = { 1, MarketId::XXXX };
 static const short d_GWT[2] = { 1, MarketId::XXXX };
@@ -2485,7 +2494,7 @@ static const short d_GZT[2] = { 1, MarketId::XXXX };
 static const short d_HAC[2] = { 1, MarketId::XXXX };
 static const short d_HAG[3] = { 2, MarketId::NIBC, MarketId::NPEX };
 static const short d_HAH[2] = { 1, MarketId::COM0 };
-static const short d_HAJ[6] = { 5, MarketId::HANA, MarketId::HANB, MarketId::NLBX, MarketId::XHAN, MarketId::XHCE };
+static const short d_HAJ[9] = { 8, MarketId::HANA, MarketId::HANB, MarketId::HANC, MarketId::HAND, MarketId::HANE, MarketId::NLBX, MarketId::XHAN, MarketId::XHCE };
 static const short d_HAM[12] = { 11, MarketId::BGFI, MarketId::BGFX, MarketId::BGSI, MarketId::HAMA, MarketId::HAMB, MarketId::HAML, MarketId::HAMM, MarketId::HAMN, MarketId::NORD, MarketId::SSWM, MarketId::XHAM };
 static const short d_HAN[5] = { 4, MarketId::HSTC, MarketId::VNM0, MarketId::XHNF, MarketId::XHNX };
 static const short d_HAP[2] = { 1, MarketId::XXXX };
@@ -2694,7 +2703,6 @@ static const short d_JRS[2] = { 1, MarketId::XXXX };
 static const short d_JSA[2] = { 1, MarketId::XXXX };
 static const short d_JSI[2] = { 1, MarketId::XXXX };
 static const short d_JSM[2] = { 1, MarketId::XXXX };
-static const short d_JSR[2] = { 1, MarketId::XXXX };
 static const short d_JST[2] = { 1, MarketId::XXXX };
 static const short d_JTI[2] = { 1, MarketId::XXXX };
 static const short d_JTR[2] = { 1, MarketId::XXXX };
@@ -2859,7 +2867,7 @@ static const short d_LNO[2] = { 1, MarketId::XXXX };
 static const short d_LNS[2] = { 1, MarketId::XXXX };
 static const short d_LNY[2] = { 1, MarketId::XXXX };
 static const short d_LNZ[3] = { 2, MarketId::OBKL, MarketId::RLBO };
-static const short d_LON[571] = { 570, MarketId::A3579, MarketId::ACCX, MarketId::AFDL, MarketId::AFTS, MarketId::AIMX, MarketId::ALGO, MarketId::AMPX, MarketId::AMTS, MarketId::ANLP, MarketId::ANTS, MarketId::ANZL, MarketId::AQSD, MarketId::AQSE, MarketId::AQSF, MarketId::AQSG, MarketId::AQSL, MarketId::AQSN, MarketId::AQST, MarketId::AQXA, MarketId::AQXD, MarketId::AQXE, MarketId::ARAX, MarketId::ARCH, MarketId::ARDA, MarketId::ARIA, MarketId::ATLB, MarketId::AUTB, MarketId::AUTP, MarketId::AUTX, MarketId::BAIK, MarketId::BALT, MarketId::BANA, MarketId::BAPA, MarketId::BARK, MarketId::BARO, MarketId::BART, MarketId::BASI, MarketId::BATD, MarketId::BATE, MarketId::BATF, MarketId::BATP, MarketId::BBSI, MarketId::BBSX, MarketId::BBVX, MarketId::BCRM, MarketId::BCSI, MarketId::BCSL, MarketId::BCXE, MarketId::BETX, MarketId::BGCB, MarketId::BGCI, MarketId::BGCM, MarketId::BGCO, MarketId::BGFU, MarketId::BGUK, MarketId::BISI, MarketId::BKLF, MarketId::BKLN, MarketId::BLNK, MarketId::BLOX, MarketId::BLTX, MarketId::BMCM, MarketId::BMLB, MarketId::BMTF, MarketId::BNPL, MarketId::BNTW, MarketId::BOAL, MarketId::BOAT, MarketId::BOSC, MarketId::BOTC, MarketId::BPLC, MarketId::BRFQ, MarketId::BRGA, MarketId::BRNX, MarketId::BSLB, MarketId::BSPL, MarketId::BTEE, MarketId::BTLX, MarketId::BTQG, MarketId::BUYN, MarketId::BVUK, MarketId::CAZE, MarketId::CBAL, MarketId::CBNL, MarketId::CCEU, MarketId::CCML, MarketId::CCO2, MarketId::CEPU, MarketId::CFIC, MarketId::CGMC, MarketId::CGME, MarketId::CGMG, MarketId::CGML, MarketId::CGMT, MarketId::CGMU, MarketId::CHEV, MarketId::CHID, MarketId::CHIO, MarketId::CHIX, MarketId::CHIY, MarketId::CIBC, MarketId::CIBP, MarketId::CLCH, MarketId::CLVE, MarketId::CMCM, MarketId::CMEC, MarketId::CMED, MarketId::CMEE, MarketId::CMMT, MarketId::CMTS, MarketId::CRDL, MarketId::CRYP, MarketId::CSBX, MarketId::CSCF, MarketId::CSEC, MarketId::CSEU, MarketId::CSFB, MarketId::CSIN, MarketId::CSLB, MarketId::CSSI, MarketId::CXOT, MarketId::CXRT, MarketId::DAIW, MarketId::DAUK, MarketId::DBCR, MarketId::DBCX, MarketId::DBDC, MarketId::DBIX, MarketId::DBSE, MarketId::DBVX, MarketId::DOWG, MarketId::DRSP, MarketId::DVFX, MarketId::EACM, MarketId::EBSM, MarketId::EBSO, MarketId::EBSX, MarketId::ECHO, MarketId::ECNL, MarketId::ECSL, MarketId::EIXE, MarketId::ELIX, MarketId::EMBX, MarketId::EMCH, MarketId::EMTS, MarketId::ENCL, MarketId::ENSY, MarketId::EQLD, MarketId::EQSL, MarketId::EVOL, MarketId::EXBO, MarketId::EXCP, MarketId::EXDC, MarketId::EXEU, MarketId::EXLP, MarketId::EXMP, MarketId::EXOR, MarketId::EXOT, MarketId::EXSI, MarketId::EXVP, MarketId::FAIR, MarketId::FISU, MarketId::FNUK, MarketId::FRTE, MarketId::FXGB, MarketId::FXMT, MarketId::FXOP, MarketId::G360, MarketId::GBR0, MarketId::GEMX, MarketId::GFBM, MarketId::GFBO, MarketId::GFIA, MarketId::GFIB, MarketId::GFIC, MarketId::GFIF, MarketId::GFIM, MarketId::GFIN, MarketId::GFIR, MarketId::GFOX, MarketId::GFSM, MarketId::GFSO, MarketId::GMEG, MarketId::GMGL, MarketId::GMTS, MarketId::GRIF, MarketId::GRIO, MarketId::GRSE, MarketId::GSBX, MarketId::GSIB, MarketId::GSIL, MarketId::GSLO, MarketId::GSSI, MarketId::HPSO, MarketId::HPSX, MarketId::HRSI, MarketId::HSBC, MarketId::HSXE, MarketId::HUNG, MarketId::IBAL, MarketId::ICAH, MarketId::ICAP, MarketId::ICAT, MarketId::ICEN, MarketId::ICEO, MarketId::ICEU, MarketId::ICPM, MarketId::ICSE, MarketId::ICTQ, MarketId::IECE, MarketId::IECL, MarketId::IFEN, MarketId::IFEU, MarketId::IFLL, MarketId::IFLO, MarketId::IFLS, MarketId::IFLX, MarketId::IFUT, MarketId::IGDL, MarketId::ILCM, MarketId::IMCD, MarketId::IMCE, MarketId::IMCM, MarketId::IMED, MarketId::IMET, MarketId::IMFD, MarketId::IMGB, MarketId::IMGI, MarketId::IMMM, MarketId::IMRD, MarketId::IMSB, MarketId::IMTF, MarketId::IMTS, MarketId::INGU, MarketId::INVE, MarketId::IOCD, MarketId::IOED, MarketId::IOFB, MarketId::IOFI, MarketId::IOFX, MarketId::IOGB, MarketId::IOGI, MarketId::IOIR, MarketId::IOMM, MarketId::IOTC, MarketId::IOTF, MarketId::IPSX, MarketId::IPXP, MarketId::IPXW, MarketId::ISDX, MarketId::ISSI, MarketId::ISWA, MarketId::ISWB, MarketId::ISWC, MarketId::ISWE, MarketId::ISWR, MarketId::ISWV, MarketId::IUOB, MarketId::JEFS, MarketId::JISI, MarketId::JLSI, MarketId::JPCB, MarketId::JPJX, MarketId::JPSI, MarketId::JSSI, MarketId::KBLM, MarketId::KLEU, MarketId::KMTS, MarketId::LBCM, MarketId::LCUR, MarketId::LELE, MarketId::LIQF, MarketId::LIQH, MarketId::LIQU, MarketId::LISX, MarketId::LMAD, MarketId::LMAE, MarketId::LMAF, MarketId::LMAO, MarketId::LMAX, MarketId::LMEC, MarketId::LMTS, MarketId::LOTC, MarketId::LOUI, MarketId::LOYD, MarketId::LPPM, MarketId::MAEL, MarketId::MAKX, MarketId::MAQI, MarketId::MAQL, MarketId::MAQU, MarketId::MBSI, MarketId::MCUR, MarketId::MCXR, MarketId::MCXS, MarketId::MCZK, MarketId::METZ, MarketId::MFGL, MarketId::MFXA, MarketId::MFXC, MarketId::MFXR, MarketId::MHBL, MarketId::MHIP, MarketId::MLAX, MarketId::MLEU, MarketId::MLIB, MarketId::MLIX, MarketId::MLRQ, MarketId::MLSI, MarketId::MLVE, MarketId::MLXN, MarketId::MSBI, MarketId::MSIP, MarketId::MSSI, MarketId::MTSA, MarketId::MTSG, MarketId::MTSS, MarketId::MTSW, MarketId::MUBL, MarketId::MUFP, MarketId::MUSE, MarketId::MUTI, MarketId::MXLM, MarketId::MYTR, MarketId::N2EX, MarketId::NABA, MarketId::NABE, MarketId::NABL, MarketId::NABU, MarketId::NAVE, MarketId::NBFL, MarketId::NCML, MarketId::NDCM, MarketId::NEXD, MarketId::NEXF, MarketId::NEXG, MarketId::NEXL, MarketId::NEXN, MarketId::NEXS, MarketId::NEXT, MarketId::NEXX, MarketId::NMTS, MarketId::NOFF, MarketId::NOME, MarketId::NOSI, MarketId::NTUK, MarketId::NURD, MarketId::NURO, MarketId::NXEU, MarketId::NYMX, MarketId::OCSI, MarketId::OFEX, MarketId::OILX, MarketId::OTCE, MarketId::OTXT, MarketId::PARX, MarketId::PCDS, MarketId::PEEL, MarketId::PFXD, MarketId::PHSI, MarketId::PIEU, MarketId::PIRM, MarketId::PLDX, MarketId::PLSX, MarketId::PORT, MarketId::PPEX, MarketId::PRME, MarketId::PVMF, MarketId::QMTS, MarketId::QWIX, MarketId::R5FX, MarketId::RABL, MarketId::RBCE, MarketId::RBCM, MarketId::RBCT, MarketId::RBSX, MarketId::REST, MarketId::RFQU, MarketId::RMTS, MarketId::RTSI, MarketId::RTSL, MarketId::SBEX, MarketId::SECF, MarketId::SEDR, MarketId::SFCL, MarketId::SGMX, MarketId::SGMY, MarketId::SGMZ, MarketId::SICS, MarketId::SIFX, MarketId::SISU, MarketId::SKYX, MarketId::SLKK, MarketId::SLXT, MarketId::SMBE, MarketId::SMBG, MarketId::SMTS, MarketId::SNUK, MarketId::SPDX, MarketId::SPEC, MarketId::SPRZ, MarketId::SQUA, MarketId::SSBT, MarketId::SSEX, MarketId::SSFX, MarketId::SSIL, MarketId::STAL, MarketId::STAN, MarketId::STFL, MarketId::STSI, MarketId::SUNB, MarketId::SUNM, MarketId::SUNO, MarketId::SWAP, MarketId::TBEN, MarketId::TBLA, MarketId::TCDS, MarketId::TCME, MarketId::TCML, MarketId::TDBL, MarketId::TECO, MarketId::TEEG, MarketId::TEFD, MarketId::TEFX, MarketId::TEGB, MarketId::TEGI, MarketId::TEIR, MarketId::TEMB, MarketId::TEMC, MarketId::TEMF, MarketId::TEMG, MarketId::TEMI, MarketId::TEMM, MarketId::TEMR, MarketId::TEOF, MarketId::TERE, MarketId::TFSC, MarketId::TFSE, MarketId::TFSG, MarketId::TFSS, MarketId::TFSV, MarketId::TIRD, MarketId::TMTS, MarketId::TMUK, MarketId::TNLL, MarketId::TPCD, MarketId::TPDA, MarketId::TPEL, MarketId::TPEO, MarketId::TPEQ, MarketId::TPFD, MarketId::TPID, MarketId::TPIE, MarketId::TPIM, MarketId::TPIS, MarketId::TPLF, MarketId::TPMF, MarketId::TPMG, MarketId::TPRE, MarketId::TPSD, MarketId::TPSL, MarketId::TPSO, MarketId::TPSP, MarketId::TPSY, MarketId::TRAL, MarketId::TRAX, MarketId::TRDE, MarketId::TRDX, MarketId::TREA, MarketId::TREO, MarketId::TREU, MarketId::TRFW, MarketId::TRQA, MarketId::TRQB, MarketId::TRQC, MarketId::TRQD, MarketId::TRQM, MarketId::TRQS, MarketId::TRQX, MarketId::TRSI, MarketId::TRUK, MarketId::TSCB, MarketId::TSCD, MarketId::TSED, MarketId::TSFI, MarketId::TSFX, MarketId::TSGB, MarketId::TSGI, MarketId::TSIR, MarketId::TSMB, MarketId::TSMC, MarketId::TSMG, MarketId::TSMI, MarketId::TSMM, MarketId::TSMR, MarketId::TSRE, MarketId::TSUK, MarketId::TUOB, MarketId::TWGP, MarketId::UBIN, MarketId::UBSB, MarketId::UBSE, MarketId::UBSY, MarketId::UKCA, MarketId::UKGD, MarketId::UKOR, MarketId::UKPX, MarketId::UKRE, MarketId::UMTS, MarketId::UNGB, MarketId::USWP, MarketId::VAGL, MarketId::VAGM, MarketId::VCMO, MarketId::VEGA, MarketId::VFGB, MarketId::VFUK, MarketId::VIUK, MarketId::VMTS, MarketId::VOLA, MarketId::VTBC, MarketId::WCLK, MarketId::WELN, MarketId::WFLB, MarketId::WINS, MarketId::WINX, MarketId::WSIL, MarketId::WSIN, MarketId::XALT, MarketId::XCOR, MarketId::XEBS, MarketId::XEDX, MarketId::XGCL, MarketId::XGCX, MarketId::XGDX, MarketId::XGFI, MarketId::XGSX, MarketId::XIEL, MarketId::XIPE, MarketId::XJWY, MarketId::XLBM, MarketId::XLCE, MarketId::XLCH, MarketId::XLDN, MarketId::XLDX, MarketId::XLIF, MarketId::XLME, MarketId::XLOD, MarketId::XLOM, MarketId::XLON, MarketId::XLTO, MarketId::XMLX, MarketId::XMTS, MarketId::XNLX, MarketId::XPAL, MarketId::XPHX, MarketId::XPLU, MarketId::XPOL, MarketId::XPUK, MarketId::XRSP, MarketId::XSGB, MarketId::XSMP, MarketId::XSWB, MarketId::XTFN, MarketId::XTPE, MarketId::XTUP, MarketId::XTXM, MarketId::XUBS, MarketId::XUMP, MarketId::ZODM };
+static const short d_LON[575] = { 574, MarketId::A3579, MarketId::ACCX, MarketId::AFDL, MarketId::AFTS, MarketId::AIMX, MarketId::ALGO, MarketId::AMPX, MarketId::AMTS, MarketId::ANLP, MarketId::ANTS, MarketId::ANZL, MarketId::AQSD, MarketId::AQSE, MarketId::AQSF, MarketId::AQSG, MarketId::AQSL, MarketId::AQSN, MarketId::AQST, MarketId::AQXA, MarketId::AQXD, MarketId::AQXE, MarketId::ARAX, MarketId::ARCH, MarketId::ARDA, MarketId::ARIA, MarketId::ATLB, MarketId::AUTB, MarketId::AUTP, MarketId::AUTX, MarketId::BAIK, MarketId::BALT, MarketId::BANA, MarketId::BAPA, MarketId::BARK, MarketId::BARO, MarketId::BART, MarketId::BASI, MarketId::BATD, MarketId::BATE, MarketId::BATF, MarketId::BATP, MarketId::BBSI, MarketId::BBSX, MarketId::BBVX, MarketId::BCRM, MarketId::BCSI, MarketId::BCSL, MarketId::BCXE, MarketId::BETX, MarketId::BGCB, MarketId::BGCI, MarketId::BGCM, MarketId::BGCO, MarketId::BGFU, MarketId::BGUK, MarketId::BISI, MarketId::BKLF, MarketId::BKLN, MarketId::BLNK, MarketId::BLOX, MarketId::BLTX, MarketId::BMCM, MarketId::BMLB, MarketId::BMTF, MarketId::BNPL, MarketId::BNTW, MarketId::BOAL, MarketId::BOAT, MarketId::BOSC, MarketId::BOTC, MarketId::BPLC, MarketId::BRFQ, MarketId::BRGA, MarketId::BRNX, MarketId::BSLB, MarketId::BSPL, MarketId::BTEE, MarketId::BTLX, MarketId::BTQG, MarketId::BUYN, MarketId::BVUK, MarketId::CAZE, MarketId::CBAL, MarketId::CBNL, MarketId::CCEU, MarketId::CCML, MarketId::CCO2, MarketId::CEPU, MarketId::CFIC, MarketId::CGMC, MarketId::CGME, MarketId::CGMG, MarketId::CGML, MarketId::CGMT, MarketId::CGMU, MarketId::CHEV, MarketId::CHID, MarketId::CHIO, MarketId::CHIX, MarketId::CHIY, MarketId::CIBC, MarketId::CIBP, MarketId::CLCH, MarketId::CLVE, MarketId::CMCM, MarketId::CMEC, MarketId::CMED, MarketId::CMEE, MarketId::CMMT, MarketId::CMTS, MarketId::CRDL, MarketId::CRYP, MarketId::CSBX, MarketId::CSCF, MarketId::CSEC, MarketId::CSEU, MarketId::CSFB, MarketId::CSIN, MarketId::CSLB, MarketId::CSSI, MarketId::CXOT, MarketId::CXRT, MarketId::DAIW, MarketId::DAUK, MarketId::DBCR, MarketId::DBCX, MarketId::DBDC, MarketId::DBIX, MarketId::DBSE, MarketId::DBVX, MarketId::DOWG, MarketId::DRSP, MarketId::DVFX, MarketId::EACM, MarketId::EBSM, MarketId::EBSO, MarketId::EBSX, MarketId::ECHO, MarketId::ECNL, MarketId::ECSL, MarketId::EIXE, MarketId::ELIX, MarketId::EMBX, MarketId::EMCH, MarketId::EMTS, MarketId::ENCL, MarketId::ENSY, MarketId::EQLD, MarketId::EQSL, MarketId::EVOL, MarketId::EXBO, MarketId::EXCP, MarketId::EXDC, MarketId::EXEU, MarketId::EXLP, MarketId::EXMP, MarketId::EXOR, MarketId::EXOT, MarketId::EXSI, MarketId::EXVP, MarketId::FAIR, MarketId::FISU, MarketId::FNUK, MarketId::FRTE, MarketId::FXGB, MarketId::FXMT, MarketId::FXOP, MarketId::G360, MarketId::GBR0, MarketId::GEMX, MarketId::GFBM, MarketId::GFBO, MarketId::GFIA, MarketId::GFIB, MarketId::GFIC, MarketId::GFIF, MarketId::GFIM, MarketId::GFIN, MarketId::GFIR, MarketId::GFOX, MarketId::GFSM, MarketId::GFSO, MarketId::GMEG, MarketId::GMGL, MarketId::GMTS, MarketId::GRIF, MarketId::GRIO, MarketId::GRSE, MarketId::GSBX, MarketId::GSIB, MarketId::GSIL, MarketId::GSLO, MarketId::GSSI, MarketId::HPSO, MarketId::HPSX, MarketId::HRSI, MarketId::HSBC, MarketId::HSXE, MarketId::HUNG, MarketId::IBAL, MarketId::ICAH, MarketId::ICAP, MarketId::ICAT, MarketId::ICEN, MarketId::ICEO, MarketId::ICEU, MarketId::ICPM, MarketId::ICSE, MarketId::ICTQ, MarketId::IECE, MarketId::IECL, MarketId::IFEN, MarketId::IFEU, MarketId::IFLL, MarketId::IFLO, MarketId::IFLS, MarketId::IFLX, MarketId::IFUT, MarketId::IGDL, MarketId::ILCM, MarketId::IMCD, MarketId::IMCE, MarketId::IMCM, MarketId::IMED, MarketId::IMET, MarketId::IMFD, MarketId::IMGB, MarketId::IMGI, MarketId::IMMM, MarketId::IMRD, MarketId::IMSB, MarketId::IMTF, MarketId::IMTS, MarketId::INGU, MarketId::INVE, MarketId::IOCD, MarketId::IOED, MarketId::IOFB, MarketId::IOFI, MarketId::IOFX, MarketId::IOGB, MarketId::IOGI, MarketId::IOIR, MarketId::IOMM, MarketId::IOTC, MarketId::IOTF, MarketId::IPSX, MarketId::IPXP, MarketId::IPXW, MarketId::ISDX, MarketId::ISSI, MarketId::ISWA, MarketId::ISWB, MarketId::ISWC, MarketId::ISWE, MarketId::ISWR, MarketId::ISWV, MarketId::IUOB, MarketId::JEFS, MarketId::JISI, MarketId::JLSI, MarketId::JPCB, MarketId::JPJX, MarketId::JPSI, MarketId::JSSI, MarketId::KBLM, MarketId::KLEU, MarketId::KMTS, MarketId::LBCM, MarketId::LCUR, MarketId::LELE, MarketId::LIQF, MarketId::LIQH, MarketId::LIQU, MarketId::LISX, MarketId::LMAD, MarketId::LMAE, MarketId::LMAF, MarketId::LMAO, MarketId::LMAX, MarketId::LMEC, MarketId::LMTS, MarketId::LOTC, MarketId::LOUI, MarketId::LOYD, MarketId::LPPM, MarketId::MAEL, MarketId::MAKX, MarketId::MAQI, MarketId::MAQL, MarketId::MAQU, MarketId::MBSI, MarketId::MCUR, MarketId::MCXR, MarketId::MCXS, MarketId::MCZK, MarketId::METZ, MarketId::MFGL, MarketId::MFXA, MarketId::MFXC, MarketId::MFXR, MarketId::MHBL, MarketId::MHIP, MarketId::MLAX, MarketId::MLEU, MarketId::MLIB, MarketId::MLIX, MarketId::MLRQ, MarketId::MLSI, MarketId::MLVE, MarketId::MLXN, MarketId::MSBI, MarketId::MSIP, MarketId::MSSI, MarketId::MTSA, MarketId::MTSG, MarketId::MTSS, MarketId::MTSW, MarketId::MUBL, MarketId::MUFP, MarketId::MUSE, MarketId::MUTI, MarketId::MXLM, MarketId::MYTR, MarketId::N2EX, MarketId::NABA, MarketId::NABE, MarketId::NABL, MarketId::NABU, MarketId::NAVE, MarketId::NBFL, MarketId::NCML, MarketId::NDCM, MarketId::NEXD, MarketId::NEXF, MarketId::NEXG, MarketId::NEXL, MarketId::NEXN, MarketId::NEXS, MarketId::NEXT, MarketId::NEXX, MarketId::NMTS, MarketId::NOFF, MarketId::NOME, MarketId::NOSI, MarketId::NTUK, MarketId::NURD, MarketId::NURO, MarketId::NXEU, MarketId::NYMX, MarketId::OCSI, MarketId::OCXL, MarketId::OFEX, MarketId::OILX, MarketId::OPTX, MarketId::OTCE, MarketId::OTXT, MarketId::PARX, MarketId::PCDS, MarketId::PEEL, MarketId::PFXD, MarketId::PHSI, MarketId::PIEU, MarketId::PIRM, MarketId::PLDX, MarketId::PLSX, MarketId::PORT, MarketId::PPEX, MarketId::PRME, MarketId::PVMF, MarketId::QMTS, MarketId::QWIX, MarketId::R5FX, MarketId::RABL, MarketId::RBCE, MarketId::RBCM, MarketId::RBCT, MarketId::RBSX, MarketId::REST, MarketId::RFQU, MarketId::RMTS, MarketId::RTSI, MarketId::RTSL, MarketId::SBEX, MarketId::SECF, MarketId::SEDR, MarketId::SFCL, MarketId::SFMP, MarketId::SGMX, MarketId::SGMY, MarketId::SGMZ, MarketId::SICS, MarketId::SIFX, MarketId::SISU, MarketId::SKYX, MarketId::SLKK, MarketId::SLXT, MarketId::SMBE, MarketId::SMBG, MarketId::SMTS, MarketId::SNUK, MarketId::SPDX, MarketId::SPEC, MarketId::SPRZ, MarketId::SQUA, MarketId::SSBT, MarketId::SSEX, MarketId::SSFX, MarketId::SSIL, MarketId::STAL, MarketId::STAN, MarketId::STFL, MarketId::STSI, MarketId::SUNB, MarketId::SUNM, MarketId::SUNO, MarketId::SWAP, MarketId::TBEN, MarketId::TBLA, MarketId::TCDS, MarketId::TCME, MarketId::TCML, MarketId::TDBL, MarketId::TECO, MarketId::TEEG, MarketId::TEFD, MarketId::TEFX, MarketId::TEGB, MarketId::TEGI, MarketId::TEIR, MarketId::TEMB, MarketId::TEMC, MarketId::TEMF, MarketId::TEMG, MarketId::TEMI, MarketId::TEMM, MarketId::TEMR, MarketId::TEOF, MarketId::TERE, MarketId::TFSC, MarketId::TFSE, MarketId::TFSG, MarketId::TFSS, MarketId::TFSV, MarketId::TIRD, MarketId::TMTS, MarketId::TMUK, MarketId::TNLL, MarketId::TPCD, MarketId::TPDA, MarketId::TPEL, MarketId::TPEO, MarketId::TPEQ, MarketId::TPFD, MarketId::TPID, MarketId::TPIE, MarketId::TPIM, MarketId::TPIS, MarketId::TPLF, MarketId::TPMF, MarketId::TPMG, MarketId::TPRE, MarketId::TPSD, MarketId::TPSL, MarketId::TPSO, MarketId::TPSP, MarketId::TPSY, MarketId::TRAL, MarketId::TRAX, MarketId::TRDE, MarketId::TRDX, MarketId::TREA, MarketId::TREO, MarketId::TREU, MarketId::TRFW, MarketId::TRQA, MarketId::TRQB, MarketId::TRQC, MarketId::TRQD, MarketId::TRQM, MarketId::TRQS, MarketId::TRQX, MarketId::TRSI, MarketId::TRUK, MarketId::TSCB, MarketId::TSCD, MarketId::TSED, MarketId::TSFI, MarketId::TSFX, MarketId::TSGB, MarketId::TSGI, MarketId::TSIR, MarketId::TSMB, MarketId::TSMC, MarketId::TSMG, MarketId::TSMI, MarketId::TSMM, MarketId::TSMR, MarketId::TSRE, MarketId::TSUK, MarketId::TUOB, MarketId::TWGP, MarketId::UBIN, MarketId::UBSB, MarketId::UBSE, MarketId::UBSY, MarketId::UKCA, MarketId::UKGD, MarketId::UKOR, MarketId::UKPX, MarketId::UKRE, MarketId::UMTS, MarketId::UNGB, MarketId::USWP, MarketId::VAGL, MarketId::VAGM, MarketId::VCMO, MarketId::VEGA, MarketId::VFGB, MarketId::VFUK, MarketId::VIUK, MarketId::VMTS, MarketId::VOLA, MarketId::VTBC, MarketId::WCLK, MarketId::WELN, MarketId::WFLB, MarketId::WINS, MarketId::WINX, MarketId::WSIL, MarketId::WSIN, MarketId::XALT, MarketId::XCOR, MarketId::XEBS, MarketId::XEDX, MarketId::XGCL, MarketId::XGCX, MarketId::XGDX, MarketId::XGFI, MarketId::XGSX, MarketId::XIEL, MarketId::XIPE, MarketId::XJWY, MarketId::XLBM, MarketId::XLCE, MarketId::XLCH, MarketId::XLDN, MarketId::XLDX, MarketId::XLIF, MarketId::XLME, MarketId::XLOD, MarketId::XLOM, MarketId::XLON, MarketId::XLTO, MarketId::XMLX, MarketId::XMTS, MarketId::XNLX, MarketId::XPAL, MarketId::XPHX, MarketId::XPLU, MarketId::XPOL, MarketId::XPUK, MarketId::XRSP, MarketId::XSGB, MarketId::XSMP, MarketId::XSWB, MarketId::XTFN, MarketId::XTPE, MarketId::XTUP, MarketId::XTXM, MarketId::XUBS, MarketId::XUMP, MarketId::XWAP, MarketId::ZODM };
 static const short d_LOS[3] = { 2, MarketId::NASX, MarketId::XNSA };
 static const short d_LPA[2] = { 1, MarketId::XXXX };
 static const short d_LPB[3] = { 2, MarketId::BOL0, MarketId::XBOL };
@@ -2902,7 +2910,7 @@ static const short d_LYX[2] = { 1, MarketId::XXXX };
 static const short d_LZC[2] = { 1, MarketId::XXXX };
 static const short d_LZR[2] = { 1, MarketId::XXXX };
 static const short d_MAA[2] = { 1, MarketId::XMDS };
-static const short d_MAD[44] = { 43, MarketId::ABAN, MarketId::AGBP, MarketId::ALLT, MarketId::BBVA, MarketId::BMCL, MarketId::BMEA, MarketId::BMEX, MarketId::CAPI, MarketId::CECA, MarketId::CIMA, MarketId::CIMB, MarketId::CIMD, MarketId::CIME, MarketId::CIMV, MarketId::CMAP, MarketId::CSMD, MarketId::DOWE, MarketId::DOWM, MarketId::ESP0, MarketId::GROW, MarketId::MABX, MarketId::MARF, MarketId::MDRV, MarketId::MERF, MarketId::MIBG, MarketId::OMEL, MarketId::POSE, MarketId::SCLE, MarketId::SEND, MarketId::SIMD, MarketId::TEUR, MarketId::TOMF, MarketId::TOMG, MarketId::TPES, MarketId::XDPA, MarketId::XDRF, MarketId::XLAT, MarketId::XMAD, MarketId::XMCE, MarketId::XMFX, MarketId::XMPW, MarketId::XMRV, MarketId::XNAF };
+static const short d_MAD[45] = { 44, MarketId::ABAN, MarketId::AGBP, MarketId::ALLT, MarketId::BBVA, MarketId::BMCL, MarketId::BMEA, MarketId::BMEX, MarketId::CAPI, MarketId::CECA, MarketId::CIMA, MarketId::CIMB, MarketId::CIMD, MarketId::CIME, MarketId::CIMV, MarketId::CMAP, MarketId::CSMD, MarketId::DMAD, MarketId::DOWE, MarketId::DOWM, MarketId::ESP0, MarketId::GROW, MarketId::MABX, MarketId::MARF, MarketId::MDRV, MarketId::MERF, MarketId::MIBG, MarketId::OMEL, MarketId::POSE, MarketId::SCLE, MarketId::SEND, MarketId::SIMD, MarketId::TEUR, MarketId::TOMF, MarketId::TOMG, MarketId::TPES, MarketId::XDPA, MarketId::XDRF, MarketId::XLAT, MarketId::XMAD, MarketId::XMCE, MarketId::XMFX, MarketId::XMPW, MarketId::XMRV, MarketId::XNAF };
 static const short d_MAF[2] = { 1, MarketId::XXXX };
 static const short d_MAH[2] = { 1, MarketId::XXXX };
 static const short d_MAJ[2] = { 1, MarketId::MHL0 };
@@ -3044,7 +3052,7 @@ static const short d_MTS[2] = { 1, MarketId::XXXX };
 static const short d_MTT[2] = { 1, MarketId::XXXX };
 static const short d_MTY[2] = { 1, MarketId::XXXX };
 static const short d_MUB[2] = { 1, MarketId::XXXX };
-static const short d_MUC[19] = { 18, MarketId::BAAD, MarketId::BDEA, MarketId::BLBB, MarketId::BLBS, MarketId::BLEQ, MarketId::BLFX, MarketId::BLIQ, MarketId::BSFX, MarketId::GMEX, MarketId::MUNA, MarketId::MUNB, MarketId::MUNC, MarketId::MUND, MarketId::PLUS, MarketId::SSBI, MarketId::SSBM, MarketId::UCDE, MarketId::XMUN };
+static const short d_MUC[20] = { 19, MarketId::BAAD, MarketId::BDEA, MarketId::BLBB, MarketId::BLBS, MarketId::BLEQ, MarketId::BLFX, MarketId::BLIQ, MarketId::BSFX, MarketId::GMEX, MarketId::MUNA, MarketId::MUNB, MarketId::MUNC, MarketId::MUND, MarketId::PLUS, MarketId::SCLB, MarketId::SSBI, MarketId::SSBM, MarketId::UCDE, MarketId::XMUN };
 static const short d_MUE[2] = { 1, MarketId::XXXX };
 static const short d_MUH[2] = { 1, MarketId::XXXX };
 static const short d_MUX[2] = { 1, MarketId::XXXX };
@@ -3118,7 +3126,7 @@ static const short d_NTR[2] = { 1, MarketId::XXXX };
 static const short d_NTY[2] = { 1, MarketId::XXXX };
 static const short d_NUE[2] = { 1, MarketId::XXXX };
 static const short d_NWI[2] = { 1, MarketId::XXXX };
-static const short d_NYC[265] = { 264, MarketId::ACKF, MarketId::ADVT, MarketId::ALDP, MarketId::AMXO, MarketId::AQUA, MarketId::ARCD, MarketId::ARCO, MarketId::ARCX, MarketId::ARKX, MarketId::ATDF, MarketId::BAML, MarketId::BAMP, MarketId::BAMX, MarketId::BARD, MarketId::BARL, MarketId::BARX, MarketId::BBOK, MarketId::BBSF, MarketId::BCDX, MarketId::BGCD, MarketId::BGCF, MarketId::BHSF, MarketId::BIDS, MarketId::BLKX, MarketId::BLTD, MarketId::BLUE, MarketId::BNDD, MarketId::BNDS, MarketId::BNPC, MarketId::BNPH, MarketId::BNYC, MarketId::BOSD, MarketId::BPOL, MarketId::BTEQ, MarketId::BVUS, MarketId::CAES, MarketId::CALH, MarketId::CAVE, MarketId::CBLC, MarketId::CCMX, MarketId::CDED, MarketId::CDEL, MarketId::CECS, MarketId::CFIM, MarketId::CGMI, MarketId::CGXS, MarketId::CICX, MarketId::CIOI, MarketId::CISD, MarketId::CLST, MarketId::CORE, MarketId::CPGX, MarketId::CRED, MarketId::CSCL, MarketId::CSLP, MarketId::CSVW, MarketId::CURX, MarketId::DBAB, MarketId::DBSX, MarketId::DEAL, MarketId::DWIN, MarketId::DWSF, MarketId::EGMT, MarketId::EQUS, MarketId::ESPD, MarketId::EXPM, MarketId::FAST, MarketId::FINC, MarketId::FINN, MarketId::FNCS, MarketId::FNFT, MarketId::FNFX, MarketId::FNIX, MarketId::FNXB, MarketId::FSEF, MarketId::FTUS, MarketId::FXAL, MarketId::FXCM, MarketId::FXNM, MarketId::FXPS, MarketId::GFAM, MarketId::GLLC, MarketId::GLMX, MarketId::GMNI, MarketId::GSCO, MarketId::GSEF, MarketId::GTCO, MarketId::GTSX, MarketId::HRTF, MarketId::HRTX, MarketId::HSFX, MarketId::IBLX, MarketId::ICBX, MarketId::ICEL, MarketId::ICES, MarketId::ICRO, MarketId::ICUS, MarketId::IDXM, MarketId::IEXC, MarketId::IEXD, MarketId::IEXG, MarketId::IFED, MarketId::IFUS, MarketId::IIDX, MarketId::IMCC, MarketId::IMCG, MarketId::INCA, MarketId::ISDA, MarketId::ITGI, MarketId::JEFX, MarketId::JNST, MarketId::JPBX, MarketId::JPMS, MarketId::JPMX, MarketId::JSEF, MarketId::JSES, MarketId::JSJX, MarketId::KLSH, MarketId::LAFD, MarketId::LAFL, MarketId::LAFX, MarketId::LASF, MarketId::LATG, MarketId::LAVA, MarketId::LEDG, MarketId::LESI, MarketId::LIFI, MarketId::LIUH, MarketId::LIUS, MarketId::LPSF, MarketId::LQED, MarketId::LQFI, MarketId::MCRY, MarketId::MELO, MarketId::MKAA, MarketId::MLCO, MarketId::MLVX, MarketId::MOCX, MarketId::MSCO, MarketId::MSLC, MarketId::MSLP, MarketId::MSPL, MarketId::MSRP, MarketId::MSTC, MarketId::MSTX, MarketId::MTSB, MarketId::MTUS, MarketId::MTXA, MarketId::MTXC, MarketId::MTXM, MarketId::MTXS, MarketId::MTXX, MarketId::NASD, MarketId::NBLX, MarketId::NLAX, MarketId::NMRA, MarketId::NPMS, MarketId::NXUS, MarketId::NYFX, MarketId::NYMS, MarketId::NYPC, MarketId::NYSD, MarketId::OCTL, MarketId::OLLC, MarketId::ONEC, MarketId::OTCB, MarketId::OTCI, MarketId::OTCM, MarketId::OTCN, MarketId::OTCQ, MarketId::PINC, MarketId::PINI, MarketId::PINL, MarketId::PINX, MarketId::PIPE, MarketId::PRSE, MarketId::PSGM, MarketId::PSXD, MarketId::PULX, MarketId::PUMA, MarketId::PUMX, MarketId::PUND, MarketId::RAJA, MarketId::RCBX, MarketId::RCMA, MarketId::RTXF, MarketId::SGA2, MarketId::SGAS, MarketId::SGMA, MarketId::SGMT, MarketId::SHAD, MarketId::SHAW, MarketId::SOHO, MarketId::SPAX, MarketId::STFU, MarketId::STFX, MarketId::STRM, MarketId::TFSU, MarketId::THRE, MarketId::TMCC, MarketId::TMID, MarketId::TRCK, MarketId::TRCX, MarketId::TRU1, MarketId::TRU2, MarketId::TRUX, MarketId::TSAD, MarketId::TSEF, MarketId::TWSF, MarketId::U360, MarketId::UBSA, MarketId::UBSP, MarketId::UBSS, MarketId::USEF, MarketId::VABD, MarketId::VALX, MarketId::VCRS, MarketId::VERT, MarketId::VFCM, MarketId::VFMI, MarketId::VIRT, MarketId::VNDM, MarketId::VTEX, MarketId::VUSA, MarketId::WABR, MarketId::WELS, MarketId::WSAG, MarketId::XAQS, MarketId::XASE, MarketId::XBMK, MarketId::XBOS, MarketId::XBRT, MarketId::XBXO, MarketId::XCEC, MarketId::XCFF, MarketId::XCIS, MarketId::XCSC, MarketId::XCUR, MarketId::XELX, MarketId::XINS, MarketId::XISA, MarketId::XISE, MarketId::XISX, MarketId::XNAS, MarketId::XNCM, MarketId::XNDQ, MarketId::XNFI, MarketId::XNGS, MarketId::XNIM, MarketId::XNLI, MarketId::XNMS, MarketId::XNQL, MarketId::XNYC, MarketId::XNYE, MarketId::XNYF, MarketId::XNYL, MarketId::XNYM, MarketId::XNYS, MarketId::XPSX, MarketId::XPUS, MarketId::XSEF, MarketId::XTPZ, MarketId::XTRD, MarketId::XTXD };
+static const short d_NYC[274] = { 273, MarketId::ACKF, MarketId::ADVT, MarketId::ALDP, MarketId::AMXO, MarketId::AQUA, MarketId::ARCD, MarketId::ARCO, MarketId::ARCX, MarketId::ARKX, MarketId::ATDF, MarketId::BAML, MarketId::BAMP, MarketId::BAMX, MarketId::BARD, MarketId::BARL, MarketId::BARX, MarketId::BBOK, MarketId::BBSF, MarketId::BBSN, MarketId::BCDX, MarketId::BGCD, MarketId::BGCF, MarketId::BHSF, MarketId::BIDS, MarketId::BLKX, MarketId::BLTD, MarketId::BLUE, MarketId::BNDD, MarketId::BNDS, MarketId::BNPC, MarketId::BNPH, MarketId::BNYC, MarketId::BOSD, MarketId::BPOL, MarketId::BTEQ, MarketId::BVUS, MarketId::CAES, MarketId::CALH, MarketId::CAVE, MarketId::CBLC, MarketId::CCMX, MarketId::CDED, MarketId::CDEL, MarketId::CECS, MarketId::CFIM, MarketId::CGMI, MarketId::CGXS, MarketId::CICX, MarketId::CIOI, MarketId::CISD, MarketId::CLST, MarketId::CORE, MarketId::CPGX, MarketId::CRED, MarketId::CSCL, MarketId::CSLP, MarketId::CSVW, MarketId::CURX, MarketId::DBAB, MarketId::DBSX, MarketId::DEAL, MarketId::DWIN, MarketId::DWSF, MarketId::EGMT, MarketId::EQUS, MarketId::ESPD, MarketId::EXPM, MarketId::FAST, MarketId::FINC, MarketId::FINN, MarketId::FNCS, MarketId::FNFT, MarketId::FNFX, MarketId::FNIX, MarketId::FNXB, MarketId::FSEF, MarketId::FTUS, MarketId::FXAL, MarketId::FXCM, MarketId::FXNM, MarketId::FXPS, MarketId::GFAM, MarketId::GLLC, MarketId::GLMX, MarketId::GMNI, MarketId::GSCO, MarketId::GSEF, MarketId::GTCO, MarketId::GTSX, MarketId::HRTF, MarketId::HRTX, MarketId::HSFX, MarketId::IBLX, MarketId::ICBX, MarketId::ICEL, MarketId::ICES, MarketId::ICRO, MarketId::ICUS, MarketId::IDXM, MarketId::IEXA, MarketId::IEXC, MarketId::IEXD, MarketId::IEXG, MarketId::IFED, MarketId::IFUS, MarketId::IIDX, MarketId::IMCC, MarketId::IMCG, MarketId::INCA, MarketId::ISDA, MarketId::ITGI, MarketId::JEFX, MarketId::JNST, MarketId::JPBX, MarketId::JPMS, MarketId::JPMX, MarketId::JSEF, MarketId::JSES, MarketId::JSJX, MarketId::KLSH, MarketId::LAFD, MarketId::LAFL, MarketId::LAFX, MarketId::LAKE, MarketId::LASF, MarketId::LATG, MarketId::LAVA, MarketId::LEDG, MarketId::LESI, MarketId::LIFI, MarketId::LIUH, MarketId::LIUS, MarketId::LPSF, MarketId::LQED, MarketId::LQFI, MarketId::MCRY, MarketId::MELO, MarketId::MKAA, MarketId::MLCO, MarketId::MLVX, MarketId::MOCX, MarketId::MSCO, MarketId::MSLC, MarketId::MSLP, MarketId::MSPL, MarketId::MSRP, MarketId::MSTC, MarketId::MSTX, MarketId::MTSB, MarketId::MTUS, MarketId::MTXA, MarketId::MTXC, MarketId::MTXM, MarketId::MTXS, MarketId::MTXX, MarketId::NASD, MarketId::NBLX, MarketId::NLAX, MarketId::NMRA, MarketId::NPMS, MarketId::NXUS, MarketId::NYFX, MarketId::NYMS, MarketId::NYPC, MarketId::NYSD, MarketId::OCFX, MarketId::OCTC, MarketId::OCTL, MarketId::OLLC, MarketId::ONEC, MarketId::OTCB, MarketId::OTCI, MarketId::OTCM, MarketId::OTCN, MarketId::OTCQ, MarketId::PINC, MarketId::PINI, MarketId::PINL, MarketId::PINX, MarketId::PIPE, MarketId::PRSE, MarketId::PSGM, MarketId::PSXD, MarketId::PULX, MarketId::PUMA, MarketId::PUMX, MarketId::PUND, MarketId::PVBL, MarketId::RAJA, MarketId::RBCS, MarketId::RCBX, MarketId::RCMA, MarketId::RTXF, MarketId::SGA2, MarketId::SGAS, MarketId::SGMA, MarketId::SGMT, MarketId::SHAD, MarketId::SHAW, MarketId::SOHO, MarketId::SPAX, MarketId::STFU, MarketId::STFX, MarketId::STRM, MarketId::TFSU, MarketId::THRE, MarketId::TMCC, MarketId::TMID, MarketId::TPSB, MarketId::TRCK, MarketId::TRCX, MarketId::TRU1, MarketId::TRU2, MarketId::TRUX, MarketId::TSAD, MarketId::TSEF, MarketId::TWSF, MarketId::U360, MarketId::UBSA, MarketId::UBSP, MarketId::UBSS, MarketId::USEF, MarketId::VABD, MarketId::VALX, MarketId::VCRS, MarketId::VERT, MarketId::VFCM, MarketId::VFMI, MarketId::VIRT, MarketId::VNDM, MarketId::VTEX, MarketId::VUSA, MarketId::WABR, MarketId::WELS, MarketId::WFLP, MarketId::WSAG, MarketId::XAQS, MarketId::XASE, MarketId::XBMK, MarketId::XBOS, MarketId::XBRT, MarketId::XBXO, MarketId::XCEC, MarketId::XCFF, MarketId::XCIS, MarketId::XCSC, MarketId::XCUR, MarketId::XELX, MarketId::XINS, MarketId::XISA, MarketId::XISE, MarketId::XISX, MarketId::XNAS, MarketId::XNCM, MarketId::XNDQ, MarketId::XNFI, MarketId::XNGS, MarketId::XNIM, MarketId::XNLI, MarketId::XNMS, MarketId::XNQL, MarketId::XNYC, MarketId::XNYE, MarketId::XNYF, MarketId::XNYL, MarketId::XNYM, MarketId::XNYS, MarketId::XPSX, MarketId::XPUS, MarketId::XSEF, MarketId::XTPZ, MarketId::XTRD, MarketId::XTXD };
 static const short d_NZC[2] = { 1, MarketId::XXXX };
 static const short d_OAG[2] = { 1, MarketId::XXXX };
 static const short d_OAJ[2] = { 1, MarketId::XXXX };
@@ -3185,7 +3193,7 @@ static const short d_PAC[3] = { 2, MarketId::PAN0, MarketId::XPTY };
 static const short d_PAD[2] = { 1, MarketId::XXXX };
 static const short d_PAH[2] = { 1, MarketId::XXXX };
 static const short d_PAP[2] = { 1, MarketId::HTI0 };
-static const short d_PAR[99] = { 98, MarketId::AACA, MarketId::ALXP, MarketId::AQEA, MarketId::AQED, MarketId::AQEU, MarketId::AURB, MarketId::AURO, MarketId::BNPA, MarketId::BNPS, MarketId::BPSX, MarketId::BRED, MarketId::CMCI, MarketId::COAL, MarketId::DPAR, MarketId::EDRF, MarketId::ELXE, MarketId::EPEX, MarketId::EXSB, MarketId::EXSD, MarketId::EXSE, MarketId::EXSF, MarketId::EXSH, MarketId::EXSP, MarketId::EXSY, MarketId::EXYY, MarketId::FMTS, MarketId::FRA0, MarketId::GFPO, MarketId::GIPB, MarketId::GMEO, MarketId::GMES, MarketId::GMTF, MarketId::GSPX, MarketId::HBFR, MarketId::HPCO, MarketId::HPCS, MarketId::HPCV, MarketId::HPCX, MarketId::ICOR, MarketId::ICOT, MarketId::KOTF, MarketId::LCHC, MarketId::LNEQ, MarketId::LNFI, MarketId::MHBP, MarketId::MKTF, MarketId::MLER, MarketId::MLES, MarketId::MLEX, MarketId::MSAX, MarketId::MSCX, MarketId::MSNT, MarketId::MTCH, MarketId::MUBP, MarketId::NABP, MarketId::NATX, MarketId::NOWX, MarketId::ODDO, MarketId::ODOC, MarketId::RBCC, MarketId::SGMU, MarketId::SGMV, MarketId::SGMW, MarketId::SGOE, MarketId::SMBP, MarketId::TDON, MarketId::TEPF, MarketId::TEPG, MarketId::TEPI, MarketId::TEPM, MarketId::TEPR, MarketId::TEPX, MarketId::TLCM, MarketId::TPEE, MarketId::TPER, MarketId::TPEU, MarketId::TPFR, MarketId::TPIC, MarketId::TPIO, MarketId::TPIR, MarketId::TRXE, MarketId::TSAF, MarketId::VRXP, MarketId::WFSE, MarketId::XAFR, MarketId::XAPA, MarketId::XBLK, MarketId::XBLN, MarketId::XETF, MarketId::XFMN, MarketId::XMAT, MarketId::XMLI, MarketId::XMON, MarketId::XPAR, MarketId::XPOW, MarketId::XSGA, MarketId::XSPM, MarketId::XTXE };
+static const short d_PAR[100] = { 99, MarketId::AACA, MarketId::ALXP, MarketId::AQEA, MarketId::AQED, MarketId::AQEU, MarketId::AURB, MarketId::AURO, MarketId::BNPA, MarketId::BNPS, MarketId::BPSX, MarketId::BRED, MarketId::CMCI, MarketId::COAL, MarketId::DPAR, MarketId::EDRF, MarketId::ELXE, MarketId::EPEX, MarketId::EXSB, MarketId::EXSD, MarketId::EXSE, MarketId::EXSF, MarketId::EXSH, MarketId::EXSP, MarketId::EXSY, MarketId::EXYY, MarketId::FMTS, MarketId::FRA0, MarketId::GFPO, MarketId::GIPB, MarketId::GMEO, MarketId::GMES, MarketId::GMTF, MarketId::GSPX, MarketId::HBFR, MarketId::HPCO, MarketId::HPCS, MarketId::HPCV, MarketId::HPCX, MarketId::ICOR, MarketId::ICOT, MarketId::KOTF, MarketId::LCHC, MarketId::LNEQ, MarketId::LNFI, MarketId::MHBP, MarketId::MKTF, MarketId::MLER, MarketId::MLES, MarketId::MLEX, MarketId::MSAX, MarketId::MSCX, MarketId::MSNT, MarketId::MSSA, MarketId::MTCH, MarketId::MUBP, MarketId::NABP, MarketId::NATX, MarketId::NOWX, MarketId::ODDO, MarketId::ODOC, MarketId::RBCC, MarketId::SGMU, MarketId::SGMV, MarketId::SGMW, MarketId::SGOE, MarketId::SMBP, MarketId::TDON, MarketId::TEPF, MarketId::TEPG, MarketId::TEPI, MarketId::TEPM, MarketId::TEPR, MarketId::TEPX, MarketId::TLCM, MarketId::TPEE, MarketId::TPER, MarketId::TPEU, MarketId::TPFR, MarketId::TPIC, MarketId::TPIO, MarketId::TPIR, MarketId::TRXE, MarketId::TSAF, MarketId::VRXP, MarketId::WFSE, MarketId::XAFR, MarketId::XAPA, MarketId::XBLK, MarketId::XBLN, MarketId::XETF, MarketId::XFMN, MarketId::XMAT, MarketId::XMLI, MarketId::XMON, MarketId::XPAR, MarketId::XPOW, MarketId::XSGA, MarketId::XSPM, MarketId::XTXE };
 static const short d_PAT[2] = { 1, MarketId::XXXX };
 static const short d_PBC[2] = { 1, MarketId::XXXX };
 static const short d_PBH[2] = { 1, MarketId::BTN0 };
@@ -3382,7 +3390,6 @@ static const short d_SAP[2] = { 1, MarketId::XHON };
 static const short d_SAT[2] = { 1, MarketId::XXXX };
 static const short d_SAV[2] = { 1, MarketId::XXXX };
 static const short d_SAW[2] = { 1, MarketId::XXXX };
-static const short d_SAY[2] = { 1, MarketId::XXXX };
 static const short d_SBA[2] = { 1, MarketId::XXXX };
 static const short d_SBH[2] = { 1, MarketId::BLM0 };
 static const short d_SBK[2] = { 1, MarketId::XXXX };
@@ -3412,7 +3419,7 @@ static const short d_SDU[2] = { 1, MarketId::XXXX };
 static const short d_SDY[2] = { 1, MarketId::XXXX };
 static const short d_SEA[2] = { 1, MarketId::XXXX };
 static const short d_SEB[2] = { 1, MarketId::XXXX };
-static const short d_SEL[12] = { 11, MarketId::GSXK, MarketId::KOCN, MarketId::KOR0, MarketId::XKCM, MarketId::XKEM, MarketId::XKFB, MarketId::XKFE, MarketId::XKON, MarketId::XKOR, MarketId::XKOS, MarketId::XKRX };
+static const short d_SEL[13] = { 12, MarketId::GSXK, MarketId::KOCN, MarketId::KOR0, MarketId::NXTE, MarketId::XKCM, MarketId::XKEM, MarketId::XKFB, MarketId::XKFE, MarketId::XKON, MarketId::XKOR, MarketId::XKOS, MarketId::XKRX };
 static const short d_SEN[2] = { 1, MarketId::XXXX };
 static const short d_SEW[2] = { 1, MarketId::XXXX };
 static const short d_SEZ[7] = { 6, MarketId::SECC, MarketId::SECD, MarketId::SECE, MarketId::SEDC, MarketId::SYC0, MarketId::TRPX };
@@ -3435,7 +3442,7 @@ static const short d_SHR[2] = { 1, MarketId::XXXX };
 static const short d_SHV[2] = { 1, MarketId::XXXX };
 static const short d_SI0[2] = { 1, MarketId::JBSI };
 static const short d_SID[2] = { 1, MarketId::XXXX };
-static const short d_SIN[42] = { 41, MarketId::APCL, MarketId::APEX, MarketId::BBLX, MarketId::BGSG, MarketId::BTBS, MarketId::CHIE, MarketId::CLTD, MarketId::CNOD, MarketId::ECAL, MarketId::EEAL, MarketId::ENMS, MarketId::EQOC, MarketId::EQOD, MarketId::EQOS, MarketId::FXSM, MarketId::GFSG, MarketId::IFSG, MarketId::JADX, MarketId::LMAS, MarketId::MALM, MarketId::MASG, MarketId::OSSG, MarketId::RFQS, MarketId::RTSP, MarketId::SGP0, MarketId::SMEX, MarketId::SYFX, MarketId::TERM, MarketId::TFSA, MarketId::TRDC, MarketId::TSIG, MarketId::TWSG, MarketId::XABX, MarketId::XAND, MarketId::XANM, MarketId::XSBT, MarketId::XSCA, MarketId::XSCE, MarketId::XSCL, MarketId::XSES, MarketId::XSIM };
+static const short d_SIN[46] = { 45, MarketId::APCL, MarketId::APEX, MarketId::BBLX, MarketId::BGSG, MarketId::BTBS, MarketId::CHIE, MarketId::CLTD, MarketId::CNOD, MarketId::ECAL, MarketId::EEAL, MarketId::ENMS, MarketId::EQOC, MarketId::EQOD, MarketId::EQOS, MarketId::FMXS, MarketId::FXSM, MarketId::GFSG, MarketId::ICPS, MarketId::IFSG, MarketId::JADX, MarketId::LMAS, MarketId::MALM, MarketId::MASG, MarketId::OSSG, MarketId::RFQS, MarketId::RTSP, MarketId::SGP0, MarketId::SMEX, MarketId::SYFX, MarketId::TERM, MarketId::TFSA, MarketId::TPSG, MarketId::TRDC, MarketId::TSIG, MarketId::TWSG, MarketId::XABX, MarketId::XAND, MarketId::XANM, MarketId::XANS, MarketId::XSBT, MarketId::XSCA, MarketId::XSCE, MarketId::XSCL, MarketId::XSES, MarketId::XSIM };
 static const short d_SIP[2] = { 1, MarketId::XXXX };
 static const short d_SIS[2] = { 1, MarketId::XXXX };
 static const short d_SIT[2] = { 1, MarketId::XXXX };
@@ -3502,7 +3509,7 @@ static const short d_STL[2] = { 1, MarketId::XXXX };
 static const short d_STN[2] = { 1, MarketId::XXXX };
 static const short d_STO[65] = { 64, MarketId::CASI, MarketId::CRYD, MarketId::CRYX, MarketId::CSTO, MarketId::DKED, MarketId::DKFI, MarketId::DKOB, MarketId::DKWB, MarketId::DNSE, MarketId::DOSE, MarketId::DSTO, MarketId::EBON, MarketId::ENSX, MarketId::ESTO, MarketId::EUOB, MarketId::EUWB, MarketId::FIED, MarketId::FNSE, MarketId::GBOB, MarketId::GBWB, MarketId::GFKS, MarketId::MNSE, MarketId::MOSE, MarketId::MSTO, MarketId::NAPA, MarketId::NASN, MarketId::NMTF, MarketId::NOCO, MarketId::NOED, MarketId::NOFI, MarketId::NOOB, MarketId::NOWB, MarketId::NSME, MarketId::NSPO, MarketId::ONSE, MarketId::PEPH, MarketId::PEPM, MarketId::PEPQ, MarketId::PEPW, MarketId::PEPY, MarketId::PNED, MarketId::SEBS, MarketId::SEBX, MarketId::SEED, MarketId::SEOB, MarketId::SEWB, MarketId::SPDK, MarketId::SPEU, MarketId::SPFI, MarketId::SPNO, MarketId::SSME, MarketId::SVES, MarketId::SVEX, MarketId::SWBI, MarketId::USOB, MarketId::USWB, MarketId::XABC, MarketId::XNDX, MarketId::XNGM, MarketId::XNMR, MarketId::XOME, MarketId::XOPV, MarketId::XSAT, MarketId::XSTO };
 static const short d_STP[2] = { 1, MarketId::XXXX };
-static const short d_STR[16] = { 15, MarketId::EUWA, MarketId::EUWX, MarketId::LBBW, MarketId::LBWL, MarketId::LBWS, MarketId::STUA, MarketId::STUB, MarketId::STUC, MarketId::STUD, MarketId::STUE, MarketId::STUF, MarketId::XDEX, MarketId::XSTF, MarketId::XSTP, MarketId::XSTU };
+static const short d_STR[18] = { 17, MarketId::EUWA, MarketId::EUWX, MarketId::LBBW, MarketId::LBWL, MarketId::LBWS, MarketId::STUA, MarketId::STUB, MarketId::STUC, MarketId::STUD, MarketId::STUE, MarketId::STUF, MarketId::STUH, MarketId::XCTS, MarketId::XDEX, MarketId::XSTF, MarketId::XSTP, MarketId::XSTU };
 static const short d_STS[2] = { 1, MarketId::XXXX };
 static const short d_STT[2] = { 1, MarketId::VIR0 };
 static const short d_STV[2] = { 1, MarketId::XXXX };
@@ -3682,7 +3689,7 @@ static const short d_URM[2] = { 1, MarketId::XXXX };
 static const short d_URZ[2] = { 1, MarketId::XXXX };
 static const short d_USH[2] = { 1, MarketId::XXXX };
 static const short d_USN[2] = { 1, MarketId::XXXX };
-static const short d_UTC[4] = { 3, MarketId::CLMX, MarketId::GMGE, MarketId::RABO };
+static const short d_UTC[3] = { 2, MarketId::CLMX, MarketId::RABO };
 static const short d_UTH[2] = { 1, MarketId::XXXX };
 static const short d_UTN[2] = { 1, MarketId::XXXX };
 static const short d_UTP[2] = { 1, MarketId::XXXX };
@@ -3709,7 +3716,7 @@ static const short d_VER[2] = { 1, MarketId::XXXX };
 static const short d_VFA[2] = { 1, MarketId::VFEX };
 static const short d_VGO[2] = { 1, MarketId::XXXX };
 static const short d_VID[2] = { 1, MarketId::XXXX };
-static const short d_VIE[17] = { 16, MarketId::APAW, MarketId::AUT0, MarketId::EGSI, MarketId::EXAA, MarketId::FPWB, MarketId::LLAT, MarketId::RBIV, MarketId::UCBA, MarketId::WBAH, MarketId::WBDM, MarketId::WBGF, MarketId::XCEG, MarketId::XOTB, MarketId::XRCB, MarketId::XVIE, MarketId::XWBO };
+static const short d_VIE[18] = { 17, MarketId::APAW, MarketId::AUT0, MarketId::EGSI, MarketId::EXAA, MarketId::FPWB, MarketId::LLAT, MarketId::RBIV, MarketId::UCBA, MarketId::WBAH, MarketId::WBDM, MarketId::WBGF, MarketId::WBMA, MarketId::XCEG, MarketId::XOTB, MarketId::XRCB, MarketId::XVIE, MarketId::XWBO };
 static const short d_VIJ[2] = { 1, MarketId::XXXX };
 static const short d_VIS[2] = { 1, MarketId::XXXX };
 static const short d_VIT[2] = { 1, MarketId::XXXX };
@@ -3748,7 +3755,7 @@ static const short d_WHM[2] = { 1, MarketId::XXXX };
 static const short d_WIC[2] = { 1, MarketId::XXXX };
 static const short d_WIE[2] = { 1, MarketId::XXXX };
 static const short d_WLB[2] = { 1, MarketId::XXXX };
-static const short d_WLG[3] = { 2, MarketId::NZL0, MarketId::XNZE };
+static const short d_WLG[2] = { 1, MarketId::NZL0 };
 static const short d_WLS[2] = { 1, MarketId::WLF0 };
 static const short d_WMB[2] = { 1, MarketId::XXXX };
 static const short d_WNS[2] = { 1, MarketId::XXXX };
@@ -3774,7 +3781,7 @@ static const short d_XPK[2] = { 1, MarketId::XXXX };
 static const short d_XRY[2] = { 1, MarketId::XXXX };
 static const short d_XSI[2] = { 1, MarketId::XXXX };
 static const short d_XSP[2] = { 1, MarketId::XXXX };
-static const short d_XXX[5] = { 4, MarketId::BILT, MarketId::XOFF, MarketId::XXX0, MarketId::XXXX };
+static const short d_XXX[6] = { 5, MarketId::BILT, MarketId::XCAY, MarketId::XOFF, MarketId::XXX0, MarketId::XXXX };
 static const short d_YAK[2] = { 1, MarketId::XXXX };
 static const short d_YAO[2] = { 1, MarketId::CMR0 };
 static const short d_YAT[2] = { 1, MarketId::XXXX };
@@ -3791,7 +3798,7 @@ static const short d_YFO[2] = { 1, MarketId::XXXX };
 static const short d_YGL[2] = { 1, MarketId::XXXX };
 static const short d_YGW[2] = { 1, MarketId::XXXX };
 static const short d_YGX[2] = { 1, MarketId::XXXX };
-static const short d_YHM[5] = { 4, MarketId::A24EX, MarketId::BMU0, MarketId::GTXE, MarketId::XBDA };
+static const short d_YHM[2] = { 1, MarketId::BMU0 };
 static const short d_YHR[2] = { 1, MarketId::XXXX };
 static const short d_YHZ[2] = { 1, MarketId::XXXX };
 static const short d_YIF[2] = { 1, MarketId::XXXX };
@@ -3864,7 +3871,7 @@ static const short d_ZLO[2] = { 1, MarketId::XXXX };
 static const short d_ZND[2] = { 1, MarketId::XXXX };
 static const short d_ZNE[2] = { 1, MarketId::XXXX };
 static const short d_ZQN[2] = { 1, MarketId::XXXX };
-static const short d_ZRH[40] = { 39, MarketId::BXDA, MarketId::CBOE, MarketId::CSAG, MarketId::CSOT, MarketId::CSZH, MarketId::DOTS, MarketId::EBSC, MarketId::EBSS, MarketId::EUCH, MarketId::EURM, MarketId::EUSC, MarketId::EUSP, MarketId::KMUX, MarketId::ROSR, MarketId::RULE, MarketId::STOX, MarketId::UBSC, MarketId::UBSF, MarketId::UBSG, MarketId::UBST, MarketId::VLEX, MarketId::XBTR, MarketId::XDLP, MarketId::XICB, MarketId::XQMH, MarketId::XQOD, MarketId::XREP, MarketId::XROT, MarketId::XSCU, MarketId::XSDX, MarketId::XSEB, MarketId::XSLS, MarketId::XSTV, MarketId::XSTX, MarketId::XSWM, MarketId::XSWO, MarketId::XSWX, MarketId::XVTX, MarketId::ZKBX };
+static const short d_ZRH[41] = { 40, MarketId::BXDA, MarketId::CBOE, MarketId::CSAG, MarketId::CSOT, MarketId::CSZH, MarketId::DOTS, MarketId::EBSC, MarketId::EBSS, MarketId::EUCH, MarketId::EURM, MarketId::EUSC, MarketId::EUSP, MarketId::GLBX, MarketId::KMUX, MarketId::ROSR, MarketId::RULE, MarketId::STOX, MarketId::UBSC, MarketId::UBSF, MarketId::UBSG, MarketId::UBST, MarketId::VLEX, MarketId::XBTR, MarketId::XDLP, MarketId::XICB, MarketId::XQMH, MarketId::XQOD, MarketId::XREP, MarketId::XROT, MarketId::XSCU, MarketId::XSDX, MarketId::XSEB, MarketId::XSLS, MarketId::XSTV, MarketId::XSTX, MarketId::XSWM, MarketId::XSWO, MarketId::XSWX, MarketId::XVTX, MarketId::ZKBX };
 static const short d_ZSA[2] = { 1, MarketId::XXXX };
 static const short d_ZSS[2] = { 1, MarketId::XXXX };
 static const short d_ZTH[2] = { 1, MarketId::XXXX };
@@ -3960,124 +3967,124 @@ const short * const Gazetteer::m_cty2mics[City::NUMCITY] = {
     d_JJN, d_JKG, d_JKH, d_JKR, d_JKT, d_JKV, d_JLN, d_JLR, d_JLS, d_JMB, 
     d_JMK, d_JMO, d_JMS, d_JMU, d_JNA, d_JNB, d_JNG, d_JNI, d_JNU, d_JNX, 
     d_JNZ, d_JOE, d_JOI, d_JOL, d_JON, d_JOS, d_JPA, d_JQE, d_JRH, d_JRO, 
-    d_JRS, d_JSA, d_JSI, d_JSM, d_JSR, d_JST, d_JTI, d_JTR, d_JUB, d_JUI, 
-    d_JUJ, d_JUL, d_JUM, d_JUN, d_JUT, d_JUV, d_JVL, d_JWA, d_JXN, d_JYV, 
-    d_KAJ, d_KAN, d_KAO, d_KBL, d_KBP, d_KBY, d_KCC, d_KCE, d_KCH, d_KCM, 
-    d_KCZ, d_KDD, d_KDU, d_KEF, d_KEL, d_KEM, d_KGC, d_KGD, d_KGI, d_KGL, 
-    d_KGS, d_KHH, d_KHI, d_KHJ, d_KHV, d_KID, d_KIJ, d_KIK, d_KIM, d_KIN, 
-    d_KIR, d_KIV, d_KIW, d_KIX, d_KKN, d_KLA, d_KLR, d_KLU, d_KLW, d_KLX, 
-    d_KLZ, d_KMI, d_KMJ, d_KMP, d_KMQ, d_KNO, d_KNS, d_KNU, d_KNX, d_KOA, 
-    d_KOI, d_KOJ, d_KOK, d_KRB, d_KRK, d_KRN, d_KRP, d_KRS, d_KRT, d_KSD, 
-    d_KSL, d_KSU, d_KTA, d_KTB, d_KTM, d_KTN, d_KTR, d_KTT, d_KUA, d_KUF, 
-    d_KUH, d_KUL, d_KUO, d_KVA, d_KWI, d_KWL, d_KWM, d_KYA, d_KYS, d_KZN, 
-    d_LAD, d_LAE, d_LAF, d_LAI, d_LAN, d_LAP, d_LAR, d_LAS, d_LAW, d_LAX, 
-    d_LBA, d_LBB, d_LBE, d_LBG, d_LBI, d_LBQ, d_LBU, d_LBV, d_LCA, d_LCG, 
-    d_LCH, d_LCY, d_LDC, d_LDE, d_LDK, d_LDY, d_LEA, d_LEB, d_LED, d_LEI, 
-    d_LEJ, d_LEK, d_LEQ, d_LER, d_LEX, d_LEY, d_LFT, d_LFW, d_LGA, d_LGB, 
-    d_LGG, d_LGK, d_LGW, d_LHE, d_LHR, d_LI0, d_LIF, d_LIG, d_LIH, d_LIJ, 
-    d_LIL, d_LIM, d_LIN, d_LIQ, d_LIS, d_LIT, d_LJU, d_LKL, d_LKO, d_LLA, 
-    d_LLW, d_LMM, d_LMP, d_LMT, d_LNK, d_LNO, d_LNS, d_LNY, d_LNZ, d_LON, 
-    d_LOS, d_LPA, d_LPB, d_LPL, d_LPP, d_LRD, d_LRE, d_LRF, d_LRH, d_LRM, 
-    d_LRT, d_LSE, d_LSI, d_LST, d_LSY, d_LSZ, d_LTN, d_LTO, d_LU0, d_LUD, 
-    d_LUG, d_LUJ, d_LUM, d_LUN, d_LUX, d_LV0, d_LVO, d_LWB, d_LWK, d_LWO, 
-    d_LWS, d_LWT, d_LXR, d_LYH, d_LYO, d_LYP, d_LYR, d_LYS, d_LYX, d_LZC, 
-    d_LZR, d_MAA, d_MAD, d_MAF, d_MAH, d_MAJ, d_MAN, d_MAO, d_MAR, d_MAU, 
-    d_MAZ, d_MBA, d_MBH, d_MBJ, d_MBM, d_MBS, d_MBX, d_MC0, d_MCE, d_MCI, 
-    d_MCL, d_MCM, d_MCN, d_MCO, d_MCP, d_MCT, d_MCW, d_MCY, d_MCZ, d_MDC, 
-    d_MDE, d_MDL, d_MDQ, d_MDT, d_MDW, d_MDY, d_MDZ, d_MED, d_MEE, d_MEI, 
-    d_MEL, d_MEM, d_MES, d_MEX, d_MEZ, d_MFE, d_MFF, d_MFG, d_MFM, d_MFN, 
-    d_MFO, d_MFQ, d_MFR, d_MFU, d_MGA, d_MGB, d_MGF, d_MGH, d_MGM, d_MGQ, 
-    d_MGW, d_MHE, d_MHH, d_MHQ, d_MHT, d_MIA, d_MID, d_MIK, d_MIL, d_MIM, 
-    d_MIR, d_MJC, d_MJD, d_MJL, d_MJN, d_MJQ, d_MJT, d_MJV, d_MKE, d_MKG, 
-    d_MKK, d_MKL, d_MKR, d_MKY, d_MLA, d_MLB, d_MLE, d_MLH, d_MLI, d_MLM, 
-    d_MLS, d_MLU, d_MLW, d_MLX, d_MMA, d_MME, d_MMG, d_MMJ, d_MMK, d_MMM, 
-    d_MMX, d_MMY, d_MNI, d_MNL, d_MOB, d_MOD, d_MOT, d_MOV, d_MOW, d_MOZ, 
-    d_MPA, d_MPD, d_MPL, d_MPM, d_MQL, d_MQM, d_MQP, d_MQQ, d_MQT, d_MRB, 
-    d_MRS, d_MRU, d_MRV, d_MRY, d_MRZ, d_MSE, d_MSL, d_MSN, d_MSO, d_MSP, 
-    d_MSQ, d_MSR, d_MST, d_MSU, d_MSY, d_MTH, d_MTJ, d_MTL, d_MTM, d_MTO, 
-    d_MTS, d_MTT, d_MTY, d_MUB, d_MUC, d_MUE, d_MUH, d_MUX, d_MV0, d_MVB, 
-    d_MVD, d_MVR, d_MVY, d_MVZ, d_MWD, d_MWH, d_MXL, d_MXP, d_MYA, d_MYD, 
-    d_MYJ, d_MYQ, d_MYR, d_MYY, d_MZF, d_MZG, d_MZM, d_MZT, d_MZY, d_NAA, 
-    d_NAG, d_NAJ, d_NAN, d_NAP, d_NAS, d_NAT, d_NAY, d_NBO, d_NCE, d_NCL, 
-    d_NCS, d_NCY, d_NDB, d_NDJ, d_NDU, d_NEV, d_NGE, d_NGO, d_NGS, d_NIC, 
-    d_NIM, d_NIP, d_NKC, d_NKW, d_NLA, d_NLD, d_NLK, d_NLP, d_NLU, d_NLV, 
-    d_NNG, d_NOC, d_NOP, d_NOU, d_NQY, d_NRA, d_NRK, d_NRT, d_NSA, d_NSN, 
-    d_NSO, d_NST, d_NTE, d_NTL, d_NTR, d_NTY, d_NUE, d_NWI, d_NYC, d_NZC, 
-    d_OAG, d_OAJ, d_OAK, d_OAX, d_OB0, d_ODA, d_ODB, d_ODE, d_ODS, d_OGG, 
-    d_OHD, d_OHT, d_OIT, d_OKA, d_OKC, d_OKD, d_OKJ, d_OKU, d_OLB, d_OLF, 
-    d_OLM, d_OLP, d_OMA, d_OMD, d_OME, d_OMH, d_OMO, d_OND, d_ONT, d_OOL, 
-    d_OOM, d_OPO, d_ORB, d_ORD, d_ORF, d_ORH, d_ORK, d_ORL, d_ORN, d_ORS, 
-    d_ORY, d_OSA, d_OSH, d_OSI, d_OSL, d_OSM, d_OTH, d_OTP, d_OTZ, d_OUA, 
-    d_OUD, d_OUH, d_OUK, d_OUL, d_OUZ, d_OVB, d_OVD, d_OWB, d_OXB, d_OXR, 
-    d_OZZ, d_PAC, d_PAD, d_PAH, d_PAP, d_PAR, d_PAT, d_PBC, d_PBH, d_PBI, 
-    d_PBM, d_PBO, d_PBZ, d_PC0, d_PCT, d_PDL, d_PDT, d_PDX, d_PEG, d_PEI, 
-    d_PEK, d_PEN, d_PER, d_PEW, d_PFN, d_PFO, d_PGA, d_PGF, d_PGV, d_PHC, 
-    d_PHE, d_PHF, d_PHL, d_PHW, d_PHX, d_PIA, d_PIB, d_PIH, d_PIK, d_PIR, 
-    d_PIS, d_PIT, d_PJG, d_PKB, d_PKW, d_PLB, d_PLN, d_PLO, d_PLZ, d_PMD, 
-    d_PMI, d_PMO, d_PMR, d_PMV, d_PMW, d_PN0, d_PNH, d_PNI, d_PNL, d_PNQ, 
-    d_PNR, d_PNS, d_POA, d_POG, d_POM, d_POP, d_POR, d_POS, d_POU, d_POZ, 
-    d_PPG, d_PPP, d_PPT, d_PQI, d_PQQ, d_PRG, d_PRN, d_PRY, d_PS0, d_PSA, 
-    d_PSC, d_PSD, d_PSE, d_PSG, d_PSI, d_PSP, d_PSR, d_PSY, d_PTG, d_PTJ, 
-    d_PTP, d_PTY, d_PUB, d_PUF, d_PUG, d_PUJ, d_PUQ, d_PUS, d_PUW, d_PUY, 
-    d_PVD, d_PVG, d_PVH, d_PVK, d_PVR, d_PWM, d_PXM, d_PXO, d_PYB, d_PYX, 
-    d_PZB, d_PZH, d_PZO, d_QCB, d_QDU, d_QGF, d_QIC, d_QLI, d_QML, d_QMN, 
-    d_QNB, d_QND, d_QPA, d_QPG, d_QSA, d_QUF, d_RA0, d_RAI, d_RAJ, d_RAK, 
-    d_RAP, d_RAR, d_RAZ, d_RB0, d_RBA, d_RBR, d_RCB, d_RDD, d_RDG, d_RDM, 
-    d_RDU, d_RDZ, d_REC, d_REG, d_REK, d_REU, d_RFD, d_RFP, d_RGI, d_RGN, 
-    d_RHI, d_RHO, d_RIC, d_RIO, d_RIX, d_RIZ, d_RJK, d_RKD, d_RKS, d_RKT, 
-    d_RKV, d_RLT, d_RMF, d_RMI, d_RNB, d_RNE, d_RNN, d_RNO, d_RNS, d_ROA, 
-    d_ROB, d_ROC, d_ROK, d_ROM, d_ROR, d_ROS, d_ROT, d_ROU, d_ROV, d_RRG, 
-    d_RSA, d_RSD, d_RST, d_RSW, d_RTB, d_RTM, d_RUH, d_RUN, d_RVI, d_RVN, 
-    d_RWI, d_RWP, d_RYK, d_SAF, d_SAH, d_SAL, d_SAN, d_SAO, d_SAP, d_SAT, 
-    d_SAV, d_SAW, d_SAY, d_SBA, d_SBH, d_SBK, d_SBN, d_SBP, d_SBU, d_SBW, 
-    d_SBY, d_SBZ, d_SCC, d_SCE, d_SCF, d_SCK, d_SCL, d_SCN, d_SCQ, d_SCU, 
-    d_SDF, d_SDH, d_SDJ, d_SDL, d_SDQ, d_SDR, d_SDS, d_SDT, d_SDU, d_SDY, 
-    d_SEA, d_SEB, d_SEL, d_SEN, d_SEW, d_SEZ, d_SFA, d_SFG, d_SFJ, d_SFN, 
-    d_SFO, d_SGD, d_SGF, d_SGN, d_SGU, d_SGY, d_SH0, d_SHA, d_SHD, d_SHE, 
-    d_SHJ, d_SHR, d_SHV, d_SI0, d_SID, d_SIN, d_SIP, d_SIS, d_SIT, d_SIX, 
-    d_SJC, d_SJD, d_SJI, d_SJJ, d_SJO, d_SJT, d_SJU, d_SJY, d_SK0, d_SKB, 
-    d_SKD, d_SKG, d_SKP, d_SKS, d_SKV, d_SKX, d_SKZ, d_SLA, d_SLC, d_SLE, 
-    d_SLL, d_SLP, d_SLS, d_SLU, d_SLZ, d_SM0, d_SMA, d_SMF, d_SMI, d_SMX, 
-    d_SNA, d_SNC, d_SNN, d_SNS, d_SOF, d_SOG, d_SOI, d_SON, d_SOT, d_SOU, 
-    d_SPC, d_SPI, d_SPK, d_SPN, d_SPS, d_SPU, d_SPY, d_SRA, d_SRB, d_SRL, 
-    d_SRQ, d_SRZ, d_SSA, d_SSG, d_SSH, d_SSL, d_ST0, d_STI, d_STL, d_STN, 
-    d_STO, d_STP, d_STR, d_STS, d_STT, d_STV, d_STX, d_SUB, d_SUF, d_SUL, 
-    d_SUM, d_SUN, d_SUV, d_SUX, d_SVD, d_SVG, d_SVL, d_SVO, d_SVQ, d_SVX, 
-    d_SW0, d_SWF, d_SWP, d_SWS, d_SXB, d_SXF, d_SXL, d_SXM, d_SXR, d_SYD, 
-    d_SYR, d_SYY, d_SZB, d_SZD, d_SZF, d_SZG, d_SZK, d_SZX, d_SZZ, d_TAB, 
-    d_TAK, d_TAM, d_TAO, d_TAS, d_TAY, d_TBS, d_TBU, d_TCA, d_TCB, d_TCI, 
-    d_TCL, d_TCU, d_TED, d_TEM, d_TEQ, d_TER, d_TEU, d_TEX, d_TF0, d_TFN, 
-    d_TFS, d_TGD, d_TGU, d_TGV, d_TGZ, d_THE, d_THF, d_THR, d_TIA, d_TIF, 
-    d_TIJ, d_TIP, d_TIS, d_TIV, d_TK0, d_TKA, d_TKS, d_TKU, d_TLH, d_TLL, 
-    d_TLS, d_TLV, d_TMP, d_TMS, d_TMW, d_TMZ, d_TNA, d_TNG, d_TNR, d_TOD, 
-    d_TOL, d_TOS, d_TOU, d_TOV, d_TOY, d_TPA, d_TPE, d_TPR, d_TPS, d_TRD, 
-    d_TRF, d_TRI, d_TRN, d_TRO, d_TRS, d_TRV, d_TRW, d_TRZ, d_TSA, d_TSB, 
-    d_TSE, d_TSF, d_TSN, d_TSV, d_TTN, d_TUC, d_TUK, d_TUL, d_TUN, d_TUP, 
-    d_TUS, d_TUU, d_TVC, d_TVF, d_TVL, d_TWB, d_TWF, d_TWU, d_TXK, d_TXL, 
-    d_TYN, d_TYO, d_TYR, d_TYS, d_TZX, d_UAH, d_UAK, d_UAP, d_UBA, d_UBJ, 
-    d_UBP, d_UCA, d_UCT, d_UDE, d_UDI, d_UDJ, d_UDR, d_UEE, d_UET, d_UFA, 
-    d_UGC, d_UGO, d_UHE, d_UII, d_UIN, d_UIO, d_UIP, d_UIT, d_UKB, d_UKI, 
-    d_UKY, d_ULB, d_ULD, d_ULN, d_ULU, d_UMD, d_UME, d_UMR, d_UNI, d_UNK, 
-    d_UNT, d_UPG, d_UPL, d_UPN, d_UPP, d_URB, d_URC, d_URG, d_URM, d_URZ, 
-    d_USH, d_USN, d_UTC, d_UTH, d_UTN, d_UTP, d_UTT, d_UUD, d_UVE, d_UVF, 
-    d_UVL, d_VA0, d_VAA, d_VAN, d_VAP, d_VAR, d_VAS, d_VBS, d_VBY, d_VCE, 
-    d_VCP, d_VDA, d_VDE, d_VDZ, d_VEL, d_VER, d_VFA, d_VGO, d_VID, d_VIE, 
-    d_VIJ, d_VIS, d_VIT, d_VIX, d_VKO, d_VLC, d_VLD, d_VLI, d_VLL, d_VLN, 
-    d_VLU, d_VN0, d_VNO, d_VNS, d_VOG, d_VPS, d_VRA, d_VRB, d_VRK, d_VRN, 
-    d_VSA, d_VST, d_VTE, d_VVO, d_VXO, d_VYD, d_VZ0, d_WAS, d_WAW, d_WDH, 
-    d_WEI, d_WEL, d_WGA, d_WHK, d_WHM, d_WIC, d_WIE, d_WLB, d_WLG, d_WLS, 
-    d_WMB, d_WNS, d_WOL, d_WP0, d_WRE, d_WRG, d_WRL, d_WRO, d_WUH, d_WUN, 
-    d_WUX, d_WVB, d_WYA, d_WYN, d_WYS, d_XCH, d_XIY, d_XLB, d_XMH, d_XMN, 
-    d_XPK, d_XRY, d_XSI, d_XSP, d_XXX, d_YAK, d_YAO, d_YAT, d_YBE, d_YCB, 
-    d_YDF, d_YEA, d_YEG, d_YEV, d_YFA, d_YFB, d_YFC, d_YFO, d_YGL, d_YGW, 
-    d_YGX, d_YHM, d_YHR, d_YHZ, d_YIF, d_YIH, d_YKA, d_YKM, d_YKS, d_YLR, 
-    d_YLW, d_YMM, d_YMQ, d_YMX, d_YNB, d_YOK, d_YOP, d_YOW, d_YPN, d_YPR, 
-    d_YQB, d_YQD, d_YQG, d_YQM, d_YQR, d_YQT, d_YQX, d_YRB, d_YSJ, d_YSM, 
-    d_YSR, d_YTH, d_YTO, d_YTZ, d_YUD, d_YUL, d_YUM, d_YUX, d_YVB, d_YVO, 
-    d_YVP, d_YVQ, d_YVR, d_YWG, d_YWK, d_YXD, d_YXE, d_YXJ, d_YXN, d_YXS, 
-    d_YXT, d_YXU, d_YXY, d_YYC, d_YYD, d_YYJ, d_YYQ, d_YYR, d_YYT, d_YYZ, 
-    d_YZF, d_YZP, d_ZAD, d_ZAG, d_ZAZ, d_ZBO, d_ZCL, d_ZIH, d_ZJK, d_ZKE, 
-    d_ZLO, d_ZND, d_ZNE, d_ZQN, d_ZRH, d_ZSA, d_ZSS, d_ZTH, d_ZTM, d_ZYL
+    d_JRS, d_JSA, d_JSI, d_JSM, d_JST, d_JTI, d_JTR, d_JUB, d_JUI, d_JUJ, 
+    d_JUL, d_JUM, d_JUN, d_JUT, d_JUV, d_JVL, d_JWA, d_JXN, d_JYV, d_KAJ, 
+    d_KAN, d_KAO, d_KBL, d_KBP, d_KBY, d_KCC, d_KCE, d_KCH, d_KCM, d_KCZ, 
+    d_KDD, d_KDU, d_KEF, d_KEL, d_KEM, d_KGC, d_KGD, d_KGI, d_KGL, d_KGS, 
+    d_KHH, d_KHI, d_KHJ, d_KHV, d_KID, d_KIJ, d_KIK, d_KIM, d_KIN, d_KIR, 
+    d_KIV, d_KIW, d_KIX, d_KKN, d_KLA, d_KLR, d_KLU, d_KLW, d_KLX, d_KLZ, 
+    d_KMI, d_KMJ, d_KMP, d_KMQ, d_KNO, d_KNS, d_KNU, d_KNX, d_KOA, d_KOI, 
+    d_KOJ, d_KOK, d_KRB, d_KRK, d_KRN, d_KRP, d_KRS, d_KRT, d_KSD, d_KSL, 
+    d_KSU, d_KTA, d_KTB, d_KTM, d_KTN, d_KTR, d_KTT, d_KUA, d_KUF, d_KUH, 
+    d_KUL, d_KUO, d_KVA, d_KWI, d_KWL, d_KWM, d_KYA, d_KYS, d_KZN, d_LAD, 
+    d_LAE, d_LAF, d_LAI, d_LAN, d_LAP, d_LAR, d_LAS, d_LAW, d_LAX, d_LBA, 
+    d_LBB, d_LBE, d_LBG, d_LBI, d_LBQ, d_LBU, d_LBV, d_LCA, d_LCG, d_LCH, 
+    d_LCY, d_LDC, d_LDE, d_LDK, d_LDY, d_LEA, d_LEB, d_LED, d_LEI, d_LEJ, 
+    d_LEK, d_LEQ, d_LER, d_LEX, d_LEY, d_LFT, d_LFW, d_LGA, d_LGB, d_LGG, 
+    d_LGK, d_LGW, d_LHE, d_LHR, d_LI0, d_LIF, d_LIG, d_LIH, d_LIJ, d_LIL, 
+    d_LIM, d_LIN, d_LIQ, d_LIS, d_LIT, d_LJU, d_LKL, d_LKO, d_LLA, d_LLW, 
+    d_LMM, d_LMP, d_LMT, d_LNK, d_LNO, d_LNS, d_LNY, d_LNZ, d_LON, d_LOS, 
+    d_LPA, d_LPB, d_LPL, d_LPP, d_LRD, d_LRE, d_LRF, d_LRH, d_LRM, d_LRT, 
+    d_LSE, d_LSI, d_LST, d_LSY, d_LSZ, d_LTN, d_LTO, d_LU0, d_LUD, d_LUG, 
+    d_LUJ, d_LUM, d_LUN, d_LUX, d_LV0, d_LVO, d_LWB, d_LWK, d_LWO, d_LWS, 
+    d_LWT, d_LXR, d_LYH, d_LYO, d_LYP, d_LYR, d_LYS, d_LYX, d_LZC, d_LZR, 
+    d_MAA, d_MAD, d_MAF, d_MAH, d_MAJ, d_MAN, d_MAO, d_MAR, d_MAU, d_MAZ, 
+    d_MBA, d_MBH, d_MBJ, d_MBM, d_MBS, d_MBX, d_MC0, d_MCE, d_MCI, d_MCL, 
+    d_MCM, d_MCN, d_MCO, d_MCP, d_MCT, d_MCW, d_MCY, d_MCZ, d_MDC, d_MDE, 
+    d_MDL, d_MDQ, d_MDT, d_MDW, d_MDY, d_MDZ, d_MED, d_MEE, d_MEI, d_MEL, 
+    d_MEM, d_MES, d_MEX, d_MEZ, d_MFE, d_MFF, d_MFG, d_MFM, d_MFN, d_MFO, 
+    d_MFQ, d_MFR, d_MFU, d_MGA, d_MGB, d_MGF, d_MGH, d_MGM, d_MGQ, d_MGW, 
+    d_MHE, d_MHH, d_MHQ, d_MHT, d_MIA, d_MID, d_MIK, d_MIL, d_MIM, d_MIR, 
+    d_MJC, d_MJD, d_MJL, d_MJN, d_MJQ, d_MJT, d_MJV, d_MKE, d_MKG, d_MKK, 
+    d_MKL, d_MKR, d_MKY, d_MLA, d_MLB, d_MLE, d_MLH, d_MLI, d_MLM, d_MLS, 
+    d_MLU, d_MLW, d_MLX, d_MMA, d_MME, d_MMG, d_MMJ, d_MMK, d_MMM, d_MMX, 
+    d_MMY, d_MNI, d_MNL, d_MOB, d_MOD, d_MOT, d_MOV, d_MOW, d_MOZ, d_MPA, 
+    d_MPD, d_MPL, d_MPM, d_MQL, d_MQM, d_MQP, d_MQQ, d_MQT, d_MRB, d_MRS, 
+    d_MRU, d_MRV, d_MRY, d_MRZ, d_MSE, d_MSL, d_MSN, d_MSO, d_MSP, d_MSQ, 
+    d_MSR, d_MST, d_MSU, d_MSY, d_MTH, d_MTJ, d_MTL, d_MTM, d_MTO, d_MTS, 
+    d_MTT, d_MTY, d_MUB, d_MUC, d_MUE, d_MUH, d_MUX, d_MV0, d_MVB, d_MVD, 
+    d_MVR, d_MVY, d_MVZ, d_MWD, d_MWH, d_MXL, d_MXP, d_MYA, d_MYD, d_MYJ, 
+    d_MYQ, d_MYR, d_MYY, d_MZF, d_MZG, d_MZM, d_MZT, d_MZY, d_NAA, d_NAG, 
+    d_NAJ, d_NAN, d_NAP, d_NAS, d_NAT, d_NAY, d_NBO, d_NCE, d_NCL, d_NCS, 
+    d_NCY, d_NDB, d_NDJ, d_NDU, d_NEV, d_NGE, d_NGO, d_NGS, d_NIC, d_NIM, 
+    d_NIP, d_NKC, d_NKW, d_NLA, d_NLD, d_NLK, d_NLP, d_NLU, d_NLV, d_NNG, 
+    d_NOC, d_NOP, d_NOU, d_NQY, d_NRA, d_NRK, d_NRT, d_NSA, d_NSN, d_NSO, 
+    d_NST, d_NTE, d_NTL, d_NTR, d_NTY, d_NUE, d_NWI, d_NYC, d_NZC, d_OAG, 
+    d_OAJ, d_OAK, d_OAX, d_OB0, d_ODA, d_ODB, d_ODE, d_ODS, d_OGG, d_OHD, 
+    d_OHT, d_OIT, d_OKA, d_OKC, d_OKD, d_OKJ, d_OKU, d_OLB, d_OLF, d_OLM, 
+    d_OLP, d_OMA, d_OMD, d_OME, d_OMH, d_OMO, d_OND, d_ONT, d_OOL, d_OOM, 
+    d_OPO, d_ORB, d_ORD, d_ORF, d_ORH, d_ORK, d_ORL, d_ORN, d_ORS, d_ORY, 
+    d_OSA, d_OSH, d_OSI, d_OSL, d_OSM, d_OTH, d_OTP, d_OTZ, d_OUA, d_OUD, 
+    d_OUH, d_OUK, d_OUL, d_OUZ, d_OVB, d_OVD, d_OWB, d_OXB, d_OXR, d_OZZ, 
+    d_PAC, d_PAD, d_PAH, d_PAP, d_PAR, d_PAT, d_PBC, d_PBH, d_PBI, d_PBM, 
+    d_PBO, d_PBZ, d_PC0, d_PCT, d_PDL, d_PDT, d_PDX, d_PEG, d_PEI, d_PEK, 
+    d_PEN, d_PER, d_PEW, d_PFN, d_PFO, d_PGA, d_PGF, d_PGV, d_PHC, d_PHE, 
+    d_PHF, d_PHL, d_PHW, d_PHX, d_PIA, d_PIB, d_PIH, d_PIK, d_PIR, d_PIS, 
+    d_PIT, d_PJG, d_PKB, d_PKW, d_PLB, d_PLN, d_PLO, d_PLZ, d_PMD, d_PMI, 
+    d_PMO, d_PMR, d_PMV, d_PMW, d_PN0, d_PNH, d_PNI, d_PNL, d_PNQ, d_PNR, 
+    d_PNS, d_POA, d_POG, d_POM, d_POP, d_POR, d_POS, d_POU, d_POZ, d_PPG, 
+    d_PPP, d_PPT, d_PQI, d_PQQ, d_PRG, d_PRN, d_PRY, d_PS0, d_PSA, d_PSC, 
+    d_PSD, d_PSE, d_PSG, d_PSI, d_PSP, d_PSR, d_PSY, d_PTG, d_PTJ, d_PTP, 
+    d_PTY, d_PUB, d_PUF, d_PUG, d_PUJ, d_PUQ, d_PUS, d_PUW, d_PUY, d_PVD, 
+    d_PVG, d_PVH, d_PVK, d_PVR, d_PWM, d_PXM, d_PXO, d_PYB, d_PYX, d_PZB, 
+    d_PZH, d_PZO, d_QCB, d_QDU, d_QGF, d_QIC, d_QLI, d_QML, d_QMN, d_QNB, 
+    d_QND, d_QPA, d_QPG, d_QSA, d_QUF, d_RA0, d_RAI, d_RAJ, d_RAK, d_RAP, 
+    d_RAR, d_RAZ, d_RB0, d_RBA, d_RBR, d_RCB, d_RDD, d_RDG, d_RDM, d_RDU, 
+    d_RDZ, d_REC, d_REG, d_REK, d_REU, d_RFD, d_RFP, d_RGI, d_RGN, d_RHI, 
+    d_RHO, d_RIC, d_RIO, d_RIX, d_RIZ, d_RJK, d_RKD, d_RKS, d_RKT, d_RKV, 
+    d_RLT, d_RMF, d_RMI, d_RNB, d_RNE, d_RNN, d_RNO, d_RNS, d_ROA, d_ROB, 
+    d_ROC, d_ROK, d_ROM, d_ROR, d_ROS, d_ROT, d_ROU, d_ROV, d_RRG, d_RSA, 
+    d_RSD, d_RST, d_RSW, d_RTB, d_RTM, d_RUH, d_RUN, d_RVI, d_RVN, d_RWI, 
+    d_RWP, d_RYK, d_SAF, d_SAH, d_SAL, d_SAN, d_SAO, d_SAP, d_SAT, d_SAV, 
+    d_SAW, d_SBA, d_SBH, d_SBK, d_SBN, d_SBP, d_SBU, d_SBW, d_SBY, d_SBZ, 
+    d_SCC, d_SCE, d_SCF, d_SCK, d_SCL, d_SCN, d_SCQ, d_SCU, d_SDF, d_SDH, 
+    d_SDJ, d_SDL, d_SDQ, d_SDR, d_SDS, d_SDT, d_SDU, d_SDY, d_SEA, d_SEB, 
+    d_SEL, d_SEN, d_SEW, d_SEZ, d_SFA, d_SFG, d_SFJ, d_SFN, d_SFO, d_SGD, 
+    d_SGF, d_SGN, d_SGU, d_SGY, d_SH0, d_SHA, d_SHD, d_SHE, d_SHJ, d_SHR, 
+    d_SHV, d_SI0, d_SID, d_SIN, d_SIP, d_SIS, d_SIT, d_SIX, d_SJC, d_SJD, 
+    d_SJI, d_SJJ, d_SJO, d_SJT, d_SJU, d_SJY, d_SK0, d_SKB, d_SKD, d_SKG, 
+    d_SKP, d_SKS, d_SKV, d_SKX, d_SKZ, d_SLA, d_SLC, d_SLE, d_SLL, d_SLP, 
+    d_SLS, d_SLU, d_SLZ, d_SM0, d_SMA, d_SMF, d_SMI, d_SMX, d_SNA, d_SNC, 
+    d_SNN, d_SNS, d_SOF, d_SOG, d_SOI, d_SON, d_SOT, d_SOU, d_SPC, d_SPI, 
+    d_SPK, d_SPN, d_SPS, d_SPU, d_SPY, d_SRA, d_SRB, d_SRL, d_SRQ, d_SRZ, 
+    d_SSA, d_SSG, d_SSH, d_SSL, d_ST0, d_STI, d_STL, d_STN, d_STO, d_STP, 
+    d_STR, d_STS, d_STT, d_STV, d_STX, d_SUB, d_SUF, d_SUL, d_SUM, d_SUN, 
+    d_SUV, d_SUX, d_SVD, d_SVG, d_SVL, d_SVO, d_SVQ, d_SVX, d_SW0, d_SWF, 
+    d_SWP, d_SWS, d_SXB, d_SXF, d_SXL, d_SXM, d_SXR, d_SYD, d_SYR, d_SYY, 
+    d_SZB, d_SZD, d_SZF, d_SZG, d_SZK, d_SZX, d_SZZ, d_TAB, d_TAK, d_TAM, 
+    d_TAO, d_TAS, d_TAY, d_TBS, d_TBU, d_TCA, d_TCB, d_TCI, d_TCL, d_TCU, 
+    d_TED, d_TEM, d_TEQ, d_TER, d_TEU, d_TEX, d_TF0, d_TFN, d_TFS, d_TGD, 
+    d_TGU, d_TGV, d_TGZ, d_THE, d_THF, d_THR, d_TIA, d_TIF, d_TIJ, d_TIP, 
+    d_TIS, d_TIV, d_TK0, d_TKA, d_TKS, d_TKU, d_TLH, d_TLL, d_TLS, d_TLV, 
+    d_TMP, d_TMS, d_TMW, d_TMZ, d_TNA, d_TNG, d_TNR, d_TOD, d_TOL, d_TOS, 
+    d_TOU, d_TOV, d_TOY, d_TPA, d_TPE, d_TPR, d_TPS, d_TRD, d_TRF, d_TRI, 
+    d_TRN, d_TRO, d_TRS, d_TRV, d_TRW, d_TRZ, d_TSA, d_TSB, d_TSE, d_TSF, 
+    d_TSN, d_TSV, d_TTN, d_TUC, d_TUK, d_TUL, d_TUN, d_TUP, d_TUS, d_TUU, 
+    d_TVC, d_TVF, d_TVL, d_TWB, d_TWF, d_TWU, d_TXK, d_TXL, d_TYN, d_TYO, 
+    d_TYR, d_TYS, d_TZX, d_UAH, d_UAK, d_UAP, d_UBA, d_UBJ, d_UBP, d_UCA, 
+    d_UCT, d_UDE, d_UDI, d_UDJ, d_UDR, d_UEE, d_UET, d_UFA, d_UGC, d_UGO, 
+    d_UHE, d_UII, d_UIN, d_UIO, d_UIP, d_UIT, d_UKB, d_UKI, d_UKY, d_ULB, 
+    d_ULD, d_ULN, d_ULU, d_UMD, d_UME, d_UMR, d_UNI, d_UNK, d_UNT, d_UPG, 
+    d_UPL, d_UPN, d_UPP, d_URB, d_URC, d_URG, d_URM, d_URZ, d_USH, d_USN, 
+    d_UTC, d_UTH, d_UTN, d_UTP, d_UTT, d_UUD, d_UVE, d_UVF, d_UVL, d_VA0, 
+    d_VAA, d_VAN, d_VAP, d_VAR, d_VAS, d_VBS, d_VBY, d_VCE, d_VCP, d_VDA, 
+    d_VDE, d_VDZ, d_VEL, d_VER, d_VFA, d_VGO, d_VID, d_VIE, d_VIJ, d_VIS, 
+    d_VIT, d_VIX, d_VKO, d_VLC, d_VLD, d_VLI, d_VLL, d_VLN, d_VLU, d_VN0, 
+    d_VNO, d_VNS, d_VOG, d_VPS, d_VRA, d_VRB, d_VRK, d_VRN, d_VSA, d_VST, 
+    d_VTE, d_VVO, d_VXO, d_VYD, d_VZ0, d_WAS, d_WAW, d_WDH, d_WEI, d_WEL, 
+    d_WGA, d_WHK, d_WHM, d_WIC, d_WIE, d_WLB, d_WLG, d_WLS, d_WMB, d_WNS, 
+    d_WOL, d_WP0, d_WRE, d_WRG, d_WRL, d_WRO, d_WUH, d_WUN, d_WUX, d_WVB, 
+    d_WYA, d_WYN, d_WYS, d_XCH, d_XIY, d_XLB, d_XMH, d_XMN, d_XPK, d_XRY, 
+    d_XSI, d_XSP, d_XXX, d_YAK, d_YAO, d_YAT, d_YBE, d_YCB, d_YDF, d_YEA, 
+    d_YEG, d_YEV, d_YFA, d_YFB, d_YFC, d_YFO, d_YGL, d_YGW, d_YGX, d_YHM, 
+    d_YHR, d_YHZ, d_YIF, d_YIH, d_YKA, d_YKM, d_YKS, d_YLR, d_YLW, d_YMM, 
+    d_YMQ, d_YMX, d_YNB, d_YOK, d_YOP, d_YOW, d_YPN, d_YPR, d_YQB, d_YQD, 
+    d_YQG, d_YQM, d_YQR, d_YQT, d_YQX, d_YRB, d_YSJ, d_YSM, d_YSR, d_YTH, 
+    d_YTO, d_YTZ, d_YUD, d_YUL, d_YUM, d_YUX, d_YVB, d_YVO, d_YVP, d_YVQ, 
+    d_YVR, d_YWG, d_YWK, d_YXD, d_YXE, d_YXJ, d_YXN, d_YXS, d_YXT, d_YXU, 
+    d_YXY, d_YYC, d_YYD, d_YYJ, d_YYQ, d_YYR, d_YYT, d_YYZ, d_YZF, d_YZP, 
+    d_ZAD, d_ZAG, d_ZAZ, d_ZBO, d_ZCL, d_ZIH, d_ZJK, d_ZKE, d_ZLO, d_ZND, 
+    d_ZNE, d_ZQN, d_ZRH, d_ZSA, d_ZSS, d_ZTH, d_ZTM, d_ZYL    
 };
 
 //
