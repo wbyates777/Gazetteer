@@ -8,15 +8,18 @@
  Copyright (c) W.B. Yates. All rights reserved.
  History:
 
- Helper class used to process the names in MarketId, Currency, Country and City.
- 
- Process names with accents, by removing newlines, escaping single character 
- quote ['] (NB not [`]) and mappimg, in a transparent manner, non-ASCII characters such as: à => a and á => a. 
-
- Also provides methods to remove leading and trailing white space, quotes or brackets,
+ Provides methods for removing newlines, escaping single character apostraphe ['] (but not [`]) 
+ and mappimg characters with diacritic signs to ASCII characters i.e. [à] => [a] and [á] => [a]. 
+ Also provides methods to remove leading and trailing white space, quotes, or brackets, 
  and to split strings by an arbitrary delimeter. 
  
-  
+ Countires with alphabets that employ diacritic signs include:
+ AT, BO, BR, CH, CL, CR, DE, DK, FI, FO, FR, HU, IS, KR, MX, NO, PA, PE, PT, SE, SJ, TR and VN.  
+ 
+ 
+ 
+  Escape characters
+ 
   \a = \x07 = alert (bell)
   \b = \x08 = backspace
   \t = \x09 = horizonal tab
@@ -25,6 +28,14 @@
   \f = \x0C = form feed
   \r = \x0D = carriage return
  
+  Character literals for 'A'
+
+   char     c0 =  'A'; 
+   char     c1 =  u8'A'; 
+   wchar_t  c2 =  L'A'; 
+   char16_t c3 =  u'A'; 
+   char32_t c4 =  U'A'; 
+ 
 */
 
 
@@ -32,18 +43,20 @@
 #include "Name.h"
 #endif
 
+#include <iostream>
 #include <cassert>
+
 
 // https://www.regular-expressions.info
 // https://www.regexlib.com/Default.aspx
+const std::regex Name::m_left_whitespace  = std::regex( R"(^\s*)" );      // WHITESPACE
+const std::regex Name::m_right_whitespace = std::regex( R"(\s*$)" );
+const std::regex Name::m_left_quotes      = std::regex( R"(^\s*['"])" );  // QUOTES
+const std::regex Name::m_right_quotes     = std::regex( R"(['"]\s*$)" );
 
-const std::regex Name::m_left_whitespace   = std::regex( R"(^\s*)" );                // WHITESPACE
-const std::regex Name::m_right_whitespace  = std::regex( R"(\s*$)" );
-const std::regex Name::m_left_quotes       = std::regex( R"(^\s*[`'"])" );           // QUOTES
-const std::regex Name::m_right_quotes      = std::regex( R"([`'"]\s*$)" );
-
-std::map<std::string, std::string> Name::m_accent;
+std::map<std::string, std::string> Name::m_diacritic;
 std::map<std::string, std::string> Name::m_escape;
+
 
 
 std::string
@@ -51,11 +64,13 @@ Name::deaccent( std::string str )
 // substitute characters with accents -- slow
 {
     // const std::map<std::string, std::string>::value_type& c
-    for (auto &c : m_accent)
+    for (auto &c : m_diacritic)
     {
         size_t pos = 0;
         while ((pos = str.find(c.first, pos)) != str.npos)
+        {
             str.replace(pos, c.first.size(), c.second);
+        }
     }
     
     return str;
@@ -91,6 +106,7 @@ Name::denewln( std::string str )
     
     return str;
 }
+
 
 std::vector<std::string> 
 Name::split( const std::string &str, const std::string &delim ) 
@@ -143,8 +159,9 @@ Name::capitalise( const std::string &str )
 
 void
 Name::setup( void )
-// alphabets with accents to watch out for include 
-// Romanian, Polish, Vietnamese, and Cyrillic.
+// countires with alphabets that employ diacritic signs include:
+// AT, BO, BR, CH, CL, CR, DE, DK, FI, FO, FR, HU, IS, KR, MX, NO, PA, PE, PT, SE, SJ, TR and VN. 
+// https://service.unece.org/trade/locode/2024-1%20UNLOCODE%20SecretariatNotes.pdf
 // https://www.fileformat.info/info/charset/UTF-16/list.htm
 // https://www.codetable.net/unicodecharacters
 {
@@ -153,7 +170,7 @@ Name::setup( void )
     //
     
     m_escape["."]  = R"(\.)";
-    m_escape["\\"] = R"(\\)";
+    m_escape[R"(\)"] = R"(\\)";
     m_escape["+"]  = R"(\+)";
     m_escape["*"]  = R"(\*)";
     m_escape["?"]  = R"(\?)";
@@ -177,211 +194,219 @@ Name::setup( void )
     // accents and their replacements
     //
     
-    // NB never have the same character in the key and the value
-    // i.e m_accent["'"] = R"(\')";
+    // never use the same character in the accent key and the ascii value
+    // i.e m_diacritic["'"] = R"(\')";
     // this will loop forever as "'" is matched again and again
     
-    m_accent["Æ"] = "AE";
-    m_accent["æ"] = "ae";
+    m_diacritic["Æ"] = "A"; // "AE";
+    m_diacritic["æ"] = "a"; // "ae";
 
-    m_accent["Œ"] = "OE";
-    m_accent["œ"] = "oe";
+    m_diacritic["Œ"] = "O"; // "OE";
+    m_diacritic["œ"] = "o"; // "oe";
     
-    m_accent["ß"] = "ss";
+    m_diacritic["ß"] = "ss";
     
-    m_accent["Þ"] = "Th";
-    m_accent["þ"] = "th";
+    m_diacritic["Þ"] = "Th";
+    m_diacritic["þ"] = "th";
  
-    m_accent["Ā"] = "A"; // Latin A with macron
-    m_accent["Á"] = "A"; // Latin A with acute
-    m_accent["À"] = "A"; // Latin A with grave
-    m_accent["Ã"] = "A"; // Latin A with tilde
-    m_accent["Â"] = "A"; // Latin A with circumflex
-    m_accent["Ä"] = "A"; // Latin A with diaeresis
-    m_accent["Å"] = "A"; // Latin A with ring above
-    m_accent["Ă"] = "A"; // Latin A with breve
-    m_accent["Ą"] = "A"; // Latin A with ogonek
+    m_diacritic["Ā"] = "A"; // Latin A with macron
+    m_diacritic["Á"] = "A"; // Latin A with acute
+    m_diacritic["À"] = "A"; // Latin A with grave
+    m_diacritic["Ã"] = "A"; // Latin A with tilde
+    m_diacritic["Â"] = "A"; // Latin A with circumflex
+    m_diacritic["Ä"] = "A"; // Latin A with diaeresis
+    m_diacritic["Å"] = "A"; // Latin A with ring above
+    m_diacritic["Ă"] = "A"; // Latin A with breve
+    m_diacritic["Ą"] = "A"; // Latin A with ogonek
     
-    m_accent["Č"] = "C";
-    m_accent["Ç"] = "C";
+    m_diacritic["Č"] = "C";
+    m_diacritic["Ç"] = "C";
     
-    m_accent["Ḑ"] = "D"; 
-    m_accent["Đ"] = "D"; 
+    m_diacritic["Ḑ"] = "D"; 
+    m_diacritic["Đ"] = "D"; 
     
-    m_accent["É"] = "E"; 
-    m_accent["È"] = "E";
+    m_diacritic["É"] = "E"; 
+    m_diacritic["È"] = "E";
     
-    m_accent["Ħ"] = "H"; 
-    m_accent["Ḩ"] = "H";
+    m_diacritic["Ħ"] = "H"; 
+    m_diacritic["Ḩ"] = "H";
     
-    m_accent["Í"] = "I"; 
-    m_accent["Ì"] = "I";
-    m_accent["İ"] = "I";  
-    m_accent["Ï"] = "I";
-    m_accent["Ī"] = "I";
-    m_accent["Î"] = "I";
+    m_diacritic["Í"] = "I"; 
+    m_diacritic["Ì"] = "I";
+    m_diacritic["İ"] = "I";  
+    m_diacritic["Ï"] = "I";
+    m_diacritic["Ī"] = "I";
+    m_diacritic["Î"] = "I";
     
-    m_accent["Ñ"] = "N"; 
+    m_diacritic["Ñ"] = "N"; 
     
-    m_accent["Ò"] = "O";
-    m_accent["Ó"] = "O";
-    m_accent["Ô"] = "O";
-    m_accent["Õ"] = "O";
-    m_accent["Ö"] = "O"; 
-    m_accent["Ø"] = "O";
+    m_diacritic["Ò"] = "O";
+    m_diacritic["Ó"] = "O";
+    m_diacritic["Ô"] = "O";
+    m_diacritic["Õ"] = "O";
+    m_diacritic["Ö"] = "O"; 
+    m_diacritic["Ø"] = "O";
     
-    m_accent["Ķ"] = "K";
+    m_diacritic["Ķ"] = "K";
     
-    m_accent["Ł"] = "L";
+    m_diacritic["Ł"] = "L";
     
-    m_accent["Š"] = "S";
-    m_accent["Ş"] = "S"; 
-    m_accent["Ś"] = "S"; 
-    m_accent["Ș"] = "S";
+    m_diacritic["Š"] = "S";
+    m_diacritic["Ş"] = "S"; 
+    m_diacritic["Ś"] = "S"; 
+    m_diacritic["Ș"] = "S";
     
-    m_accent["Ţ"] = "T";
-    m_accent["Ť"] = "T";
-    m_accent["Ŧ"] = "T";
-    m_accent["Ƭ"] = "T";
-    m_accent["Ʈ"] = "T";
+    m_diacritic["Ţ"] = "T";
+    m_diacritic["Ť"] = "T";
+    m_diacritic["Ŧ"] = "T";
+    m_diacritic["Ƭ"] = "T";
+    m_diacritic["Ʈ"] = "T";
     
-    m_accent["Ú"] = "U";
-    m_accent["Ù"] = "U";
-    m_accent["Û"] = "U";
-    m_accent["Ü"] = "U";
+    m_diacritic["Ú"] = "U";
+    m_diacritic["Ù"] = "U";
+    m_diacritic["Û"] = "U";
+    m_diacritic["Ü"] = "U";
     
-    m_accent["Ż"] = "Z";  
-    m_accent["Z̧"] = "Z"; 
-    m_accent["Ž"] = "Z";
-    m_accent["Ƶ"] = "Z";
-    m_accent["Ž"] = "Z";
-    m_accent["Ź"] = "Z";
-    m_accent["Ȥ"] = "Z";
+    m_diacritic["Ż"] = "Z";  
+    m_diacritic["Z̧"] = "Z"; 
+    m_diacritic["Ž"] = "Z";
+    m_diacritic["Ƶ"] = "Z";
+    m_diacritic["Ž"] = "Z";
+    m_diacritic["Ź"] = "Z";
+    m_diacritic["Ȥ"] = "Z";
     
     //
     //
     //
     
-    m_accent["à"] = "a";
-    m_accent["á"] = "a"; 
-    m_accent["â"] = "a";
-    m_accent["ã"] = "a";
-    m_accent["ä"] = "a";
-    m_accent["å"] = "a";
-    m_accent["ả"] = "a"; 
-    m_accent["ậ"] = "a";
-    m_accent["ằ"] = "a"; 
-    m_accent["ắ"] = "a"; 
-    m_accent["ā"] = "a"; 
-    m_accent["ą"] = "a";   
-    m_accent["ă"] = "a";
-    m_accent["ầ"] = "a";
-    m_accent["ẵ"] = "a";
-    m_accent["ạ"] = "a";
+    m_diacritic["à"] = "a";
+    m_diacritic["á"] = "a"; 
+    m_diacritic["â"] = "a";
+    m_diacritic["ã"] = "a";
+    m_diacritic["ä"] = "a";
+    m_diacritic["å"] = "a";
+    m_diacritic["ả"] = "a"; 
+    m_diacritic["ậ"] = "a";
+    m_diacritic["ằ"] = "a"; 
+    m_diacritic["ắ"] = "a"; 
+    m_diacritic["ā"] = "a"; 
+    m_diacritic["ą"] = "a";   
+    m_diacritic["ă"] = "a";
+    m_diacritic["ầ"] = "a";
+    m_diacritic["ẵ"] = "a";
+    m_diacritic["ạ"] = "a";
     
-    m_accent["ç"] = "c"; 
-    m_accent["ć"] = "c";
-    m_accent["č"] = "c"; 
-    m_accent["ċ"] = "c"; 
-    m_accent["ĉ"] = "c";
-    m_accent["ƈ"] = "c";
+    m_diacritic["ç"] = "c"; 
+    m_diacritic["ć"] = "c";
+    m_diacritic["č"] = "c"; 
+    m_diacritic["ċ"] = "c"; 
+    m_diacritic["ĉ"] = "c";
+    m_diacritic["ƈ"] = "c";
     
-    m_accent["ď"] = "d";
-    m_accent["ḑ"] = "d";
-    m_accent["đ"] = "d";
+    m_diacritic["ď"] = "d";
+    m_diacritic["ḑ"] = "d";
+    m_diacritic["đ"] = "d";
     
-    m_accent["é"] = "e";   
-    m_accent["è"] = "e"; 
-    m_accent["ė"] = "e";
-    m_accent["ë"] = "e"; 
-    m_accent["ế"] = "e";
-    m_accent["ề"] = "e";
-    m_accent["ě"] = "e";
-    m_accent["ê"] = "e";
-    m_accent["ệ"] = "e";
-    m_accent["ę"] = "e";
-    m_accent["ē"] = "e";
-    m_accent["ə"] = "e";
+    m_diacritic["é"] = "e";   
+    m_diacritic["è"] = "e"; 
+    m_diacritic["ė"] = "e";
+    m_diacritic["ë"] = "e"; 
+    m_diacritic["ế"] = "e";
+    m_diacritic["ề"] = "e";
+    m_diacritic["ě"] = "e";
+    m_diacritic["ê"] = "e";
+    m_diacritic["ệ"] = "e";
+    m_diacritic["ę"] = "e";
+    m_diacritic["ē"] = "e";
+    m_diacritic["ə"] = "e";
     
-    m_accent["ġ"] = "g";
-    m_accent["ğ"] = "g"; 
-    m_accent["ĝ"] = "g";
-    m_accent["ģ"] = "g";
+    m_diacritic["ġ"] = "g";
+    m_diacritic["ğ"] = "g"; 
+    m_diacritic["ĝ"] = "g";
+    m_diacritic["ģ"] = "g";
     
-    m_accent["ḩ"] = "h";           
-    m_accent["ḥ"] = "h";
-    m_accent["ħ"] = "h"; 
-    m_accent["ĥ"] = "h";
+    m_diacritic["ḩ"] = "h";           
+    m_diacritic["ḥ"] = "h";
+    m_diacritic["ħ"] = "h"; 
+    m_diacritic["ĥ"] = "h";
     
-    m_accent["í"] = "i"; 
-    m_accent["ì"] = "i";
-    m_accent["ĩ"] = "i";
-    m_accent["î"] = "i"; 
-    m_accent["ĭ"] = "i";
-    m_accent["ī"] = "i";
-    m_accent["ı"] = "i";
-    m_accent["ï"] = "i";
-    m_accent["ị"] = "i";
+    m_diacritic["í"] = "i"; 
+    m_diacritic["ì"] = "i";
+    m_diacritic["ĩ"] = "i";
+    m_diacritic["î"] = "i"; 
+    m_diacritic["ĭ"] = "i";
+    m_diacritic["ī"] = "i";
+    m_diacritic["ı"] = "i";
+    m_diacritic["ï"] = "i";
+    m_diacritic["ị"] = "i";
 
-    m_accent["ł"] = "l";
+    m_diacritic["ł"] = "l";
     
-    m_accent["ñ"] = "n";
-    m_accent["ň"] = "n";
-    m_accent["ń"] = "n";
-    m_accent["ņ"] = "n";
+    m_diacritic["ñ"] = "n";
+    m_diacritic["ň"] = "n";
+    m_diacritic["ń"] = "n";
+    m_diacritic["ņ"] = "n";
     
-    m_accent["ồ"] = "o"; 
-    m_accent["ó"] = "o";
-    m_accent["ò"] = "o"; 
-    m_accent["ö"] = "o";
-    m_accent["ǒ"] = "o";     
-    m_accent["ô"] = "o";
-    m_accent["ð"] = "o"; 
-    m_accent["õ"] = "o";
-    m_accent["ő"] = "o";
-    m_accent["ọ"] = "o";
-    m_accent["ơ"] = "o"; 
-    m_accent["ō"] = "o";
-    m_accent["ộ"] = "o"; 
-    m_accent["ớ"] = "o";
-    m_accent["ø"] = "o";
-    m_accent["ǿ"] = "o";
     
-    m_accent["ṟ"] = "r";
-    m_accent["ṙ"] = "r"; 
-    m_accent["ř"] = "r";     
     
-    m_accent["š"] = "s"; 
-    m_accent["ş"] = "s";
-    m_accent["ś"] = "s";
-    m_accent["ŝ"] = "s"; 
-    m_accent["ș"] = "s";
+    m_diacritic["ồ"] = "o"; 
+    m_diacritic["ó"] = "o";
+    m_diacritic["ò"] = "o"; 
+    m_diacritic["ö"] = "o";
+    m_diacritic["ǒ"] = "o";     
+    m_diacritic["ô"] = "o";
+    m_diacritic["ð"] = "o"; 
+    m_diacritic["õ"] = "o";
+    m_diacritic["ő"] = "o";
+    m_diacritic["ọ"] = "o";
+    m_diacritic["ơ"] = "o"; 
+    m_diacritic["ō"] = "o";
+    m_diacritic["ộ"] = "o"; 
+    m_diacritic["ớ"] = "o";
+    m_diacritic["ø"] = "o";
+    m_diacritic["ǿ"] = "o";
     
-    m_accent["ţ"] = "t"; 
-    m_accent["ț"] = "t";
+    m_diacritic["ṟ"] = "r";
+    m_diacritic["ṙ"] = "r"; 
+    m_diacritic["ř"] = "r";     
     
-    m_accent["ů"] = "u";
-    m_accent["ừ"] = "u"; 
-    m_accent["ú"] = "u";
-    m_accent["ū"] = "u";   
-    m_accent["ü"] = "u";
-    m_accent["ŭ"] = "u";
-    m_accent["ũ"] = "u"; 
-    m_accent["û"] = "u";
-    m_accent["ư"] = "u";
+    m_diacritic["š"] = "s"; 
+    m_diacritic["ş"] = "s";
+    m_diacritic["ś"] = "s";
+    m_diacritic["ŝ"] = "s"; 
+    m_diacritic["ș"] = "s";
     
-    m_accent["ý"] = "y";
-    m_accent["ÿ"] = "y";
+    m_diacritic["ţ"] = "t"; 
+    m_diacritic["ț"] = "t";
     
-    m_accent["ż"] = "z"; 
-    m_accent["ẕ"] = "z";
-    m_accent["ž"] = "z"; 
-    m_accent["ź"] = "z"; 
-    m_accent["ż"] = "z";
-    m_accent["z̧"] = "z";
-    m_accent["ƶ"] = "z";
+    m_diacritic["ů"] = "u";
+    m_diacritic["ừ"] = "u"; 
+    m_diacritic["ú"] = "u";
+    m_diacritic["ū"] = "u";   
+    m_diacritic["ü"] = "u";
+    m_diacritic["ŭ"] = "u";
+    m_diacritic["ũ"] = "u"; 
+    m_diacritic["û"] = "u";
+    m_diacritic["ư"] = "u";
+    
+    m_diacritic["ý"] = "y";
+    m_diacritic["ÿ"] = "y";
+    
+    m_diacritic["ż"] = "z"; 
+    m_diacritic["ẕ"] = "z";
+    m_diacritic["ž"] = "z"; 
+    m_diacritic["ź"] = "z"; 
+    m_diacritic["ż"] = "z";
+    m_diacritic["z̧"] = "z";
+    m_diacritic["ƶ"] = "z";
 }
 
 
 //
+
+
+
+
+
+
 
