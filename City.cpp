@@ -8,8 +8,6 @@
  Copyright (c) W.B. Yates. All rights reserved.
  History: Supports some of the IATA airport/city code list 	   
  
- **** Updated 16/01/2024 ****
- 
  */
 
 #ifndef __CITY_H__
@@ -22,17 +20,17 @@
 std::ostream&
 operator<<( std::ostream& ostr, const City& c )
 {
-	ostr << c.toString();
-	return ostr;
+    ostr << c.toString();
+    return ostr;
 }
 
 std::istream&
 operator>>( std::istream& istr, City& c )
 {
-	std::string str;
-	istr >> str;
-	c.setCity( str );
-	return istr;
+    std::string str;
+    istr >> str;
+    c.setCity( str );
+    return istr;
 }
 
 //
@@ -49,10 +47,10 @@ City::setCity( const std::string& str )
 // https://en.wikipedia.org/wiki/Binary_search_algorithm
 {	
     if (str.size() != 3)
-	{
+    {
         m_city = City::XXX; // NOCITY
-		return false;
-	}
+	return false;
+    }
     
     int index = str[0] - 'A'; // 'A' = 65;
     
@@ -63,12 +61,12 @@ City::setCity( const std::string& str )
         return false;
     }
     
-	int low   = m_searchPoints[index]; 
-	int high  = m_searchPoints[index + 1]; 
+    int low   = m_searchPoints[index]; 
+    int high  = m_searchPoints[index + 1]; 
     int i;
     
-	while (low < high) 
-	{
+    while (low < high) 
+    {
         int mid = low + ((high - low) >> 1);
         const char * const cty = m_cityNames[mid];
         
@@ -95,7 +93,7 @@ City::setCity( const std::string& str )
             m_city = m_toISO[mid]; 
             return true;
         }
-	}
+    }
     
     m_city = City::XXX; // NOCITY
 	return false;
@@ -200,7 +198,7 @@ City::dist( float lat1, float lon1, float lat2, float lon2 )
    // note: to return initial/final bearings in addition to distance, use something like:
    // double fwdAz = std::atan2(cosU2 * sinLambda,  cosU1 * sinU2 - sinU1 * cosU2 * cosLambda);
    // double revAz = std::atan2(cosU1 * sinLambda, -sinU1 * cosU2 + cosU1 * sinU2 * cosLambda);
-   // return Pair<double,double>( fwdAz * R2D, revAz * R2D );
+   // return std::pair<double,double>( fwdAz * R2D, revAz * R2D );
 }
 
 
