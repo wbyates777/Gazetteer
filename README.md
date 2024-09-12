@@ -13,9 +13,10 @@ See:
     Countries  - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
     Currencies - https://en.wikipedia.org/wiki/ISO_4217 
     MICs       - https://en.wikipedia.org/wiki/Market_Identifier_Code 
-    Cities     - https://en.wikipedia.org/wiki/IATA_airport_code and https://en.wikipedia.org/wiki/UN/LOCODE 
+    Cities     - https://en.wikipedia.org/wiki/IATA_airport_code, and
+                 https://en.wikipedia.org/wiki/UN/LOCODE 
 
-The code depends soley on STL
+The code depends soley on the standard template library STL
 
 The following code:
 
@@ -32,6 +33,7 @@ The following code:
     std::cout << "country   : " << g.country(m).name() << " (" << g.country(m) << ")" << std::endl;
     std::cout << "region    : " << g.regionName(g.region(m)) << std::endl; 
     std::cout << "subregion : " << g.subRegionName(g.subRegion(m)) << std::endl << std::endl;
+    std::cout << "LOCODE    : " << g.city(m).locode() << std::endl << std::endl;
 
     City x, y;
 
@@ -50,6 +52,7 @@ produces the output:
     country   : United States (USA)
     region    : Americas
     subregion : Northern America
+    LOCODE    : USNYC
 
     The distance between London and New York is 5579.86 km
 
