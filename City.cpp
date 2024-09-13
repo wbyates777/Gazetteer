@@ -1543,7 +1543,7 @@ const float City::m_position[NUMCITY][2] = { { 0.0, 0.0 }, // NOCITY
     {-23.3574, 119.733}, {-45.0322, 168.661}, {47.3745, 8.54104}, {24.032, -74.49}, {4.949, -6.09217}, {37.7891, 20.7901}, {55.8609, -92.0898}, {24.7359, 91.6852}
 };
 
-const char * const City::m_locodes[NUMCITY] = { "No City",
+const char * const City::m_locodes[NUMCITY] = { "XXXXX",
     "EGAAC", "DZAAE", "DKAAL", "AEAAN", "DKAAR", "CNAAT", "DKAAB", "IRABD", "USAWN", "USABI", 
     "CIABJ", "AUABM", "USABQ", "USABR", "EGABS", "NGABV", "AUABX", "USALB", "GBABD", "MXACA", 
     "GHACC", "ESACE", "CHATR", "GGACI", "USACK", "USACT", "USEKA", "USAIY", "TRADA", "TRADB", 
