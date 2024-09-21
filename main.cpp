@@ -39,6 +39,216 @@ operator<<( std::ostream& ostr, const std::vector<T>& v )
     return ostr;
 }
 
+void
+demoName(void)
+{
+    Name xxx; // must define at least once for setup()
+    
+    // Example 1
+    
+    std::string names = "M. È. Štəfánik and Č. Ibậñềz amd Đ. Wąltóṙs and W. Bṙøñe";
+    
+    std::cout << names << std::endl;
+    names = Name::deaccent(names);
+    std::cout << names << std::endl;
+    
+    std::vector<std::string> res =  Name::split(names, std::regex("( a.d )"));
+    
+    std::cout << res.size() << std::endl;
+    for (int i = 0; i < res.size(); ++i)
+        std::cout << '[' << res[i] << ']' << std::endl;
+    
+    
+    // Example 2
+    
+    std::string test2 = " <g \"Côte d'Ivoire\"  />    ";
+    std::cout << "[" <<  test2 << "]" << std::endl;
+    std::cout << "[" <<  Name::deaccent(Name::unquote(Name::clip(test2, "<g", "/>"))) << "]" << std::endl;
+
+ 
+   // Example 3
+   
+    std::string test3 = " \"Côte d'Ivoire\"  ";
+    std::string test4 = " \'Côte d'Ivoire\'  ";
+    std::string test5 = " 'Côte d'Ivoire'  ";
+    std::string test6 = " $$Côte d'Ivoire^^  ";
+    
+    std::cout << "[" << test3 << "] --> [" <<  Name::clip(test3 ,"\"")        << "]" << std::endl;
+    std::cout << "[" << test4 << "] --> [" <<  Name::clip(test4, "'")         << "]" << std::endl;
+    std::cout << "[" << test5 << "] --> [" <<  Name::clip(test5, "\'")        << "]" << std::endl;
+    std::cout << "[" << test6 << "] --> [" <<  Name::clip(test6, "$$", "^^")  << "]" << std::endl;
+
+
+    // Example 4
+    
+    std::cout <<  Name::capitalise("I would like a cup of tea") << std::endl;
+}
+
+void
+demoCity(void)
+{
+    City xx;
+    xx.setCity( "LGW" );
+    std::cout << xx << std::endl;
+    std::cout << xx.name() << std::endl;
+    std::cout << xx.locode() << std::endl;
+    std::cout << short(xx) << std::endl;
+    std::cout << xx.capital() << std::endl;
+    std::cout << "latitude = " << xx.lat() << std::endl;
+    std::cout << "longitude = " << xx.lon() << std::endl << std::endl;
+    
+    City yy;
+    yy.setCity( "JFK" );
+    std::cout << yy << std::endl;
+    std::cout << yy.name() << std::endl;
+    std::cout << yy.locode() << std::endl;
+    std::cout << short(yy) << std::endl;
+    std::cout << yy.capital() << std::endl;
+    std::cout << "latitude = " << yy.lat() << std::endl;
+    std::cout << "longitude = " << yy.lon() << std::endl << std::endl;
+    
+    std::cout << "The distance between " << xx.name() << " and " << yy.name() << " is " << City::dist(xx,yy) / 1000.0 << " km" << std::endl << std::endl;
+    
+    City zz;
+    zz.setCity( "SCQ" );
+    std::cout << zz << std::endl;
+    std::cout << zz.name() << std::endl;
+    std::cout << zz.locode() << std::endl;
+    std::cout << short(zz) << std::endl;
+    std::cout << zz.capital() << std::endl;
+    std::cout << "latitude = " << zz.lat() << std::endl;
+    std::cout << "longitude = " << zz.lon() << std::endl << std::endl;
+    
+    Gazetteer g;
+    
+    std::cout << g.ccy(zz) << std::endl;
+    std::cout << g.country( zz ).name() << std::endl;
+    std::cout << g.regionName(g.region( zz )) << " (" << g.region( zz ) << ")" << std::endl;
+    std::cout << g.subregionName(g.subregion( zz )) << " (" << g.subregion( zz ) << ")" << std::endl;
+}
+
+void
+demoCountry(void)
+{
+    Country w;
+    w.setCountry( "QAT" );
+    std::cout << w << std::endl;
+    std::cout << w.name() << std::endl;
+    std::cout << w.to2Code() << std::endl;
+    std::cout << w.to3Code() << std::endl;
+    std::cout << short(w) << std::endl; 
+    std::cout  << std::endl; 
+    
+    Country x;
+    x.setCountry( Country::US );
+    std::cout << x << std::endl;
+    std::cout << x.name() << std::endl;
+    std::cout << x.to2Code() << std::endl;
+    std::cout << x.to3Code() << std::endl;
+    std::cout << short(x) << std::endl; 
+    std::cout  << std::endl; 
+    
+    Country y;
+    y.setCountry( "SGS" );
+    std::cout << y << std::endl;
+    std::cout << y.name() << std::endl;
+    std::cout << y.to2Code() << std::endl;
+    std::cout << short(y) << std::endl; 
+    std::cout  << std::endl; 
+    
+    Country z;
+    z.setCountry( "GS" );
+    std::cout << z << std::endl;
+    std::cout << z.name() << std::endl;
+    std::cout << z.to3Code() << std::endl;
+    std::cout << short(z) << std::endl;
+    std::cout  << std::endl; 
+    
+    Country t1("KY");
+    std::cout << t1.to3Code() << std::endl;
+    std::cout << t1.to2Code() << std::endl;
+    std::cout << t1.name() << std::endl;
+    std::cout  << std::endl; 
+    
+    Country t2("KZ");
+    std::cout << t2.to3Code() << std::endl;
+    std::cout << t2.to2Code() << std::endl;
+    std::cout << t2.name() << std::endl;
+    std::cout  << std::endl; 
+    
+    Country cid;
+    int iters = 1;
+    
+    for (int i = 0; i < iters; ++i)
+    {
+        int count = 0;
+        for (int j = 1; j < Country::NUMCOUNTRY; ++j)
+        {
+            cid.setCountry( Country::index(j).to3Code() );
+            std::cout << cid << ", ";
+            if (++count % 20 == 0)
+                std::cout << std::endl;
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl; 
+}
+
+void
+demoMarket(void)
+{
+    Gazetteer g;
+    
+    MarketId market;
+    market.setMarketId( "XLON" ); 
+    std::cout << "market    : " << market << std::endl;
+    std::cout << "name      : " << market.name() << std::endl;
+    std::cout << "id        : " << short(market) << std::endl; 
+    std::cout << "currency  : " << g.ccy(market).name() << " (" << g.ccy(market) << ")" << std::endl;
+    std::cout << "city      : " << g.city(market).name() << " (" << g.city(market) << ")" << std::endl; 
+    std::cout << "country   : " << g.country(market).name() << " (" << g.country(market) << ")" << std::endl;
+    std::cout << "region    : " << g.regionName(g.region(market)) << std::endl; 
+    std::cout << "subregion : " << g.subregionName(g.subregion(market)) << std::endl;
+    std::cout << "latitude  : " << g.city(market).lat() << std::endl;
+    std::cout << "longitude : " << g.city(market).lon() << std::endl << std::endl;
+    
+    market.setMarketId( "XNYS" ); 
+    std::cout << "market    : " << market << std::endl;
+    std::cout << "name      : " << market.name() << std::endl;
+    std::cout << "id        : " << short(market) << std::endl; 
+    std::cout << "currency  : " << g.ccy(market).name() << " (" << g.ccy(market) << ")" << std::endl;
+    std::cout << "city      : " << g.city(market).name() << " (" << g.city(market) << ")" << std::endl; 
+    std::cout << "country   : " << g.country(market).name() << " (" << g.country(market) << ")" << std::endl;
+    std::cout << "region    : " << g.regionName(g.region(market)) << std::endl; 
+    std::cout << "subregion : " << g.subregionName(g.subregion(market)) << std::endl;
+    std::cout << "latitude  : " << g.city(market).lat() << std::endl;
+    std::cout << "longitude : " << g.city(market).lon() << std::endl << std::endl;
+    
+    market.setMarketId( "A3579" ); 
+    std::cout << "market    : " << market << std::endl;
+    std::cout << "name      : " << market.name() << std::endl;
+    std::cout << "id        : " << short(market) << std::endl; 
+    std::cout << "currency  : " << g.ccy(market).name() << " (" << g.ccy(market) << ")" << std::endl;
+    std::cout << "city      : " << g.city(market).name() << " (" << g.city(market) << ")" << std::endl; 
+    std::cout << "country   : " << g.country(market).name() << " (" << g.country(market) << ")" << std::endl;
+    std::cout << "region    : " << g.regionName(g.region(market)) << std::endl; 
+    std::cout << "subregion : " << g.subregionName(g.subregion(market)) << std::endl;
+    std::cout << "latitude  : " << g.city(market).lat() << std::endl;
+    std::cout << "longitude : " << g.city(market).lon() << std::endl << std::endl;
+    
+    market.setMarketId( "A360X" ); 
+    std::cout << market << std::endl;
+    std::cout << market.name() << std::endl;
+    std::cout << short(market) << std::endl;
+    std::cout << "currency  : " << g.ccy(market).name() << " (" << g.ccy(market) << ")" << std::endl;
+    std::cout << "city      : " << g.city(market).name() << " (" << g.city(market) << ")" << std::endl; 
+    std::cout << "country   : " << g.country(market).name() << " (" << g.country(market) << ")" << std::endl;
+    std::cout << "region    : " << g.regionName(g.region(market)) << std::endl; 
+    std::cout << "subregion : " << g.subregionName(g.subregion(market)) << std::endl;
+    std::cout << "latitude  : " << g.city(market).lat() << std::endl;
+    std::cout << "longitude : " << g.city(market).lon() << std::endl << std::endl;
+}
+
 int 
 main(int argc, const char * argv[]) 
 {
@@ -60,94 +270,15 @@ main(int argc, const char * argv[])
     std::cout << "Spanish cities " << g.cities(Country::ESP) << std::endl << std::endl;
     std::cout << "Spanish markets " <<  g.markets(Country::ESP) << std::endl << std::endl;
     
-    City x;
-    x.setCity( "LON" );
-    std::cout << x << std::endl;
-    std::cout << x.name() << std::endl;
-    std::cout << short(x) << std::endl;
-    std::cout << x.capital() << std::endl;
-    std::cout << g.ccy(x) << std::endl;
-    std::cout << g.country( x ).name() << std::endl;
-    std::cout << "latitude = " << x.lat() << std::endl;
-    std::cout << "longitude = " << x.lon() << std::endl << std::endl;
-    
-    City y;
-    y.setCity( "TYO" );
-    std::cout << y << std::endl;
-    std::cout << y.name() << std::endl;
-    std::cout << short(y) << std::endl;
-    std::cout << y.capital() << std::endl;
-    std::cout << g.ccy(y) << std::endl;
-    std::cout << "latitude = " << y.lat() << std::endl;
-    std::cout << "longitude = " << y.lon() << std::endl << std::endl;
-    
-    std::cout << "distance between " << x.name() << " and " << y.name() << " is " << City::dist(x,y) / 1000.0 << " km" << std::endl << std::endl;
-    
-    MarketId market;
-    market.setMarketId( "USA0" ); 
-    std::cout << "market    : " << market << std::endl;
-    std::cout << "name      : " << market.name() << std::endl;
-    std::cout << "id        : " << short(market) << std::endl; 
-    std::cout << "currency  : " << g.ccy(market).name() << " (" << g.ccy(market) << ")" << std::endl;
-    std::cout << "city      : " << g.city(market).name() << " (" << g.city(market) << ")" << std::endl; 
-    std::cout << "country   : " << g.country(market).name() << " (" << g.country(market) << ")" << std::endl;
-    std::cout << "region    : " << g.regionName(g.region(market)) << std::endl; 
-    std::cout << "subregion : " << g.subRegionName(g.subRegion(market)) << std::endl << std::endl;
-    
-    market.setMarketId( "XNYS" ); 
-    std::cout << std::endl;
-    std::cout << "market    : " << market << std::endl;
-    std::cout << "name      : " << market.name() << std::endl;
-    std::cout << "id        : " << short(market) << std::endl; 
-    std::cout << "currency  : " << g.ccy(market).name() << " (" << g.ccy(market) << ")" << std::endl;
-    std::cout << "city      : " << g.city(market).name() << " (" << g.city(market) << ")" << std::endl; 
-    std::cout << "country   : " << g.country(market).name() << " (" << g.country(market) << ")" << std::endl;
-    std::cout << "region    : " << g.regionName(g.region(market)) << std::endl; 
-    std::cout << "subregion : " << g.subRegionName(g.subRegion(market)) << std::endl << std::endl;
-    
-    market.setMarketId( "A360T" ); 
-    std::cout << "market    : " << market << std::endl;
-    std::cout << "name      : " << market.name() << std::endl;
-    std::cout << "id        : " << short(market) << std::endl; 
-    std::cout << "currency  : " << g.ccy(market).name() << " (" << g.ccy(market) << ")" << std::endl;
-    std::cout << "city      : " << g.city(market).name() << " (" << g.city(market) << ")" << std::endl; 
-    std::cout << "country   : " << g.country(market).name() << " (" << g.country(market) << ")" << std::endl;
-    std::cout << "region    : " << g.regionName(g.region(market)) << std::endl; 
-    std::cout << "subregion : " << g.subRegionName(g.subRegion(market)) << std::endl << std::endl;
-
     Currency ccy("SVC");
     std::cout << "currency of " << g.country(ccy).name() << " is " << std::endl;
     std::cout << ccy.name() << std::endl;
     std::cout << ccy.toString() << std::endl;
     std::cout << short(ccy) << std::endl;
 
-    // 
-    //
-    //
- 
-    Name xxx; // must define at least one for setup()
- 
-    std::string test1 = "M. R. Štəfánik and Č. Ibậñềz amd D. Wąlts and W. Bṙøñel";
+    demoVCity();
+    demoMarket();
+    demoCountry();
+    demoName();
     
-    std::cout << std::endl;
-    std::cout << test1 << std::endl;
-    std::cout << Name::deaccent(test1) << std::endl;
-    std::cout << std::endl;
     
-    std::vector<std::string> results =  Name::split(Name::deaccent(test1), std::regex("( a.d )"));
-    for (auto &str : results)
-        std::cout << str << std::endl;
-    std::cout << std::endl;
- 
-    std::string test2 = " \"Côte d'Ivoire\"  ";
-    std::string test3 = " \'Côte d'Ivoire\'  ";
-    std::string test4 = " 'Côte d'Ivoire'  ";
-    std::string test5 = " $$Côte d'Ivoire$$  ";
-    
-    std::cout << "[" << test2 << "] --> [" <<  Name::deaccent(Name::clip(test2 ,"\""))      << "]" << std::endl;
-    std::cout << "[" << test3 << "] --> [" <<  Name::clip(test3, "'")       << "]" << std::endl;
-    std::cout << "[" << test4 << "] --> [" <<  Name::clip(test4, "\'")      << "]" << std::endl;
-    std::cout << "[" << test5 << "] --> [" <<  Name::clip(test5, "$$")  << "]" << std::endl;
-    
-    std::cout <<  Name::capitalise("I would like a cup of tea") << std::endl;
-}
