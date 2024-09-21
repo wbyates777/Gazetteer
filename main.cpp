@@ -257,7 +257,7 @@ main(int argc, const char * argv[])
     Gazetteer g;
     
     std::cout << "The countries of  Subregion::SouthAmerica" << std::endl;
-    std::vector<Country> southam = g.subregion(  Gazetteer::Subregion::SouthAmerica );
+    std::vector<Country> southam = g.subregion(  Gazetteer::Subregion::SOUTH_AMERICA );
     for (Country c : southam)
         std::cout << c.name() << std::endl;
     std::cout << std::endl;
@@ -273,12 +273,17 @@ main(int argc, const char * argv[])
     Currency ccy("SVC");
     std::cout << "currency of " << g.country(ccy).name() << " is " << std::endl;
     std::cout << ccy.name() << std::endl;
-    std::cout << ccy.toString() << std::endl;
+    std::cout << ccy.to3Code() << std::endl;
     std::cout << short(ccy) << std::endl;
 
-    demoVCity();
+    demoCity();
     demoMarket();
     demoCountry();
     demoName();
+}
+
+//
+
+
     
     
