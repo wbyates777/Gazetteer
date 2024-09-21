@@ -15,14 +15,12 @@
  Also provides methods to remove leading and trailing white space, quotes, or brackets, 
  and to split strings by an arbitrary delimeter. 
  
- Countires with alphabets that employ diacritic signs include:
+ Countries with alphabets that employ diacritic signs include:
  AT, BO, BR, CH, CL, CR, DE, DK, FI, FO, FR, HU, IS, KR, MX, NO, PA, PE, PT, SE, SJ, TR and VN. 
  
  See
  
  https://en.wikipedia.org/wiki/Romanization
- 
- https://service.unece.org/trade/locode/2024-1%20UNLOCODE%20SecretariatNotes.pdf
  
  https://www.regular-expressions.info
  https://www.regexlib.com/Default.aspx
@@ -31,21 +29,22 @@
  https://www.codetable.net/unicodecharacters
  
  
- Example 1
- 
  Name xxx; // must define at least once for setup()
  
- std::string test1 = "M. È. Štəfánik and Č. Ibậñềz amd Đ. Wąltós and W. Bṙøñe";
  
- std::cout << test1 << std::endl;
- test1 = Name::deaccent(test1);
- std::cout << test1 << std::endl;
+ Example 1
  
- std::vector<std::string> res =  Name::split(test1, std::regex("( a.d )"));
+ std::string names = "M. È. Štəfánik and Č. Ibậñềz amd Đ. Wąltóṙs and W. Bṙøñe";
+ 
+ std::cout << names << std::endl;
+ names = Name::deaccent(names);
+ std::cout << names << std::endl;
+ 
+ std::vector<std::string> res =  Name::split(names, std::regex("( a.d )"));
  
  std::cout << res.size() << std::endl;
  for (int i = 0; i < res.size(); ++i)
-     std::cout << '[' << res[i] << ']' << std::endl
+     std::cout << '[' << res[i] << ']' << std::endl;
  
  
  Example 2
@@ -134,12 +133,12 @@ public:
     rtrim( const std::string &str ) { return rclip(str, m_right_whitespace); }
 
     
-    // add/remove  quote characters ["] ['] [`]
+    // add/remove  quote characters ["] [']
     static std::string 
-    quote( const std::string &str, const std::string& sym = "'" ) { return sym + str + sym; }
+    quote( const std::string &str, const std::string &sym = "'" ) { return sym + str + sym; }
     
     static std::string 
-    unquote( const std::string &str, const std::string& sym ) { return rclip(lclip(str, sym), sym); }
+    unquote( const std::string &str, const std::string &sym ) { return rclip(lclip(str, sym), sym); }
     
     static std::string 
     unquote( const std::string &str ) { return rclip( lclip(str, m_left_quotes), m_right_quotes ); }
@@ -195,7 +194,7 @@ public:
     // escape the std::regex special characters: 
     // . \ + * ? [ ^ ] $ ( ) { } = ! < > | : -
     static std::string 
-    escape( const std::string& str );
+    escape( const std::string &str );
     
     
 private:

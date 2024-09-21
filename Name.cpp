@@ -13,10 +13,9 @@
  Also provides methods to remove leading and trailing white space, quotes, or brackets, 
  and to split strings by an arbitrary delimeter. 
  
- Countires with alphabets that employ diacritic signs include:
- AT, BO, BR, CH, CL, CR, DE, DK, FI, FO, FR, HU, IS, KR, MX, NO, PA, PE, PT, SE, SJ, TR and VN.  
  
- 
+  Countries with alphabets that employ diacritic signs include:
+  AT, BO, BR, CH, CL, CR, DE, DK, FI, FO, FR, HU, IS, KR, MX, NO, PA, PE, PT, SE, SJ, TR and VN.  
  
   Escape characters
  
@@ -77,7 +76,7 @@ Name::deaccent( std::string str )
 }
 
 std::string
-Name::escape( const std::string& str )
+Name::escape( const std::string &str )
 // escape std::regex special characters 
 {
     std::string retVal;

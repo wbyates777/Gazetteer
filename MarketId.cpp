@@ -8,7 +8,8 @@
  Copyright (c) W.B. Yates. All rights reserved 
  History: Supports most of ISO 10383 market identification code (MIC) list. Useful for describing origin of trades
  
- **** Updated 16/01/2024 ****
+
+ The MIC list used here was last updated 09/09/2024. 
  
  */
 
@@ -21,18 +22,18 @@
 
 	
 std::ostream&
-operator<<( std::ostream& ostr, const MarketId& c )
+operator<<( std::ostream &ostr, const MarketId &m )
 {
-	ostr << c.toString();
+	ostr << m.to4Code();
 	return ostr;
 }
 
 std::istream&
-operator>>( std::istream& istr, MarketId& c )
+operator>>( std::istream &istr, MarketId &m )
 {
 	std::string str;
 	istr >> str;
-	c.setMarketId( str );
+	m.setMarketId( str );
 	return istr;
 }
 
@@ -46,11 +47,12 @@ const short MarketId::m_searchPoints[27] = {
 };
 
 bool
-MarketId::setMarketId( const std::string& str )
+MarketId::setMarketId( const std::string &str )
 // https://en.wikipedia.org/wiki/Binary_search_algorithm
 {	
-    int len = (int) str.size();
+    const int len = (int) str.size();
     
+    //assert(str.size() == 4 || (str.size() == 5 && str[0] == 'A'));
     if (!(len == 4) && !(len == 5 && str[0] == 'A'))
 	{
         m_mic = MarketId::XXXX; // NOMARKET
@@ -58,7 +60,6 @@ MarketId::setMarketId( const std::string& str )
 	}
   
     int index = str[0] - 'A'; // 'A' = 65;
-    
     // assert(index > -1 && index < 26);
     if (index < 0 || index > 25)
     {
@@ -73,7 +74,7 @@ MarketId::setMarketId( const std::string& str )
 	while (low < high) 
 	{		
         int mid = low + ((high - low) >> 1);
-        const char * const mic = m_micNames[mid];
+        const char * const mic = m_micCodes[mid];
         
         for (i = 1; i < len; ++i)
         {
@@ -108,7 +109,7 @@ MarketId::setMarketId( const std::string& str )
 
 // if you add markets make sure you add the names in the correct alphabetic order position
 // or else the binary chop search in setMarketId(std::string) won't work
-const char * const MarketId::m_micNames[NUMMARKETID] = { "NOMARKET", 
+const char * const MarketId::m_micCodes[NUMMARKETID] = { "NOMARKET", 
     "A21XX", "A24EX", "A2XX", "A3579", "A360T", "A360X", "A4AXE", "AACA", "AAPA", "AATS", 
     "ABAN", "ABFI", "ABNA", "ABNC", "ABSI", "ABUL", "ABW0", "ABXX", "ACCX", "ACEX", 
     "ACKF", "ACXC", "ACXL", "ADRK", "ADVT", "AFDL", "AFET", "AFEX", "AFG0", "AFSA", 

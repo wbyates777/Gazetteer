@@ -13,32 +13,34 @@
  Each IATA code corresponds to the city served by that airport. For the cases where no airport
  serves a city we have invented a code terminated in a '0' (see table below).
 
- Note that distinct IATA codes can map to a single city i.e 'LHR', 'LGW', 'LTN', 'STN', 'LCY' all map to 'LON' - London
- while 'JFK', 'LGA' all map to 'NYC' - New York
+ https://www.iata.org/en/publications/directories/code-search/
+ https://en.wikipedia.org/wiki/IATA_airport_code
+ 
+ Distinct IATA codes can map to a single city i.e 'LHR', 'LGW', 'LTN', 'STN', 'LCY' all map to 'LON' - London
+ while 'JFK', 'LGA' both map to 'NYC' - New York
  
  Latitude and longitude of cities (not airports) is provided for geograpical positioning and the calculation of distances between cities.
  Geodetic distances (in metres) between points specified by latitude/longitude are calculated using the Vincenty method.
  
- https://www.iata.org/en/publications/directories/code-search/
- https://en.wikipedia.org/wiki/IATA_airport_code
  
- 
- Note for 'Kansas City' which could be either 'Kansas City (KS)' or 'Kansas City (MO)' we have choosen '(MO)'
+ Notes
 
- City names have been harmonised with UN/LOCODE names and now have hyphens and apostrophes i.e "Val-d'Or".
- Some names however have been anglicised i.e. "Muenchen" -> "Munich". 
+ i) City names have been harmonised with UN/LOCODE names and now have hyphens and apostrophes i.e "Val-d'Or".
+    Some names have been anglicised i.e. "Muenchen" -> "Munich". 
  
- We have also added the 5 digit UN/LOCODE for most cities. 
- For the 12 cities without a UN/LOCODE we have used XXXXX. Note [country2code]XXX is a valid location.
- 'No City' or 'XXX' has also been assigned XXXXX. XXXXX is not an official UN/LOCODE
+ ii) We have also added the 5 digit UN/LOCODE for most cities. 
+      For the 12 cities without a UN/LOCODE we have used XXXXX. Note [country2code]XXX is a valid location.
+      'No City' or 'XXX' has also been assigned XXXXX. XXXXX is not an official UN/LOCODE
  
- https://unece.org/trade/uncefact/unlocode
- https://en.wikipedia.org/wiki/UN/LOCODE 
+      https://unece.org/trade/uncefact/unlocode 
+      https://en.wikipedia.org/wiki/UN/LOCODE 
  
- In future releases the 3 letter IATA codes will be supplanted by the 5 letter UN/LOCODES.
+      In future releases the 3 letter IATA codes will be supplanted by the 5 letter UN/LOCODES.
 
+ iii) For 'Kansas City' which could be either 'Kansas City (KS)' or 'Kansas City (MO)' we have choosen '(MO)'
 
- select city, city3code, country3code from cities where city3code like '%0' order by city;
+ 
+ iv) select city, city3code, country3code from cities where city3code like '%0' order by city;
  +-------------------+-----------+--------------+
  | city              | city3code | country3code |
  +-------------------+-----------+--------------+
@@ -345,7 +347,7 @@ public:
 	
 	// non-explicit constructors intentional here
 	City( CityCode i ): m_city(i) {} // e.g. i = City::LON
-	City( const std::string& s ): m_city(NOCITY) { setCity(s); }
+	City( const std::string &s ): m_city(NOCITY) { setCity(s); }
 	City( const char *s ): m_city(NOCITY) { if (s) setCity(s); } 
     
 	// My numeric code for this city e.g. City::LON = 1983
@@ -353,7 +355,7 @@ public:
 	
 	// The 3 letter IATA code for this city e.g. "LON"
     std::string
-    toString( void ) const { return m_cityNames[m_fromISO[m_city]]; }
+    to3Code( void ) const { return m_cityCodes[m_fromISO[m_city]]; }
 	
 	std::string 
 	name( void ) const { return m_fullCityNames[m_fromISO[m_city]]; } // i.e "London" 
@@ -363,10 +365,10 @@ public:
     locode( void ) const { return m_locodes[m_fromISO[m_city]]; } 
     
 	bool
-	setCity( const std::string& s ); // e.g. s = "LON"
+	setCity( const std::string &s ); // e.g. s = "LON"
 	
 	void
-	setCity( const CityCode s ) { m_city = s; } // e.g. s = City::LON
+	setCity( CityCode s ) { m_city = s; } // e.g. s = City::LON
     
     bool
     capital( void ) const { return m_capital[m_fromISO[m_city]]; }
@@ -382,17 +384,17 @@ public:
     
     // distance (in metres) calculated using Vincenty inverse solution
     static float
-    dist( const City c1, const City c2 ) { return City::dist(c1.lat(), c1.lon(), c2.lat(), c2.lon()); };
+    dist( const City &c1, const City &c2 ) { return City::dist(c1.lat(), c1.lon(), c2.lat(), c2.lon()); };
     
     static float
     dist( float lat1, float lon1, float lat2, float lon2 );
     
     
 	static City
-	index( const int i ) { return CityCode(m_toISO[i]); }
+	index( int i ) { return CityCode(m_toISO[i]); }
     
     static int
-	index( const City c ) { return m_fromISO[c]; }
+	index( const City &c ) { return m_fromISO[c]; }
     
     bool                
 	valid( void ) const { return m_city != NOCITY; }
@@ -401,7 +403,7 @@ private:
 	
 	short m_city; // we use short here as it simplifies streaming 
 	
-	static const char * const  m_cityNames[NUMCITY];
+	static const char * const  m_cityCodes[NUMCITY];
 	static const char * const  m_fullCityNames[NUMCITY];
 	static const short         m_toISO[NUMCITY];
     static const short         m_fromISO[MAXCITY]; 
@@ -414,10 +416,10 @@ private:
 
 
 std::ostream&
-operator<<(std::ostream& ostr, const City& c);
+operator<<( std::ostream &ostr, const City &c );
 
 std::istream&
-operator>>(std::istream& istr, City& c);
+operator>>( std::istream &istr, City &c );
 
 
 #endif

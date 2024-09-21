@@ -5,9 +5,11 @@
  $$$$$$$$$$$$$$$%$$$$$$$
  
  by W.B. Yates    
- Copyright (c) W.B. Yates. All rights reserved.
- History: Supports some of the IATA airport/city code list 	   
+ History: Identifies a city (not an airport) using a large part of the IATA airport code list. 
+ This class can represent 1936 distinct cities (2049 codes) including the capital cities of the world and the US state capitals.
+ This is enough to describe (almost) every city associated with a Market Identification Code (MIC).  
  
+
  */
 
 #ifndef __CITY_H__
@@ -18,19 +20,19 @@
 
 	
 std::ostream&
-operator<<( std::ostream& ostr, const City& c )
+operator<<( std::ostream &ostr, const City &c )
 {
-    ostr << c.toString();
-    return ostr;
+	ostr << c.to3Code();
+	return ostr;
 }
 
 std::istream&
-operator>>( std::istream& istr, City& c )
+operator>>( std::istream &istr, City &c )
 {
-    std::string str;
-    istr >> str;
-    c.setCity( str );
-    return istr;
+	std::string str;
+	istr >> str;
+	c.setCity( str );
+	return istr;
 }
 
 //
@@ -43,17 +45,17 @@ const short City::m_searchPoints[] = {
 };
 
 bool
-City::setCity( const std::string& str )
+City::setCity( const std::string &str )
 // https://en.wikipedia.org/wiki/Binary_search_algorithm
 {	
+    //assert(str.size() == 3);
     if (str.size() != 3)
-    {
+	{
         m_city = City::XXX; // NOCITY
-	return false;
-    }
+		return false;
+	}
     
     int index = str[0] - 'A'; // 'A' = 65;
-    
     //assert(index > -1 && index < 26);
     if (index < 0 || index > 25)
     {
@@ -61,14 +63,14 @@ City::setCity( const std::string& str )
         return false;
     }
     
-    int low   = m_searchPoints[index]; 
-    int high  = m_searchPoints[index + 1]; 
+	int low   = m_searchPoints[index]; 
+	int high  = m_searchPoints[index + 1]; 
     int i;
     
-    while (low < high) 
-    {
+	while (low < high) 
+	{
         int mid = low + ((high - low) >> 1);
-        const char * const cty = m_cityNames[mid];
+        const char * const cty = m_cityCodes[mid];
         
         for (i = 1; i < 3; ++i)
         {
@@ -93,7 +95,7 @@ City::setCity( const std::string& str )
             m_city = m_toISO[mid]; 
             return true;
         }
-    }
+	}
     
     m_city = City::XXX; // NOCITY
 	return false;
@@ -108,8 +110,10 @@ City::setCity( const std::string& str )
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 
 // http://www.movable-type.co.uk/scripts/latlong-vincenty.html
+
 // https://en.wikipedia.org/wiki/Great-circle_distance
 // https://en.wikipedia.org/wiki/Vincenty%27s_formulae
+// https://en.wikipedia.org/wiki/World_Geodetic_System
 
 // Table taken from GMT project. Radii in metres 
 //   Name,          Date,  Eq. rad,    Pole rad,         Flattening
@@ -122,6 +126,8 @@ City::setCity( const std::string& str )
 // { "MERIT_83",    1983,  6378137.0,  6356752.29821597, 1.0/298.257 },
 // { "GRS_80",      1980,  6378137.0,  6356752.31414036, 1.0/298.257222101 },
 // { "Hughes_1980", 1980,  6378273.0,  6356889.44820259, 1.0/298.2794 },
+
+
 
 float
 City::dist( float lat1, float lon1, float lat2, float lon2 ) 
@@ -206,7 +212,7 @@ City::dist( float lat1, float lon1, float lat2, float lon2 )
 
 // if you add cities make sure you add the names in the correct alphabetic order position
 // or else the binary chop search in setCity(std::string) won't work
-const char * const City::m_cityNames[NUMCITY] = { "NOCITY", 
+const char * const City::m_cityCodes[NUMCITY] = { "NOCITY", 
     "AAC", "AAE", "AAL", "AAN", "AAR", "AAT", "AB0", "ABD", "ABE", "ABI", 
     "ABJ", "ABM", "ABQ", "ABR", "ABS", "ABV", "ABX", "ABY", "ABZ", "ACA", 
     "ACC", "ACE", "ACH", "ACI", "ACK", "ACT", "ACV", "ACY", "ADA", "ADB", 

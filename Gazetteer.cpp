@@ -7,10 +7,8 @@
  by W.B. Yates    
  Copyright (c) W.B. Yates. All rights reserved.
  History:  
- 
- **** Updated 16/01/2024 ****
- 
- This code depends on the fact that City, MarketId, Currency and Country are all represented as a short
+
+ This code depends on the fact that City, MarketId, Currency and Country can be converted to a short
  
  Although these tables are generated automatically one should be aware of a number of issues:
  
@@ -172,12 +170,12 @@ Gazetteer::region( const Region rid ) const
     switch (rid)
     {
         case NOREGION: index = 0; break;
-        case AntarcticRegion: index = 1; break;
-        case Africa: index = 2; break;
-        case Oceania: index = 3; break;
-        case Americas: index = 4; break;
-        case Asia: index = 5; break;
-        case Europe: index = 6; break;
+        case ANTARCTIC_REGION: index = 1; break;
+        case AFRICA: index = 2; break;
+        case OCEANIA: index = 3; break;
+        case AMERICAS: index = 4; break;
+        case ASIA: index = 5; break;
+        case EUROPE: index = 6; break;
         default: index = 0; break;
     }
 
@@ -188,7 +186,7 @@ Gazetteer::region( const Region rid ) const
 std::vector<Gazetteer::Region>
 Gazetteer::region( void ) const
 {
-    return std::vector<Region>({ AntarcticRegion, Africa, Oceania, Americas, Asia, Europe  });   
+    return std::vector<Region>({ ANTARCTIC_REGION, AFRICA, OCEANIA, AMERICAS, ASIA, EUROPE  });   
 }
 
 std::string
@@ -197,12 +195,12 @@ Gazetteer::regionName( Region r ) const
     switch (r)
     {
         case NOREGION: return "No Region"; break;
-        case AntarcticRegion: return "Antarctic Region"; break;
-        case Africa: return "Africa"; break;
-        case Oceania: return "Oceania"; break;
-        case Americas: return "Americas"; break;
-        case Asia: return "Asia"; break;
-        case Europe: return "Europe"; break;
+        case ANTARCTIC_REGION: return "Antarctic Region"; break;
+        case AFRICA: return "Africa"; break;
+        case OCEANIA: return "Oceania"; break;
+        case AMERICAS: return "Americas"; break;
+        case ASIA: return "Asia"; break;
+        case EUROPE: return "Europe"; break;
         default: return "No Region"; break;
     }  
 }
@@ -229,56 +227,56 @@ Gazetteer::region( const MarketId& mic ) const
 //
 // Sub Regions
 //
-std::vector<Gazetteer::SubRegion>
-Gazetteer::subRegion( const Region rid ) const
+std::vector<Gazetteer::Subregion>
+Gazetteer::subregion( Region rid ) const
 {
     int index = 0;
     switch (rid)
     {
         case NOREGION: index = 0; break;
-        case AntarcticRegion: index = 1; break;
-        case Africa: index = 2; break;
-        case Oceania: index = 3; break;
-        case Americas: index = 4; break;
-        case Asia: index = 5; break;
-        case Europe: index = 6; break;
+        case ANTARCTIC_REGION: index = 1; break;
+        case AFRICA: index = 2; break;
+        case OCEANIA: index = 3; break;
+        case AMERICAS: index = 4; break;
+        case ASIA: index = 5; break;
+        case EUROPE: index = 6; break;
         default: index = 0; break;
     }
     
-    const SubRegion *subr = reinterpret_cast<const SubRegion*>(m_reg2subreg[index]);
-    return std::vector<SubRegion>(subr + 1, subr + 1 + *subr);
+    const Subregion *subr = reinterpret_cast<const Subregion*>(m_reg2subreg[index]);
+    return std::vector<Subregion>(subr + 1, subr + 1 + *subr);
 }
 
 std::vector<Country>
-Gazetteer::subRegion( const SubRegion rid ) const
+Gazetteer::subregion( Subregion rid ) const
 {
     int index = 0;
     switch (rid)
     {
-        case NOSUBREGION: index = 0; break;
-        case AntarcticSubregion : index = 1; break;
-        case SouthAmerica: index = 2; break;
-        case WesternAfrica: index = 3; break;
-        case CentralAmerica: index = 4; break;
-        case EasternAfrica: index = 5; break;
-        case NorthernAfrica: index = 6; break;
-        case MiddleAfrica: index = 7; break;
-        case SouthernAfrica: index = 8; break;
-        case NorthernAmerica: index = 9; break;
-        case Caribbean: index = 10; break;
-        case EasternAsia: index = 11; break;
-        case SouthernAsia: index = 12; break;
-        case SouthEasternAsia: index = 13; break;
-        case SouthernEurope: index = 14; break;
-        case AustraliaNewZealand: index = 15; break;
-        case Melanesia: index = 16; break;
-        case Micronesia: index = 17; break;
-        case Polynesia: index = 18; break;            
-        case CentralAsia: index = 19; break;
-        case WesternAsia: index = 20; break;
-        case EasternEurope: index = 21; break;
-        case NorthernEurope: index = 22; break;
-        case WesternEurope: index = 23; break;
+         case NOSUBREGION: index = 0; break;
+         case ANTARCTIC_SUBREGION : index = 1; break;
+         case SOUTH_AMERICA: index = 2; break;
+         case WESTERN_AFRICA: index = 3; break;
+         case CENTRAL_AMERICA: index = 4; break;
+         case EASTERN_AFRICA: index = 5; break;
+         case NORTHERN_AFRICA: index = 6; break;
+         case MIDDLE_AFRICA: index = 7; break;
+         case SOUTHERN_AFRICA: index = 8; break;
+         case NORTHERN_AMERICA: index = 9; break;
+         case CARIBBEAN: index = 10; break;
+         case EASTERN_ASIA: index = 11; break;
+         case SOUTHERN_ASIA: index = 12; break;
+         case SOUTH_EASTERN_ASIA: index = 13; break;
+         case SOUTHERN_EUROPE: index = 14; break;
+         case AUSTRALIA_NEW_ZEALAND: index = 15; break;
+         case MELANESIA: index = 16; break;
+         case MICRONESIA: index = 17; break;
+         case POLYNESIA: index = 18; break;
+         case CENTRAL_ASIA: index = 19; break;
+         case WESTERN_ASIA: index = 20; break;
+         case EASTERN_EUROPE: index = 21; break;
+         case NORTHERN_EUROPE: index = 22; break;
+         case WESTERN_EUROPE: index = 23; break;
         default: index = 0; break;
     }
 
@@ -286,85 +284,85 @@ Gazetteer::subRegion( const SubRegion rid ) const
     return std::vector<Country>(cid + 1, cid + 1 + *cid);
 }
 
-std::vector<Gazetteer::SubRegion>
-Gazetteer::subRegion( void ) const
+std::vector<Gazetteer::Subregion>
+Gazetteer::subregion( void ) const
 {
-    return std::vector<SubRegion>({
-        AntarcticSubregion,
-        SouthAmerica,
-        WesternAfrica,
-        CentralAmerica,
-        EasternAfrica,
-        NorthernAfrica,
-        MiddleAfrica,
-        SouthernAfrica,
-        NorthernAmerica,
-        Caribbean,
-        EasternAsia,
-        SouthernAsia,
-        SouthEasternAsia,
-        SouthernEurope,
-        AustraliaNewZealand,
-        Melanesia,
-        Micronesia,
-        Polynesia,            
-        CentralAsia,
-        WesternAsia,
-        EasternEurope,
-        NorthernEurope,
-        WesternEurope
+    return std::vector<Subregion>({
+         ANTARCTIC_SUBREGION,
+         SOUTH_AMERICA,
+         WESTERN_AFRICA,
+         CENTRAL_AMERICA,
+         EASTERN_AFRICA,
+         NORTHERN_AFRICA,
+         MIDDLE_AFRICA,
+         SOUTHERN_AFRICA,
+         NORTHERN_AMERICA,
+         CARIBBEAN,
+         EASTERN_ASIA,
+         SOUTHERN_ASIA,
+         SOUTH_EASTERN_ASIA,
+         SOUTHERN_EUROPE,
+         AUSTRALIA_NEW_ZEALAND,
+         MELANESIA,
+         MICRONESIA,
+         POLYNESIA,
+         CENTRAL_ASIA,
+         WESTERN_ASIA,
+         EASTERN_EUROPE,
+         NORTHERN_EUROPE,
+         WESTERN_EUROPE
     });   
 }
 
 std::string
-Gazetteer::subRegionName( SubRegion sr ) const 
+Gazetteer::subregionName( Subregion sr ) const 
 {
     switch (sr)
     {
         case NOSUBREGION: return "No Subregion"; break;
-        case AntarcticSubregion : return "Antarctic Subregion"; break; // move this to end; least likely subregion
-        case SouthAmerica: return "South America"; break;
-        case WesternAfrica: return "Western Africa"; break;
-        case CentralAmerica: return "Central America"; break;
-        case EasternAfrica: return "Eastern Africa"; break;
-        case NorthernAfrica: return "Northern Africa"; break;
-        case MiddleAfrica: return "Middle Africa"; break;
-        case SouthernAfrica: return "Southern Africa"; break;
-        case NorthernAmerica: return "Northern America"; break;
-        case Caribbean: return "Caribbean"; break;
-        case EasternAsia: return "Eastern Asia"; break;
-        case SouthernAsia: return "Southern Asia"; break;
-        case SouthEasternAsia: return "South-Eastern Asia"; break;
-        case SouthernEurope: return "Southern Europe"; break;
-        case AustraliaNewZealand: return "Australia and New Zealand"; break;
-        case Melanesia: return "Melanesia"; break;
-        case Micronesia: return "Micronesia"; break;
-        case Polynesia: return "Polynesia"; break;            
-        case CentralAsia: return "Central Asia"; break;
-        case WesternAsia: return "Western Asia"; break;
-        case EasternEurope: return "Eastern Europe"; break;
-        case NorthernEurope: return "Northern Europe"; break;
-        case WesternEurope: return "Western Europe"; break;
+        case ANTARCTIC_SUBREGION : return "Antarctic Subregion"; break; // move this to end; least likely subregion
+        case SOUTH_AMERICA: return "South America"; break;
+        case WESTERN_AFRICA: return "Western Africa"; break;
+        case CENTRAL_AMERICA: return "Central America"; break;
+        case EASTERN_AFRICA: return "Eastern Africa"; break;
+        case NORTHERN_AFRICA: return "Northern Africa"; break;
+        case MIDDLE_AFRICA: return "Middle Africa"; break;
+        case SOUTHERN_AFRICA: return "Southern Africa"; break;
+        case NORTHERN_AMERICA: return "Northern America"; break;
+        case CARIBBEAN: return "Caribbean"; break;
+        case EASTERN_ASIA: return "Eastern Asia"; break;
+        case SOUTHERN_ASIA: return "Southern Asia"; break;
+        case SOUTH_EASTERN_ASIA: return "South-Eastern Asia"; break;
+        case SOUTHERN_EUROPE: return "Southern Europe"; break;
+        case AUSTRALIA_NEW_ZEALAND: return "Australia and New Zealand"; break;
+        case MELANESIA: return "Melanesia"; break;
+        case MICRONESIA: return "Micronesia"; break;
+        case POLYNESIA: return "Polynesia"; break;            
+        case CENTRAL_ASIA: return "Central Asia"; break;
+        case WESTERN_ASIA: return "Western Asia"; break;
+        case EASTERN_EUROPE: return "Eastern Europe"; break;
+        case NORTHERN_EUROPE: return "Northern Europe"; break;
+        case WESTERN_EUROPE: return "Western Europe"; break;
         default: return "No Subregion"; break;
     }    
 }
 
-Gazetteer::SubRegion
-Gazetteer::subRegion( const Country& cid ) const 
+Gazetteer::Subregion
+Gazetteer::subregion( const Country& cid ) const 
 {
-    return SubRegion(m_subregion[Country::index(cid)]);    
+    return Subregion(m_subregion[Country::index(cid)]);    
 }
 
-Gazetteer::SubRegion
-Gazetteer::subRegion( const City& cty ) const 
+Gazetteer::Subregion
+Gazetteer::subregion( const City& cty ) const 
 {    
-    return SubRegion(m_subregion[Country::index(country(cty))]);
+    return Subregion(m_subregion[Country::index(country(cty))]);
 }
 
-Gazetteer::SubRegion
-Gazetteer::subRegion( const MarketId& mic ) const 
+Gazetteer::Subregion
+Gazetteer::subregion( const MarketId& mic ) const 
 {    
-    return SubRegion(m_subregion[Country::index(country(mic))]);
+    return Subregion(m_subregion[Country::index(country(mic))]);
 }
 
 
@@ -4131,72 +4129,73 @@ f_Caribbean, f_EasternAsia, f_SouthernAsia, f_SouthEasternAsia, f_SouthernEurope
 f_WesternAsia, f_EasternEurope, f_NorthernEurope, f_WesternEurope,  };
 
 static const short g_NoRegion[2] = { 1, Gazetteer::NOREGION };
-static const short g_AntarcticRegion[2] = { 1, Gazetteer::AntarcticSubregion };
-static const short g_Africa[6] = { 5, Gazetteer::WesternAfrica, Gazetteer::EasternAfrica, Gazetteer::NorthernAfrica, Gazetteer::MiddleAfrica, Gazetteer::SouthernAfrica };
-static const short g_Oceania[5] = { 4, Gazetteer::AustraliaNewZealand, Gazetteer::Melanesia, Gazetteer::Micronesia, Gazetteer::Polynesia };
-static const short g_Americas[5] = { 4, Gazetteer::SouthAmerica, Gazetteer::CentralAmerica, Gazetteer::NorthernAmerica, Gazetteer::Caribbean };
-static const short g_Asia[6] = { 5, Gazetteer::EasternAsia, Gazetteer::SouthernAsia, Gazetteer::SouthEasternAsia, Gazetteer::CentralAsia, Gazetteer::WesternAsia };
-static const short g_Europe[5] = { 4, Gazetteer::SouthernEurope, Gazetteer::EasternEurope, Gazetteer::NorthernEurope, Gazetteer::WesternEurope };
+static const short g_AntarcticRegion[2] = { 1, Gazetteer::ANTARCTIC_SUBREGION };
+static const short g_Africa[6] = { 5, Gazetteer::WESTERN_AFRICA, Gazetteer::EASTERN_AFRICA, Gazetteer::NORTHERN_AFRICA, Gazetteer::MIDDLE_AFRICA, Gazetteer::SOUTHERN_AFRICA };
+static const short g_Oceania[5] = { 4, Gazetteer::AUSTRALIA_NEW_ZEALAND, Gazetteer::MELANESIA, Gazetteer::MICRONESIA, Gazetteer::POLYNESIA };
+static const short g_Americas[5] = { 4, Gazetteer::SOUTH_AMERICA, Gazetteer::CENTRAL_AMERICA, Gazetteer::NORTHERN_AMERICA, Gazetteer::CARIBBEAN };
+static const short g_Asia[6] = { 5, Gazetteer::EASTERN_ASIA, Gazetteer::SOUTHERN_ASIA, Gazetteer::SOUTH_EASTERN_ASIA, Gazetteer::CENTRAL_ASIA, Gazetteer::WESTERN_ASIA };
+static const short g_Europe[5] = { 4, Gazetteer::SOUTHERN_EUROPE, Gazetteer::EASTERN_EUROPE, Gazetteer::NORTHERN_EUROPE, Gazetteer::WESTERN_EUROPE };
 
 const short * const Gazetteer::m_reg2subreg[7] = { g_NoRegion, g_AntarcticRegion, g_Africa, g_Oceania, g_Americas, g_Asia, g_Europe };
 
 const unsigned char Gazetteer::m_region[Country::NUMCOUNTRY] = { NOREGION,
-	Americas, Asia, Africa, Americas, Europe, Europe, Europe, Asia, Americas, Asia, 
-	Oceania, AntarcticRegion, AntarcticRegion, Americas, Oceania, Europe, Asia, Africa, Europe, Africa, 
-	Americas, Africa, Asia, Europe, Asia, Americas, Europe, Americas, Europe, Americas, 
-	Americas, Americas, Americas, Americas, Asia, Asia, AntarcticRegion, Africa, Africa, Americas, 
-	Oceania, Europe, Americas, Asia, Africa, Africa, Africa, Africa, Oceania, Americas, 
-	Africa, Africa, Americas, Americas, Americas, Oceania, Americas, Asia, Europe, Europe, 
-	Africa, Americas, Europe, Americas, Africa, Americas, Africa, Africa, Africa, Europe, 
-	Europe, Africa, NOREGION, Europe, Oceania, Americas, Europe, Europe, Oceania, Africa, 
-	Europe, Asia, Europe, Africa, Europe, Africa, Americas, Africa, Africa, Africa, 
-	Europe, Americas, Americas, Americas, Americas, Oceania, Americas, Asia, AntarcticRegion, Americas, 
-	Europe, Americas, Europe, Asia, Europe, Asia, Africa, Europe, Asia, Asia, 
-	Europe, Asia, Europe, Americas, Europe, Asia, Asia, Asia, Africa, Asia, 
-	Asia, Oceania, Americas, Asia, Asia, Asia, Asia, Africa, Africa, Americas, 
-	Europe, Asia, Africa, Europe, Europe, Europe, Asia, Americas, Africa, Europe, 
-	Europe, Africa, Asia, Americas, Oceania, Europe, Africa, Europe, Asia, Europe, 
-	Asia, Oceania, Africa, Africa, Americas, Americas, Africa, Africa, Asia, Africa, 
-	Africa, Oceania, Africa, Oceania, Africa, Americas, Oceania, Europe, Europe, Asia, 
-	Oceania, Oceania, Asia, Asia, Americas, Oceania, Americas, Asia, Oceania, Oceania, 
-	Europe, Americas, Asia, Europe, Americas, Asia, Oceania, Asia, Africa, Europe, 
-	Europe, Africa, Asia, Africa, Africa, Asia, Americas, Africa, Europe, Oceania, 
-	Africa, Americas, Europe, Africa, Americas, Europe, Africa, Africa, Americas, Europe, 
-	Europe, Europe, Africa, Americas, Africa, Asia, Americas, Africa, Africa, Asia, 
-	Asia, Oceania, Asia, Asia, Oceania, Americas, Africa, Asia, Oceania, Asia, 
-	Africa, Africa, Europe, Americas, Americas, Americas, Asia, Europe, Americas, Americas, 
-	Americas, Americas, Asia, Oceania, Oceania, Oceania, NOREGION, NOREGION, NOREGION, NOREGION, 
-	NOREGION, Asia, Africa, Africa, Africa 
+        AMERICAS, ASIA, AFRICA, AMERICAS, EUROPE, EUROPE, EUROPE, ASIA, AMERICAS, ASIA,
+        OCEANIA, ANTARCTIC_REGION, ANTARCTIC_REGION, AMERICAS, OCEANIA, EUROPE, ASIA, AFRICA, EUROPE, AFRICA,
+        AMERICAS, AFRICA, ASIA, EUROPE, ASIA, AMERICAS, EUROPE, AMERICAS, EUROPE, AMERICAS,
+        AMERICAS, AMERICAS, AMERICAS, AMERICAS, ASIA, ASIA, ANTARCTIC_REGION, AFRICA, AFRICA, AMERICAS,
+        OCEANIA, EUROPE, AMERICAS, ASIA, AFRICA, AFRICA, AFRICA, AFRICA, OCEANIA, AMERICAS,
+        AFRICA, AFRICA, AMERICAS, AMERICAS, AMERICAS, OCEANIA, AMERICAS, ASIA, EUROPE, EUROPE,
+        AFRICA, AMERICAS, EUROPE, AMERICAS, AFRICA, AMERICAS, AFRICA, AFRICA, AFRICA, EUROPE,
+        EUROPE, AFRICA, NOREGION, EUROPE, OCEANIA, AMERICAS, EUROPE, EUROPE, OCEANIA, AFRICA,
+        EUROPE, ASIA, EUROPE, AFRICA, EUROPE, AFRICA, AMERICAS, AFRICA, AFRICA, AFRICA,
+        EUROPE, AMERICAS, AMERICAS, AMERICAS, AMERICAS, OCEANIA, AMERICAS, ASIA, ANTARCTIC_REGION, AMERICAS,
+        EUROPE, AMERICAS, EUROPE, ASIA, EUROPE, ASIA, AFRICA, EUROPE, ASIA, ASIA,
+        EUROPE, ASIA, EUROPE, AMERICAS, EUROPE, ASIA, ASIA, ASIA, AFRICA, ASIA,
+        ASIA, OCEANIA, AMERICAS, ASIA, ASIA, ASIA, ASIA, AFRICA, AFRICA, AMERICAS,
+        EUROPE, ASIA, AFRICA, EUROPE, EUROPE, EUROPE, ASIA, AMERICAS, AFRICA, EUROPE,
+        EUROPE, AFRICA, ASIA, AMERICAS, OCEANIA, EUROPE, AFRICA, EUROPE, ASIA, EUROPE,
+        ASIA, OCEANIA, AFRICA, AFRICA, AMERICAS, AMERICAS, AFRICA, AFRICA, ASIA, AFRICA,
+        AFRICA, OCEANIA, AFRICA, OCEANIA, AFRICA, AMERICAS, OCEANIA, EUROPE, EUROPE, ASIA,
+        OCEANIA, OCEANIA, ASIA, ASIA, AMERICAS, OCEANIA, AMERICAS, ASIA, OCEANIA, OCEANIA,
+        EUROPE, AMERICAS, ASIA, EUROPE, AMERICAS, ASIA, OCEANIA, ASIA, AFRICA, EUROPE,
+        EUROPE, AFRICA, ASIA, AFRICA, AFRICA, ASIA, AMERICAS, AFRICA, EUROPE, OCEANIA,
+        AFRICA, AMERICAS, EUROPE, AFRICA, AMERICAS, EUROPE, AFRICA, AFRICA, AMERICAS, EUROPE,
+        EUROPE, EUROPE, AFRICA, AMERICAS, AFRICA, ASIA, AMERICAS, AFRICA, AFRICA, ASIA,
+        ASIA, OCEANIA, ASIA, ASIA, OCEANIA, AMERICAS, AFRICA, ASIA, OCEANIA, ASIA,
+        AFRICA, AFRICA, EUROPE, AMERICAS, AMERICAS, AMERICAS, ASIA, EUROPE, AMERICAS, AMERICAS,
+        AMERICAS, AMERICAS, ASIA, OCEANIA, OCEANIA, OCEANIA, NOREGION, NOREGION, NOREGION, NOREGION,
+        NOREGION, ASIA, AFRICA, AFRICA, AFRICA
 };
 
 const unsigned char Gazetteer::m_subregion[Country::NUMCOUNTRY] = { NOSUBREGION,
-    Caribbean, SouthernAsia, MiddleAfrica, Caribbean, NorthernEurope, SouthernEurope, SouthernEurope, WesternAsia, SouthAmerica, WesternAsia, 
-    Polynesia, AntarcticSubregion , AntarcticSubregion , Caribbean, AustraliaNewZealand, WesternEurope, WesternAsia, EasternAfrica, WesternEurope, WesternAfrica, 
-    Caribbean, WesternAfrica, SouthernAsia, EasternEurope, WesternAsia, Caribbean, SouthernEurope, Caribbean, EasternEurope, CentralAmerica, 
-    NorthernAmerica, SouthAmerica, SouthAmerica, Caribbean, SouthEasternAsia, SouthernAsia, AntarcticSubregion , SouthernAfrica, MiddleAfrica, NorthernAmerica, 
-    AustraliaNewZealand, WesternEurope, SouthAmerica, EasternAsia, WesternAfrica, MiddleAfrica, MiddleAfrica, MiddleAfrica, Polynesia, SouthAmerica, 
-    EasternAfrica, WesternAfrica, CentralAmerica, Caribbean, Caribbean, AustraliaNewZealand, Caribbean, WesternAsia, EasternEurope, WesternEurope, 
-    EasternAfrica, Caribbean, NorthernEurope, Caribbean, NorthernAfrica, SouthAmerica, NorthernAfrica, EasternAfrica, NorthernAfrica, SouthernEurope, 
-    NorthernEurope, EasternAfrica, NOSUBREGION, NorthernEurope, Melanesia, SouthAmerica, WesternEurope, NorthernEurope, Micronesia, MiddleAfrica, 
-    NorthernEurope, WesternAsia, NorthernEurope, WesternAfrica, SouthernEurope, WesternAfrica, Caribbean, WesternAfrica, WesternAfrica, MiddleAfrica, 
-    SouthernEurope, Caribbean, NorthernAmerica, CentralAmerica, SouthAmerica, Micronesia, SouthAmerica, EasternAsia, AntarcticSubregion , CentralAmerica, 
-    SouthernEurope, Caribbean, EasternEurope, SouthEasternAsia, NorthernEurope, SouthernAsia, EasternAfrica, NorthernEurope, SouthernAsia, WesternAsia, 
-    NorthernEurope, WesternAsia, SouthernEurope, Caribbean, NorthernEurope, WesternAsia, EasternAsia, CentralAsia, EasternAfrica, CentralAsia, 
-    SouthEasternAsia, Micronesia, Caribbean, EasternAsia, WesternAsia, SouthEasternAsia, WesternAsia, WesternAfrica, NorthernAfrica, Caribbean, 
-    WesternEurope, SouthernAsia, SouthernAfrica, NorthernEurope, WesternEurope, NorthernEurope, EasternAsia, Caribbean, NorthernAfrica, WesternEurope, 
-    EasternEurope, EasternAfrica, SouthernAsia, CentralAmerica, Micronesia, SouthernEurope, WesternAfrica, SouthernEurope, SouthEasternAsia, SouthernEurope, 
-    EasternAsia, Micronesia, EasternAfrica, WesternAfrica, Caribbean, Caribbean, EasternAfrica, EasternAfrica, SouthEasternAsia, EasternAfrica, 
-    SouthernAfrica, Melanesia, WesternAfrica, AustraliaNewZealand, WesternAfrica, CentralAmerica, Polynesia, WesternEurope, NorthernEurope, SouthernAsia, 
-    Micronesia, AustraliaNewZealand, WesternAsia, SouthernAsia, CentralAmerica, Polynesia, SouthAmerica, SouthEasternAsia, Micronesia, Melanesia, 
-    EasternEurope, Caribbean, EasternAsia, SouthernEurope, SouthAmerica, WesternAsia, Polynesia, WesternAsia, EasternAfrica, EasternEurope, 
-    EasternEurope, EasternAfrica, WesternAsia, NorthernAfrica, WesternAfrica, SouthEasternAsia, SouthAmerica, WesternAfrica, NorthernEurope, Melanesia, 
-    WesternAfrica, CentralAmerica, SouthernEurope, EasternAfrica, NorthernAmerica, SouthernEurope, NorthernAfrica, MiddleAfrica, SouthAmerica, EasternEurope, 
-    SouthernEurope, NorthernEurope, SouthernAfrica, Caribbean, EasternAfrica, WesternAsia, Caribbean, MiddleAfrica, WesternAfrica, SouthEasternAsia, 
-    CentralAsia, Polynesia, CentralAsia, SouthEasternAsia, Polynesia, Caribbean, NorthernAfrica, WesternAsia, Polynesia, EasternAsia, 
-    EasternAfrica, EasternAfrica, EasternEurope, NorthernAmerica, SouthAmerica, NorthernAmerica, CentralAsia, SouthernEurope, Caribbean, SouthAmerica, 
-    Caribbean, Caribbean, SouthEasternAsia, Melanesia, Polynesia, Polynesia, NOSUBREGION, NOSUBREGION, NOSUBREGION, NOSUBREGION, 
-    NOSUBREGION, WesternAsia, SouthernAfrica, EasternAfrica, EasternAfrica
+    CARIBBEAN, SOUTHERN_ASIA, MIDDLE_AFRICA, CARIBBEAN, NORTHERN_EUROPE, SOUTHERN_EUROPE, SOUTHERN_EUROPE, WESTERN_ASIA, SOUTH_AMERICA, WESTERN_ASIA,
+    POLYNESIA, ANTARCTIC_SUBREGION , ANTARCTIC_SUBREGION , CARIBBEAN, AUSTRALIA_NEW_ZEALAND, WESTERN_EUROPE, WESTERN_ASIA, EASTERN_AFRICA, WESTERN_EUROPE, WESTERN_AFRICA,
+    CARIBBEAN, WESTERN_AFRICA, SOUTHERN_ASIA, EASTERN_EUROPE, WESTERN_ASIA, CARIBBEAN, SOUTHERN_EUROPE, CARIBBEAN, EASTERN_EUROPE, CENTRAL_AMERICA,
+    NORTHERN_AMERICA, SOUTH_AMERICA, SOUTH_AMERICA, CARIBBEAN, SOUTH_EASTERN_ASIA, SOUTHERN_ASIA, ANTARCTIC_SUBREGION , SOUTHERN_AFRICA, MIDDLE_AFRICA, NORTHERN_AMERICA,
+    AUSTRALIA_NEW_ZEALAND, WESTERN_EUROPE, SOUTH_AMERICA, EASTERN_ASIA, WESTERN_AFRICA, MIDDLE_AFRICA, MIDDLE_AFRICA, MIDDLE_AFRICA, POLYNESIA, SOUTH_AMERICA,
+    EASTERN_AFRICA, WESTERN_AFRICA, CENTRAL_AMERICA, CARIBBEAN, CARIBBEAN, AUSTRALIA_NEW_ZEALAND, CARIBBEAN, WESTERN_ASIA, EASTERN_EUROPE, WESTERN_EUROPE,
+    EASTERN_AFRICA, CARIBBEAN, NORTHERN_EUROPE, CARIBBEAN, NORTHERN_AFRICA, SOUTH_AMERICA, NORTHERN_AFRICA, EASTERN_AFRICA, NORTHERN_AFRICA, SOUTHERN_EUROPE,
+    NORTHERN_EUROPE, EASTERN_AFRICA, NOSUBREGION, NORTHERN_EUROPE, MELANESIA, SOUTH_AMERICA, WESTERN_EUROPE, NORTHERN_EUROPE, MICRONESIA, MIDDLE_AFRICA,
+    NORTHERN_EUROPE, WESTERN_ASIA, NORTHERN_EUROPE, WESTERN_AFRICA, SOUTHERN_EUROPE, WESTERN_AFRICA, CARIBBEAN, WESTERN_AFRICA, WESTERN_AFRICA, MIDDLE_AFRICA,
+    SOUTHERN_EUROPE, CARIBBEAN, NORTHERN_AMERICA, CENTRAL_AMERICA, SOUTH_AMERICA, MICRONESIA, SOUTH_AMERICA, EASTERN_ASIA, ANTARCTIC_SUBREGION , CENTRAL_AMERICA,
+    SOUTHERN_EUROPE, CARIBBEAN, EASTERN_EUROPE, SOUTH_EASTERN_ASIA, NORTHERN_EUROPE, SOUTHERN_ASIA, EASTERN_AFRICA, NORTHERN_EUROPE, SOUTHERN_ASIA, WESTERN_ASIA,
+    NORTHERN_EUROPE, WESTERN_ASIA, SOUTHERN_EUROPE, CARIBBEAN, NORTHERN_EUROPE, WESTERN_ASIA, EASTERN_ASIA, CENTRAL_ASIA, EASTERN_AFRICA, CENTRAL_ASIA,
+    SOUTH_EASTERN_ASIA, MICRONESIA, CARIBBEAN, EASTERN_ASIA, WESTERN_ASIA, SOUTH_EASTERN_ASIA, WESTERN_ASIA, WESTERN_AFRICA, NORTHERN_AFRICA, CARIBBEAN,
+    WESTERN_EUROPE, SOUTHERN_ASIA, SOUTHERN_AFRICA, NORTHERN_EUROPE, WESTERN_EUROPE, NORTHERN_EUROPE, EASTERN_ASIA, CARIBBEAN, NORTHERN_AFRICA, WESTERN_EUROPE,
+    EASTERN_EUROPE, EASTERN_AFRICA, SOUTHERN_ASIA, CENTRAL_AMERICA, MICRONESIA, SOUTHERN_EUROPE, WESTERN_AFRICA, SOUTHERN_EUROPE, SOUTH_EASTERN_ASIA, SOUTHERN_EUROPE,
+    EASTERN_ASIA, MICRONESIA, EASTERN_AFRICA, WESTERN_AFRICA, CARIBBEAN, CARIBBEAN, EASTERN_AFRICA, EASTERN_AFRICA, SOUTH_EASTERN_ASIA, EASTERN_AFRICA,
+    SOUTHERN_AFRICA, MELANESIA, WESTERN_AFRICA, AUSTRALIA_NEW_ZEALAND, WESTERN_AFRICA, CENTRAL_AMERICA, POLYNESIA, WESTERN_EUROPE, NORTHERN_EUROPE, SOUTHERN_ASIA,
+    MICRONESIA, AUSTRALIA_NEW_ZEALAND, WESTERN_ASIA, SOUTHERN_ASIA, CENTRAL_AMERICA, POLYNESIA, SOUTH_AMERICA, SOUTH_EASTERN_ASIA, MICRONESIA, MELANESIA,
+    EASTERN_EUROPE, CARIBBEAN, EASTERN_ASIA, SOUTHERN_EUROPE, SOUTH_AMERICA, WESTERN_ASIA, POLYNESIA, WESTERN_ASIA, EASTERN_AFRICA, EASTERN_EUROPE,
+    EASTERN_EUROPE, EASTERN_AFRICA, WESTERN_ASIA, NORTHERN_AFRICA, WESTERN_AFRICA, SOUTH_EASTERN_ASIA, SOUTH_AMERICA, WESTERN_AFRICA, NORTHERN_EUROPE, MELANESIA,
+    WESTERN_AFRICA, CENTRAL_AMERICA, SOUTHERN_EUROPE, EASTERN_AFRICA, NORTHERN_AMERICA, SOUTHERN_EUROPE, NORTHERN_AFRICA, MIDDLE_AFRICA, SOUTH_AMERICA, EASTERN_EUROPE,
+    SOUTHERN_EUROPE, NORTHERN_EUROPE, SOUTHERN_AFRICA, CARIBBEAN, EASTERN_AFRICA, WESTERN_ASIA, CARIBBEAN, MIDDLE_AFRICA, WESTERN_AFRICA, SOUTH_EASTERN_ASIA,
+    CENTRAL_ASIA, POLYNESIA, CENTRAL_ASIA, SOUTH_EASTERN_ASIA, POLYNESIA, CARIBBEAN, NORTHERN_AFRICA, WESTERN_ASIA, POLYNESIA, EASTERN_ASIA,
+    EASTERN_AFRICA, EASTERN_AFRICA, EASTERN_EUROPE, NORTHERN_AMERICA, SOUTH_AMERICA, NORTHERN_AMERICA, CENTRAL_ASIA, SOUTHERN_EUROPE, CARIBBEAN, SOUTH_AMERICA,
+    CARIBBEAN, CARIBBEAN, SOUTH_EASTERN_ASIA, MELANESIA, POLYNESIA, POLYNESIA, NOSUBREGION, NOSUBREGION, NOSUBREGION, NOSUBREGION,
+    NOSUBREGION, WESTERN_ASIA, SOUTHERN_AFRICA, EASTERN_AFRICA, EASTERN_AFRICA
 };
+              
 
 
 

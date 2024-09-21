@@ -9,6 +9,8 @@
  History: Supports most of ISO market identification code (MIC) list (ISO 10383). 
  Useful for describing origin of trades.
  
+ The MIC list used here was last updated 09/09/2024.  
+ 
  "This International Standard (ISO 10383) specifies a universal method of identifying exchanges, 
  trading platforms and regulated or non-regulated markets as sources of prices and related information 
  in order to facilitate automated processing"
@@ -18,15 +20,16 @@
 
  https://www.iso20022.org/market-identifier-codes
  
- The MIC list used here was last updated 09/09/2024.  
- 
- We have added country mics; their mic is the country 3 code followed by a zero to distinguish them from ISO mic codes.
- Trades that cannot be attributed to an existing market can use these identifiers.
 
- Note: mics 24EX, 2XX, 3579, 360T, 360X and 4AXE are not legal c++ enumerations as they begin with a numeric character.
- These mics have been prefixed with an 'A' so that they become A24EX, A2XX, A3579, A360T, A360X and A4AXE.
- Inserting 'A' ensures we get a valid c++ enum member and the correct ASCII ordering.
- This ensures the binary chop search works properly
+ Notes
+
+ i)  mics 24EX, 2XX, 3579, 360T, 360X and 4AXE are not legal c++ enumerations as they begin with a numeric character.
+     These MICs have been prefixed with an 'A' so that they become A24EX, A2XX, A3579, A360T, A360X and A4AXE.
+     Inserting 'A' ensures we get a valid c++ enum member and the correct ASCII ordering.
+     This ensures the binary chop search works properly
+ 
+ ii)  We have added country MICs; their MIC is the country 3 code followed by a zero to distinguish them from ISO mic codes.
+      Trades that cannot be attributed to an existing market can use these identifiers.
  
  Example
  
@@ -364,7 +367,7 @@ public:
 	
 	// non-explicit constructors intentional here
 	MarketId( MarketIdCode i ): m_mic(i) {} // e.g. i = MarketId::XLON
-	MarketId( const std::string& s ): m_mic(NOMARKETID) { setMarketId(s); }
+	MarketId( const std::string &s ): m_mic(NOMARKETID) { setMarketId(s); }
 	MarketId( const char *s ): m_mic(NOMARKETID) { if (s) setMarketId(s); } 
     
 	// my numeric code for this market e.g. MarketId::XLON = 2550
@@ -372,31 +375,31 @@ public:
 	
 	// The 4 letter MIC code for this market e.g. "XLON"
     std::string
-    toString( void ) const { return m_micNames[m_fromISO[m_mic]]; } 
+    to4Code( void ) const { return m_micCodes[m_fromISO[m_mic]]; } 
 	
 	std::string
 	name( void ) const { return m_fullMicNames[m_fromISO[m_mic]]; } // i.e "London Stock Exchange" 
 	
 	bool
-	setMarketId( const std::string& s ); // e.g. s = "XLON" 
+	setMarketId( const std::string &s ); // e.g. s = "XLON" 
 	
     void
-	setMarketId( const MarketIdCode s ) { m_mic = s; } // e.g. s = MarketId::XLON
+	setMarketId( MarketIdCode s ) { m_mic = s; } // e.g. s = MarketId::XLON
 
 	static MarketId
-	index(const int i) { return MarketIdCode(m_toISO[i]); }
+	index( int i ) { return MarketIdCode(m_toISO[i]); }
 
     static int
-	index(const MarketId c) { return m_fromISO[c]; }
+	index( const MarketId &c ) { return m_fromISO[c]; }
     
 	bool                
 	valid( void ) const { return m_mic != NOMARKETID; }
 	
 private:
 	
-	short m_mic; // we use short here as it simplifies streaming
+	short m_mic;
 	
-	static const char * const m_micNames[NUMMARKETID];
+	static const char * const m_micCodes[NUMMARKETID];
 	static const char * const m_fullMicNames[NUMMARKETID];
 	static const short        m_toISO[NUMMARKETID];
     static const short        m_fromISO[MAXMARKETID]; 
@@ -405,10 +408,10 @@ private:
 
 
 std::ostream&
-operator<<(std::ostream& ostr, const MarketId& c);
+operator<<( std::ostream &ostr, const MarketId &m );
 
 std::istream&
-operator>>(std::istream& istr, MarketId& c);
+operator>>( std::istream &istr, MarketId &m );
 
 
 

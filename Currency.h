@@ -6,70 +6,58 @@
 
    by W.B. Yates    
    Copyright (c) W.B. Yates. All rights reserved 
-   History: Supports most of the ISO 4217 currency code list.  
- 
-  **** Updated 10/10/2023 ****
-   
-   Note There is no currency ZRZ (the Zaire) as there is no ISO country code for Zaire which ceased to exist in 1997 (see Democratic Republic of the Congo).
-   
-   Note El Salvadore currency number 316 ommited beacuse its 3 letter code (SVC) clashes with new code
-    
-   Note The following are not ISO codes and therefore have no ISO currency number, although they are used commercially
- 
-   IMP - Isle of Man Pound; we treat this as GBP 
-   JEP - Jersey Pound; we treat this as GBP 
-   GGP - Gurnsey Pound; we treat this as GBP
-   TVD - Tuvalu Dollar; we treat this as AUD
-   
-   https://www.currency-iso.org/
- 
-   https://en.wikipedia.org/wiki/ISO_4217
+   History: Supports most of the ISO 4217 currency code list as of 10/10/2023  
 
    
+   Notes
+   
+     i)   There is no currency ZRZ (the Zaire) as there is no ISO country code for Zaire 
+          which ceased to exist in 1997 (see Democratic Republic of the Congo).
+       
+     ii)  El Salvadore currency number 316 ommited beacuse its 3 letter code (SVC) clashes with new code
+       
+     iii) The following are not ISO codes and therefore have no ISO currency number, although they are used commercially:
+              IMP - Isle of Man Pound; we treat this as GBP 
+              JEP - Jersey Pound; we treat this as GBP 
+              GGP - Gurnsey Pound; we treat this as GBP
+              TVD - Tuvalu Dollar; we treat this as AUD
+       
+       https://www.currency-iso.org/
+       https://en.wikipedia.org/wiki/ISO_4217
+
+   Example 1
+
+   Currency ccy1(Currency::USD);
+   std::cout << ccy1 << std::endl;	
+
+   Currency ccy2("USD");
+   std::cout << ccy2 << std::endl;
+
+   Currency ccy3("XYZ");
+   std::cout << ccy3 << std::endl;
+
+   Currency ccy4(Currency::SVC);
+   std::cout << ccy4 << std::endl;	
+
+   Currency ccy5("SVC");
+   std::cout << ccy5.name() << std::endl;
+   std::cout << ccy5.toString() << std::endl;
+
+   Currency ccy6(Currency::SVC);
+   std::cout << short(ccy6) << std::endl;
+
+   Currency ccy;
+   int iters = 100000;
+   for (int i = 0; i < iters; ++i)
+   {
+      for (int j = 1; j < Currency::NUMCURRENCY; ++j)
+      {
+         ccy.setCurrency( Currency::index(j).to3Code() );
+      }
+   }
+
+   exit(1);
  
-	Example 1
-
-	Currency ccy1(Currency::USD);
-	std::cout << ccy1 << std::endl;	
-
-	Currency ccy2("USD");
-	std::cout << ccy2 << std::endl;
-
-	Currency ccy3("XYZ");
-	std::cout << ccy3 << std::endl;
- 
-	Currency ccy4(Currency::SVC);
-	std::cout << ccy4 << std::endl;	
-
-	Currency ccy5("SVC");
-	std::cout << ccy5.name() << std::endl;
-	std::cout << ccy5.toString() << std::endl;
-
-	Currency ccy6(Currency::SVC);
-	std::cout << short(ccy6) << std::endl;
-	exit(1);
-
-
-    Example 2
- 
-    Currency ccy;
-    int iters2 = 100000;
-    for (int i = 0; i < iters2; ++i)
-    {
-        for (int j = 1; j < Currency::NUMCURRENCY; ++j)
-        {
-            ccy.setCurrency( Currency::index(j).toString() );
-        }
-        
-    }
-    for (int i = 0; i < iters2; ++i)
-    {
-        for (int j = 1; j < Currency::NUMCURRENCY; ++j)
-        {
-            ccy.setCurrency2( Currency::index(j).toString() );
-        }
-    }
-    exit(1);
 */
 
 #ifndef __CURRENCY_H__
@@ -84,7 +72,8 @@ class Currency
 {
 public:
 
-	// The value of the enum elements are the ISO numeric code for each currency. Note, NOCURRENCY, MAXCURRENCY, and NUMCURRENCY are not ISO codes
+	// The value of the enum elements are the ISO numeric code for each currency. 
+    // Note NOCURRENCY, MAXCURRENCY, and NUMCURRENCY are not ISO codes.
     enum CurrencyCode : short {
     NOCURRENCY = 0,
     ADP = 20,  AED = 784, AFA = 4,   AFN = 971, ALL = 8,   AMD = 51,  ANG = 532, AOA = 973, AON = 24,  AOR = 982, 
@@ -119,66 +108,62 @@ public:
 	~Currency( void ) { m_ccy = NOCURRENCY; }
 	
 	// non-explicit constructors intentional here
-	Currency( CurrencyCode i ): m_ccy(i) {} // i.e. i = Currency::GBP
-	Currency( const std::string& s ): m_ccy(NOCURRENCY) { setCurrency(s); }
+	Currency( CurrencyCode i ): m_ccy(i) {} // e.g. i = Currency::GBP
+	Currency( const std::string &s ): m_ccy(NOCURRENCY) { setCurrency(s); }
 	Currency( const char *s ): m_ccy(NOCURRENCY) { if (s) setCurrency(s); } 
 
-	// The ISO numeric code for this currency i.e. Currency::GBP = 826 
+	// The ISO numeric code for this currency e.g. Currency::GBP = 826 
 	operator short( void ) const { return m_ccy; }
 
-	// The ISO 3 letter code for this currency i.e. "GBP"
+	// The ISO 3 letter code for this currency e.g. "GBP"
     std::string
-    toString( void ) const { return m_ccyNames[m_fromISO[m_ccy]]; }
+    to3Code( void ) const { return m_ccyCodes[m_fromISO[m_ccy]]; }
 		
-	// i.e. s = "GBP"
+	// e.g. s = "GBP"
 	bool
-	setCurrency( const std::string& s ); 
+	setCurrency( const std::string &s ); 
 
-	// i.e. s = Currency::GBP
+	// e.g. s = Currency::GBP
 	void
-	setCurrency( const CurrencyCode s ) { m_ccy = s; } 
+	setCurrency( CurrencyCode s ) { m_ccy = s; } 
 
-	std::string
-	name( void ) const; // i.e. "Pound Sterling"
+    std::string
+    name( void ) const  { return m_denomNames[m_fromISO[m_ccy]]; }  // e.g. "Pound Sterling"
 
 	static Currency
 	baseCurrency( void ) { return m_baseCurrency; }
 	
 	static void // not thread safe
-	baseCurrency( const Currency& c ) { m_baseCurrency = c; }
+	baseCurrency( const Currency &c ) { m_baseCurrency = c; }
 
 	static Currency
-	index( const int i ) { return CurrencyCode(m_toISO[i]); }	
+	index( int i ) { return CurrencyCode(m_toISO[i]); }	
 
     static int
-    index( const Currency c ) { return m_fromISO[c]; }
+	index( const Currency &c ) { return m_fromISO[c]; }
     
     bool                
-    valid( void ) const { return m_ccy != NOCURRENCY; }
+	valid( void ) const { return m_ccy != NOCURRENCY; }
 	
 private:
 	
-    // we use short here rather than enum deliberately as it simplifies streaming and Gazetteer
-    short m_ccy; 
+	short m_ccy; 
     
-    static Currency m_baseCurrency;
-    static const char * const m_ccyNames[NUMCURRENCY];
-    static const char * const m_denomNames[NUMCURRENCY];
-    static const short        m_toISO[NUMCURRENCY]; 
-    static const short        m_fromISO[MAXCURRENCY]; 
+	static Currency m_baseCurrency;
+	static const char * const m_ccyCodes[NUMCURRENCY];
+	static const char * const m_denomNames[NUMCURRENCY];
+	static const short        m_toISO[NUMCURRENCY]; 
+	static const short        m_fromISO[MAXCURRENCY]; 
     static const short        m_searchPoints[27]; 
     static const short        m_midPoints[26]; 
 };
 
 
-
-
-
 std::ostream&
-operator<<(std::ostream& ostr, const Currency& c);
+operator<<( std::ostream &ostr, const Currency &c );
 
 std::istream&
-operator>>(std::istream& istr, Currency& c);
+operator>>( std::istream &istr, Currency &c );
 
 
 #endif
