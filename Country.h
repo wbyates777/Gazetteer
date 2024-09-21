@@ -6,58 +6,63 @@
  
  by W.B. Yates    
  Copyright (c) W.B. Yates. All rights reserved 
- History: Supports most of ISO 3166-1 country code list
+ History: Supports most of ISO 3166-1 country code list. 
  
- **** Updated 10/10/2023 ****
+ ISO 2 and 3 letter codes supported.
  
- Note there are no ISO codes for Kosovo at the time of writting
- Note there are no ISO codes for Zaire  at the time of writting
+
+ Notes 
+ 
+ (i)   User-assigned code elements are codes at the disposal of users who need to add further names of countries, 
+       territories, or other geographical entities to their in-house application of ISO 3166-1, and the ISO 3166/MA 
+       will never use these codes in the updating process of the standard. 
+       The following alpha-2 codes can be user-assigned: AA, QM to QZ, XA to XZ, and ZZ.
+ (ii)  there are no ISO codes for Kosovo at the time of writting
+ (iii) there are no ISO codes for Zaire  at the time of writting
+ (vi)  Netherlands Antilles (AN, ANT) is not a country - ceased to exist 10/10/2010 
  
  https://www.iso.org/iso/country_codes
- 
+ https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
  https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
  
- Region and sub region codes are taken from:
- 
- "Standard Country or Area Codes for Statistical Use, Revision 4 (United Nations publication, Sales No. 98.XVII.9"
- 
- // we should add this...
- // UNK identifies Kosovo residents to whom travel documents were issued by the United Nations Interim Administration in Kosovo (UNMIK)
+
+ TODO: could add 'UNK' - identifies Kosovo residents issued travel documents by United Nations Interim Administration in Kosovo (UNMIK)
+
 
  Example 
  
+ Country w;
+ w.setCountry( Country::US );
+ std::cout << w << std::endl;
+ std::cout << w.name() << std::endl;
+ std::cout << short(w) << std::endl; 
+ std::cout << std::endl;
+ 
  Country x;
- x.setCountry( Country::US );
+ x.setCountry( "GH3" );
  std::cout << x << std::endl;
  std::cout << x.name() << std::endl;
- std::cout << short(x) << std::endl; 
- std::cout << x.regionName() << std::endl;
- std::cout << x.region() << std::endl;
- std::cout << x.subRegionName() << std::endl;
- std::cout << x.subRegion() << std::endl << std::endl;
+ std::cout << short(x) << std::endl;
+ std::cout << std::endl;
  
  Country y;
- y.setCountry( "GBR" );
+ y.setCountry( "TF" );
  std::cout << y << std::endl;
  std::cout << y.name() << std::endl;
+ std::cout << y.to3Code() << std::endl;
  std::cout << short(y) << std::endl; 
- std::cout << y.regionName() << std::endl;
- std::cout << y.region() << std::endl;
- std::cout << y.subRegionName() << std::endl;
- std::cout << y.subRegion() << std::endl << std::endl;
- 
+ std::cout << std::endl;
+
  Country z;
- z.setCountry( "GH3" );
+ z.setCountry( "ATF" );
  std::cout << z << std::endl;
  std::cout << z.name() << std::endl;
+ std::cout << z.to2Code() << std::endl;
  std::cout << short(z) << std::endl;
- std::cout << z.regionName() << std::endl;
- std::cout << z.region() << std::endl;
- std::cout << z.subRegionName() << std::endl;
- std::cout << z.subRegion() << std::endl;
+ std::cout << std::endl;
  
  exit(1);
- 
+
  */
 
 
@@ -72,9 +77,9 @@ class Country
 {
 public:
 	
-	// The value of the enum elements are the ISO numeric code for each country. Note, NOCOUNTRY, XXX, EUR, XAF, XCD, XOF, XPF, NUMCOUNTRY, and MAXCOUNTRY are not ISO country codes
-	// The non-ISO codes EUR, XAF, XCD, XOF, XPF represent currency unions between distinct countries
-	// 2 and 3 letter codes supported, although this class uses the 3 letter code
+	// The value of the enum elements are the ISO numeric code for each country. 
+    // Note NOCOUNTRY, XXX, EUR, XAF, XCD, XOF, XPF, NUMCOUNTRY, and MAXCOUNTRY are not ISO country codes.
+	// The non-ISO codes EUR, XAF, XCD, XOF, XPF represent currency unions between countries.
 	enum CountryCode  : short {
 		NOCOUNTRY = 0,
 		AW = 533, ABW = 533, AF = 4, AFG = 4, AO = 24, AGO = 24, AI = 660, AIA = 660, AX = 248, ALA = 248, AL = 8, ALB = 8, AD = 20, AND = 20, AE = 784, ARE = 784, AR = 32, ARG = 32, AM = 51, ARM = 51, 
@@ -110,52 +115,61 @@ public:
 	~Country( void ) { m_country = NOCOUNTRY; }
 	
 	// non-explicit constructors intentional here
-	Country( CountryCode i ): m_country(i) {} // i.e. i = Country::GB
-	Country( const std::string& s ): m_country(NOCOUNTRY) { setCountry(s); }
+	Country( CountryCode i ): m_country(i) {} // e.g. i = Country::GBR
+	Country( const std::string &s ): m_country(NOCOUNTRY) { setCountry(s); }
 	Country( const char *s ): m_country(NOCOUNTRY) { if (s) setCountry(s); } 
     
-	// The ISO numeric code for this country i.e. Country::GBR = 826
+	// The ISO numeric code for this country e.g. Country::GBR = 826
 	operator short( void ) const { return m_country; }
 	
-	// The ISO 3 letter code for this country i.e. "GBR"
+	// The ISO 3 letter code for this country e.g. "GBR"
     std::string
-    toString( void ) const  { return m_countryNames[m_fromISO[m_country]]; } 
+    to3Code( void ) const { return m_country3Codes[m_fromISO[m_country]]; } 
 
+    // The ISO 2 letter code for this country e.g. "GB"
+    std::string
+    to2Code( void ) const { return m_country2Codes[m_fromISO[m_country]]; } 
+    
 	std::string
-	name( void ) const; // i.e "United Kingdom" 
+	name( void ) const { return m_fullCountryNames[m_fromISO[m_country]]; } // i.e "United Kingdom"
 	
-	bool
-	setCountry( const std::string& s ); // i.e. s = "GBR"
-	
+    bool
+    setCountry( const std::string &s ); // ISO 3 or ISO 2 letter codes e.g. s = "GBR" or "GB"
+    
 	void
-	setCountry( const CountryCode s ) { m_country = s; } // i.e. s = Country::GBR
+	setCountry( CountryCode s ) { m_country = s; } // e.g. s = Country::GBR
 
-    static Country
-    index(const int i)  { return CountryCode(m_toISO[i]); }
+	static Country
+	index( int i ) { return CountryCode(m_3toISO[i]); }
 
     static int
-    index(const Country c) { return m_fromISO[c]; }
+	index( const Country &c ) { return m_fromISO[c]; }
     
     bool                
-    valid( void ) const { return m_country != NOCOUNTRY; }
+	valid( void ) const { return m_country != NOCOUNTRY; }
 	
 private:
 	
-    short m_country; // we use short here as it simplifies streaming
+	short m_country; 
 
-    static const char * const m_countryNames[NUMCOUNTRY];
-    static const char * const m_fullCountryNames[NUMCOUNTRY];
-    static const short        m_toISO[NUMCOUNTRY];
-    static const short        m_fromISO[MAXCOUNTRY];    
-    static const short        m_searchPoints[27];    
+	static const char * const m_country2Codes[NUMCOUNTRY];
+    static const char * const m_country3Codes[NUMCOUNTRY];
+    static const char * const m_countryCodes[2*NUMCOUNTRY-1]; 
+	static const char * const m_fullCountryNames[NUMCOUNTRY];
+    
+	static const short        m_fromISO[MAXCOUNTRY]; 
+    static const short        m_3toISO[NUMCOUNTRY];
+    static const short        m_toISO[2*NUMCOUNTRY-1];
+    
+    static const short        m_searchPoints[27]; 
 };
 
 
 std::ostream&
-operator<<(std::ostream& ostr, const Country& c);
+operator<<( std::ostream &ostr, const Country &c );
 
 std::istream&
-operator>>(std::istream& istr, Country& c);
+operator>>( std::istream &istr, Country &c );
 
 
 #endif
