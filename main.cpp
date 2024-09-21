@@ -256,8 +256,8 @@ main(int argc, const char * argv[])
   
     Gazetteer g;
     
-    std::cout << "The countries of  SubRegion::SouthAmerica" << std::endl;
-    std::vector<Country> southam = g.subRegion(  Gazetteer::SubRegion::SouthAmerica );
+    std::cout << "The countries of  Subregion::SouthAmerica" << std::endl;
+    std::vector<Country> southam = g.subregion(  Gazetteer::Subregion::SouthAmerica );
     for (Country c : southam)
         std::cout << c.name() << std::endl;
     std::cout << std::endl;
