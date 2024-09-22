@@ -6,9 +6,9 @@
  
  by W.B. Yates    
  Copyright (c) W.B. Yates
- History: Supports the full ISO 3166-1 Country Code List 	   
+ History: Supports the full ISO 3166-1 Country Code List        
      
- ISO 2 and 3 letter codes supported.
+ Can print ISO 2 and 3 letter codes.
  
  Notes 
  
@@ -38,43 +38,41 @@
 std::ostream&
 operator<<( std::ostream &ostr, const Country &c )
 {
-	ostr << c.to3Code();
-	return ostr;
+    ostr << c.to3Code();
+    return ostr;
 }
 
 std::istream&
 operator>>( std::istream &istr, Country &c )
 {
-	std::string str;
-	istr >> str;
-	c.setCountry( str );
-	return istr;
+    std::string str;
+    istr >> str;
+    c.setCountry( str );
+    return istr;
 }
 
 //
 //
 //
 
-// this speeds up setCountry quite a bit
+// this speeds up setCountry a bit
 const short Country::m_searchPoints[27] = {
-    1, 34, 76, 116, 128, 144, 156, 193, 205, 225, 233, 252, 274, 321, 345, 347, 375, 377, 386, 431, 462, 474, 488, 492, 502, 505, 511
+    1, 18, 39, 60, 66, 74, 80, 98, 104, 114, 118, 126, 137, 161, 173, 174, 188, 189, 193, 217, 232, 238, 245, 247, 252, 253, 256
 };
 
 bool
 Country::setCountry( const std::string &str )
 // https://en.wikipedia.org/wiki/Binary_search_algorithm
-{	
-    
-    const int len = (int) str.size();
-    
-    //assert(str.size() == 3 || str.size() == 4);
-    if (len != 3 && len != 2)
-	{
+{    
+
+    //assert(str.size() == 3);
+    if (str.size() != 3)
+    {
         m_country = Country::XXX; // NOCOUNTRY
-		return false;
-	}
+        return false;
+    }
     
-    int index = str[0] - 'A'; // 'A' = 65;
+    const int index = str[0] - 'A'; // 'A' = 65;
     //assert(index > -1 && index < 26);
     if (index < 0 || index > 25)
     {
@@ -82,16 +80,16 @@ Country::setCountry( const std::string &str )
         return false;
     }
     
-	int low   = m_searchPoints[index]; 
-	int high  = m_searchPoints[index + 1]; 
+    int low   = m_searchPoints[index]; 
+    int high  = m_searchPoints[index + 1]; 
     int i;
     
-	while (low < high) 
-	{
+    while (low < high) 
+    {
         int mid = low + ((high - low) >> 1);
-        const char * const cty = m_countryCodes[mid];
-
-        for (i = 1; i < len; ++i)
+        const char * const cty = m_country3Codes[mid];
+        
+        for (i = 1; i < 3; ++i)
         {
             const char &a = str[i];
             const char &b = cty[i];
@@ -109,15 +107,15 @@ Country::setCountry( const std::string &str )
             }
         }
         
-        if (i == len)
+        if (i == 3)
         {
             m_country = m_toISO[mid]; 
-			return true;
+            return true;
         }
-	}
+    }
 
     m_country = Country::XXX; // NOCOUNTRY
-	return false;
+    return false;
 }
 
 
@@ -152,37 +150,9 @@ const char * const Country::m_country3Codes[NUMCOUNTRY] = { "NOCOUNTRY",
     "XXX", "YEM", "ZAF", "ZMB", "ZWE"
 };
 
-// in country3code order
-const short Country::m_3toISO[NUMCOUNTRY] = {  NOCOUNTRY, 
-    ABW, AFG, AGO, AIA, ALA, ALB, AND, ARE, ARG, ARM,
-    ASM, ATA, ATF, ATG, AUS, AUT, AZE, BDI, BEL, BEN,
-    BES, BFA, BGD, BGR, BHR, BHS, BIH, BLM, BLR, BLZ,
-    BMU, BOL, BRA, BRB, BRN, BTN, BVT, BWA, CAF, CAN,
-    CCK, CHE, CHL, CHN, CIV, CMR, COD, COG, COK, COL,
-    COM, CPV, CRI, CUB, CUW, CXR, CYM, CYP, CZE, DEU,
-    DJI, DMA, DNK, DOM, DZA, ECU, EGY, ERI, ESH, ESP,
-    EST, ETH, EUR, FIN, FJI, FLK, FRA, FRO, FSM, GAB,
-    GBR, GEO, GGY, GHA, GIB, GIN, GLP, GMB, GNB, GNQ,
-    GRC, GRD, GRL, GTM, GUF, GUM, GUY, HKG, HMD, HND,
-    HRV, HTI, HUN, IDN, IMN, IND, IOT, IRL, IRN, IRQ,
-    ISL, ISR, ITA, JAM, JEY, JOR, JPN, KAZ, KEN, KGZ,
-    KHM, KIR, KNA, KOR, KWT, LAO, LBN, LBR, LBY, LCA,
-    LIE, LKA, LSO, LTU, LUX, LVA, MAC, MAF, MAR, MCO,
-    MDA, MDG, MDV, MEX, MHL, MKD, MLI, MLT, MMR, MNE,
-    MNG, MNP, MOZ, MRT, MSR, MTQ, MUS, MWI, MYS, MYT,
-    NAM, NCL, NER, NFK, NGA, NIC, NIU, NLD, NOR, NPL,
-    NRU, NZL, OMN, PAK, PAN, PCN, PER, PHL, PLW, PNG,
-    POL, PRI, PRK, PRT, PRY, PSE, PYF, QAT, REU, ROU,
-    RUS, RWA, SAU, SDN, SEN, SGP, SGS, SHN, SJM, SLB,
-    SLE, SLV, SMR, SOM, SPM, SRB, SSD, STP, SUR, SVK,
-    SVN, SWE, SWZ, SXM, SYC, SYR, TCA, TCD, TGO, THA,
-    TJK, TKL, TKM, TLS, TON, TTO, TUN, TUR, TUV, TWN,
-    TZA, UGA, UKR, UMI, URY, USA, UZB, VAT, VCT, VEN,
-    VGB, VIR, VNM, VUT, WLF, WSM, XAF, XCD, XOF, XPF,
-    XXX, YEM, ZAF, ZMB, ZWE
-};
 
 // Note country2codes here in country3code order i.e TF/ATF or  GS/SGS
+// used for to2Code()
 const char * const Country::m_country2Codes[NUMCOUNTRY] = { "NOCOUNTRY", 
     "AW", "AF", "AO", "AI", "AX", "AL", "AD", "AE", "AR", "AM", 
     "AS", "AQ", "TF", "AG", "AU", "AT", "AZ", "BI", "BE", "BJ", 
@@ -211,6 +181,7 @@ const char * const Country::m_country2Codes[NUMCOUNTRY] = { "NOCOUNTRY",
     "VG", "VI", "VN", "VU", "WF", "WS", "XA", "XC", "XO", "XP", 
     "XX", "YE", "ZA", "ZM", "ZW"
 };
+
 
 // country3code order
 const char * const Country::m_fullCountryNames[NUMCOUNTRY] = { "No Country",
@@ -348,68 +319,41 @@ const short Country::m_fromISO[MAXCOUNTRY] =
     0, 73, 247, 248, 249, 250, 251
 };
 
-const char * const Country::m_countryCodes[2*NUMCOUNTRY-1] = { "NOCOUNTRY",  // we only have one 'NOCOUNTRY'
-    "ABW", "AD", "AE", "AF", "AFG", "AG", "AGO", "AI", "AIA", "AL", "ALA", "ALB", "AM", "AND", "AO", "AQ", "AR", "ARE", "ARG", 
-    "ARM", "AS", "ASM", "AT", "ATA", "ATF", "ATG", "AU", "AUS", "AUT", "AW", "AX", "AZ", "AZE", "BA", "BB", "BD", "BDI", "BE", "BEL", 
-    "BEN", "BES", "BF", "BFA", "BG", "BGD", "BGR", "BH", "BHR", "BHS", "BI", "BIH", "BJ", "BL", "BLM", "BLR", "BLZ", "BM", "BMU", "BN", 
-    "BO", "BOL", "BQ", "BR", "BRA", "BRB", "BRN", "BS", "BT", "BTN", "BV", "BVT", "BW", "BWA", "BY", "BZ", "CA", "CAF", "CAN", "CC", 
-    "CCK", "CD", "CF", "CG", "CH", "CHE", "CHL", "CHN", "CI", "CIV", "CK", "CL", "CM", "CMR", "CN", "CO", "COD", "COG", "COK", "COL", 
-    "COM", "CPV", "CR", "CRI", "CU", "CUB", "CUW", "CV", "CW", "CX", "CXR", "CY", "CYM", "CYP", "CZ", "CZE", "DE", "DEU", "DJ", "DJI", 
-    "DK", "DM", "DMA", "DNK", "DO", "DOM", "DZ", "DZA", "EC", "ECU", "EE", "EG", "EGY", "EH", "ER", "ERI", "ES", "ESH", "ESP", "EST", 
-    "ET", "ETH", "EUR", "EZ", "FI", "FIN", "FJ", "FJI", "FK", "FLK", "FM", "FO", "FR", "FRA", "FRO", "FSM", "GA", "GAB", "GB", "GBR", 
-    "GD", "GE", "GEO", "GF", "GG", "GGY", "GH", "GHA", "GI", "GIB", "GIN", "GL", "GLP", "GM", "GMB", "GN", "GNB", "GNQ", "GP", "GQ", 
-    "GR", "GRC", "GRD", "GRL", "GS", "GT", "GTM", "GU", "GUF", "GUM", "GUY", "GW", "GY", "HK", "HKG", "HM", "HMD", "HN", "HND", "HR", 
-    "HRV", "HT", "HTI", "HU", "HUN", "ID", "IDN", "IE", "IL", "IM", "IMN", "IN", "IND", "IO", "IOT", "IQ", "IR", "IRL", "IRN", "IRQ", 
-    "IS", "ISL", "ISR", "IT", "ITA", "JAM", "JE", "JEY", "JM", "JO", "JOR", "JP", "JPN", "KAZ", "KE", "KEN", "KG", "KGZ", "KH", "KHM", 
-    "KI", "KIR", "KM", "KN", "KNA", "KOR", "KP", "KR", "KW", "KWT", "KY", "KZ", "LA", "LAO", "LB", "LBN", "LBR", "LBY", "LC", "LCA", 
-    "LI", "LIE", "LK", "LKA", "LR", "LS", "LSO", "LT", "LTU", "LU", "LUX", "LV", "LVA", "LY", "MA", "MAC", "MAF", "MAR", "MC", "MCO", 
-    "MD", "MDA", "MDG", "MDV", "ME", "MEX", "MF", "MG", "MH", "MHL", "MK", "MKD", "ML", "MLI", "MLT", "MM", "MMR", "MN", "MNE", "MNG", 
-    "MNP", "MO", "MOZ", "MP", "MQ", "MR", "MRT", "MS", "MSR", "MT", "MTQ", "MU", "MUS", "MV", "MW", "MWI", "MX", "MY", "MYS", "MYT", 
-    "MZ", "NA", "NAM", "NC", "NCL", "NE", "NER", "NF", "NFK", "NG", "NGA", "NI", "NIC", "NIU", "NL", "NLD", "NO", "NOR", "NP", "NPL", 
-    "NR", "NRU", "NU", "NZ", "NZL", "OM", "OMN", "PA", "PAK", "PAN", "PCN", "PE", "PER", "PF", "PG", "PH", "PHL", "PK", "PL", "PLW", 
-    "PM", "PN", "PNG", "POL", "PR", "PRI", "PRK", "PRT", "PRY", "PS", "PSE", "PT", "PW", "PY", "PYF", "QA", "QAT", "RE", "REU", "RO", 
-    "ROU", "RS", "RU", "RUS", "RW", "RWA", "SA", "SAU", "SB", "SC", "SD", "SDN", "SE", "SEN", "SG", "SGP", "SGS", "SH", "SHN", "SI", 
-    "SJ", "SJM", "SK", "SL", "SLB", "SLE", "SLV", "SM", "SMR", "SN", "SO", "SOM", "SPM", "SR", "SRB", "SS", "SSD", "ST", "STP", "SUR", 
-    "SV", "SVK", "SVN", "SWE", "SWZ", "SX", "SXM", "SY", "SYC", "SYR", "SZ", "TC", "TCA", "TCD", "TD", "TF", "TG", "TGO", "TH", "THA", 
-    "TJ", "TJK", "TK", "TKL", "TKM", "TL", "TLS", "TM", "TN", "TO", "TON", "TR", "TT", "TTO", "TUN", "TUR", "TUV", "TV", "TW", "TWN", 
-    "TZ", "TZA", "UA", "UG", "UGA", "UKR", "UM", "UMI", "URY", "US", "USA", "UY", "UZ", "UZB", "VA", "VAT", "VC", "VCT", "VE", "VEN", 
-    "VG", "VGB", "VI", "VIR", "VN", "VNM", "VU", "VUT", "WF", "WLF", "WS", "WSM", "XA", "XAF", "XC", "XCD", "XO", "XOF", "XP", "XPF", 
-    "XX", "XXX", "YE", "YEM", "YT", "ZA", "ZAF", "ZM", "ZMB", "ZW", "ZWE"
-};
 
-const short Country::m_toISO[2*NUMCOUNTRY-1] = { NOCOUNTRY,  // we only have one 'NOCOUNTRY'
-    ABW, AD, AE, AF, AFG, AG, AGO, AI, AIA, AL, ALA, ALB, AM, AND, AO, AQ, AR, ARE, ARG, 
-    ARM, AS, ASM, AT, ATA, ATF, ATG, AU, AUS, AUT, AW, AX, AZ, AZE, BA, BB, BD, BDI, BE, BEL, 
-    BEN, BES, BF, BFA, BG, BGD, BGR, BH, BHR, BHS, BI, BIH, BJ, BL, BLM, BLR, BLZ, BM, BMU, BN, 
-    BO, BOL, BQ, BR, BRA, BRB, BRN, BS, BT, BTN, BV, BVT, BW, BWA, BY, BZ, CA, CAF, CAN, CC, 
-    CCK, CD, CF, CG, CH, CHE, CHL, CHN, CI, CIV, CK, CL, CM, CMR, CN, CO, COD, COG, COK, COL, 
-    COM, CPV, CR, CRI, CU, CUB, CUW, CV, CW, CX, CXR, CY, CYM, CYP, CZ, CZE, DE, DEU, DJ, DJI, 
-    DK, DM, DMA, DNK, DO, DOM, DZ, DZA, EC, ECU, EE, EG, EGY, EH, ER, ERI, ES, ESH, ESP, EST, 
-    ET, ETH, EUR, EZ, FI, FIN, FJ, FJI, FK, FLK, FM, FO, FR, FRA, FRO, FSM, GA, GAB, GB, GBR, 
-    GD, GE, GEO, GF, GG, GGY, GH, GHA, GI, GIB, GIN, GL, GLP, GM, GMB, GN, GNB, GNQ, GP, GQ, 
-    GR, GRC, GRD, GRL, GS, GT, GTM, GU, GUF, GUM, GUY, GW, GY, HK, HKG, HM, HMD, HN, HND, HR, 
-    HRV, HT, HTI, HU, HUN, ID, IDN, IE, IL, IM, IMN, IN, IND, IO, IOT, IQ, IR, IRL, IRN, IRQ, 
-    IS, ISL, ISR, IT, ITA, JAM, JE, JEY, JM, JO, JOR, JP, JPN, KAZ, KE, KEN, KG, KGZ, KH, KHM, 
-    KI, KIR, KM, KN, KNA, KOR, KP, KR, KW, KWT, KY, KZ, LA, LAO, LB, LBN, LBR, LBY, LC, LCA, 
-    LI, LIE, LK, LKA, LR, LS, LSO, LT, LTU, LU, LUX, LV, LVA, LY, MA, MAC, MAF, MAR, MC, MCO, 
-    MD, MDA, MDG, MDV, ME, MEX, MF, MG, MH, MHL, MK, MKD, ML, MLI, MLT, MM, MMR, MN, MNE, MNG, 
-    MNP, MO, MOZ, MP, MQ, MR, MRT, MS, MSR, MT, MTQ, MU, MUS, MV, MW, MWI, MX, MY, MYS, MYT, 
-    MZ, NA, NAM, NC, NCL, NE, NER, NF, NFK, NG, NGA, NI, NIC, NIU, NL, NLD, NO, NOR, NP, NPL, 
-    NR, NRU, NU, NZ, NZL, OM, OMN, PA, PAK, PAN, PCN, PE, PER, PF, PG, PH, PHL, PK, PL, PLW, 
-    PM, PN, PNG, POL, PR, PRI, PRK, PRT, PRY, PS, PSE, PT, PW, PY, PYF, QA, QAT, RE, REU, RO, 
-    ROU, RS, RU, RUS, RW, RWA, SA, SAU, SB, SC, SD, SDN, SE, SEN, SG, SGP, SGS, SH, SHN, SI, 
-    SJ, SJM, SK, SL, SLB, SLE, SLV, SM, SMR, SN, SO, SOM, SPM, SR, SRB, SS, SSD, ST, STP, SUR, 
-    SV, SVK, SVN, SWE, SWZ, SX, SXM, SY, SYC, SYR, SZ, TC, TCA, TCD, TD, TF, TG, TGO, TH, THA, 
-    TJ, TJK, TK, TKL, TKM, TL, TLS, TM, TN, TO, TON, TR, TT, TTO, TUN, TUR, TUV, TV, TW, TWN, 
-    TZ, TZA, UA, UG, UGA, UKR, UM, UMI, URY, US, USA, UY, UZ, UZB, VA, VAT, VC, VCT, VE, VEN, 
-    VG, VGB, VI, VIR, VN, VNM, VU, VUT, WF, WLF, WS, WSM, XA, XAF, XC, XCD, XO, XOF, XP, XPF, 
-    XX, XXX, YE, YEM, YT, ZA, ZAF, ZM, ZMB, ZW, ZWE
-};
 
+
+// in country3code order
+const short Country::m_toISO[NUMCOUNTRY] = {  NOCOUNTRY, 
+    ABW, AFG, AGO, AIA, ALA, ALB, AND, ARE, ARG, ARM,
+    ASM, ATA, ATF, ATG, AUS, AUT, AZE, BDI, BEL, BEN,
+    BES, BFA, BGD, BGR, BHR, BHS, BIH, BLM, BLR, BLZ,
+    BMU, BOL, BRA, BRB, BRN, BTN, BVT, BWA, CAF, CAN,
+    CCK, CHE, CHL, CHN, CIV, CMR, COD, COG, COK, COL,
+    COM, CPV, CRI, CUB, CUW, CXR, CYM, CYP, CZE, DEU,
+    DJI, DMA, DNK, DOM, DZA, ECU, EGY, ERI, ESH, ESP,
+    EST, ETH, EUR, FIN, FJI, FLK, FRA, FRO, FSM, GAB,
+    GBR, GEO, GGY, GHA, GIB, GIN, GLP, GMB, GNB, GNQ,
+    GRC, GRD, GRL, GTM, GUF, GUM, GUY, HKG, HMD, HND,
+    HRV, HTI, HUN, IDN, IMN, IND, IOT, IRL, IRN, IRQ,
+    ISL, ISR, ITA, JAM, JEY, JOR, JPN, KAZ, KEN, KGZ,
+    KHM, KIR, KNA, KOR, KWT, LAO, LBN, LBR, LBY, LCA,
+    LIE, LKA, LSO, LTU, LUX, LVA, MAC, MAF, MAR, MCO,
+    MDA, MDG, MDV, MEX, MHL, MKD, MLI, MLT, MMR, MNE,
+    MNG, MNP, MOZ, MRT, MSR, MTQ, MUS, MWI, MYS, MYT,
+    NAM, NCL, NER, NFK, NGA, NIC, NIU, NLD, NOR, NPL,
+    NRU, NZL, OMN, PAK, PAN, PCN, PER, PHL, PLW, PNG,
+    POL, PRI, PRK, PRT, PRY, PSE, PYF, QAT, REU, ROU,
+    RUS, RWA, SAU, SDN, SEN, SGP, SGS, SHN, SJM, SLB,
+    SLE, SLV, SMR, SOM, SPM, SRB, SSD, STP, SUR, SVK,
+    SVN, SWE, SWZ, SXM, SYC, SYR, TCA, TCD, TGO, THA,
+    TJK, TKL, TKM, TLS, TON, TTO, TUN, TUR, TUV, TWN,
+    TZA, UGA, UKR, UMI, URY, USA, UZB, VAT, VCT, VEN,
+    VGB, VIR, VNM, VUT, WLF, WSM, XAF, XCD, XOF, XPF,
+    XXX, YEM, ZAF, ZMB, ZWE
+};
 //
 //
-//	
-
+//    
 
 
 
