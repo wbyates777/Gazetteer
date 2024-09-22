@@ -157,20 +157,20 @@ demoCountry(void)
     std::cout  << std::endl; 
     
     Country z;
-    z.setCountry( "GS" );
+    z.setCountry( "ATF" );
     std::cout << z << std::endl;
     std::cout << z.name() << std::endl;
     std::cout << z.to3Code() << std::endl;
     std::cout << short(z) << std::endl;
     std::cout  << std::endl; 
     
-    Country t1("KY");
+    Country t1("ATG");
     std::cout << t1.to3Code() << std::endl;
     std::cout << t1.to2Code() << std::endl;
     std::cout << t1.name() << std::endl;
     std::cout  << std::endl; 
     
-    Country t2("KZ");
+    Country t2("YEM");
     std::cout << t2.to3Code() << std::endl;
     std::cout << t2.to2Code() << std::endl;
     std::cout << t2.name() << std::endl;
