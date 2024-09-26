@@ -91,6 +91,10 @@ public:
     static std::string
     deaccent( std::string str );
     
+    // return false if str contains non-ASCII characters
+    static bool
+    isRoman( const std::string &str ); 
+    
     // remove newline [\n] and carriage return [\r] also escape single quote ['] -> [\']
     static std::string
     denewln( std::string str );
@@ -100,17 +104,17 @@ public:
     capitalise( const std::string &str );
     
     static std::string 
-    toUpper( std::string s ) 
+    toUpper( std::string str ) 
     { 
-        std::transform(s.begin(), s.end(), s.begin(), [](char c){ return std::toupper(c); });
-        return s;
+        std::transform(str.begin(), str.end(), str.begin(), [](char c){ return std::toupper(c); });
+        return str;
     }
 
     static std::string 
-    toLower( std::string s ) 
+    toLower( std::string str ) 
     {
-        std::transform(s.begin(), s.end(), s.begin(), [](char c){ return std::tolower(c); });
-        return s;
+        std::transform(str.begin(), str.end(), str.begin(), [](char c){ return std::tolower(c); });
+        return str;
     }
     
     
@@ -121,6 +125,16 @@ public:
     static std::vector<std::string>
     split( std::string str, const std::regex &delim );
 
+    
+    // removes any trailing string that equals the value of sym (typically newline "\n")
+    // when sym = "" remove all trailing newlines - returns number of symbols removed
+    static int
+    chomp( std::string &str, const std::string &sym = "\n" );
+
+    // returns the total number of symbols removed from all its arguments.
+    static int
+    chomp( std::vector<std::string> &strvec, const std::string &sym = "\n" );
+    
     
     // remove whitespace 
     static std::string 
@@ -157,20 +171,17 @@ public:
     static std::string 
     clip( const std::string &str, const std::regex &lexp, const std::regex &rexp ) { return rclip(lclip(str, lexp), rexp); }
     
-    
     static std::string 
     clip( const std::string &str, const std::string &sym ) { return rclip(lclip(str, sym), sym); }
     
     static std::string 
     clip( const std::string &str, const std::regex &exp ) { return rclip(lclip(str, exp), exp); }
     
-    
     static std::string 
     lclip( const std::string &str, const std::string &sym ) { return lclip(str, std::regex(R"(^\s*)" + escape(sym))); }
 
     static std::string 
     rclip( const std::string &str, const std::string &sym ) { return rclip(str, std::regex(escape(sym) + R"(\s*$)")); }
-    
     
     static std::string 
     lclip( std::string str, const std::regex &exp )
@@ -186,6 +197,7 @@ public:
         return (std::regex_search(str, match, exp)) ? match.prefix() : str;
     }
 
+    
     // add/override mappings as you see fit
     // never use the same character in the accent key and the ascii value 
     static void
@@ -201,12 +213,10 @@ private:
 
     static void setup( void );
     
-
     static const std::regex m_left_whitespace;
     static const std::regex m_right_whitespace;
     static const std::regex m_left_quotes;
     static const std::regex m_right_quotes;
-
 
     static std::map<std::string, std::string> m_escape;
     static std::map<std::string, std::string> m_diacritic;

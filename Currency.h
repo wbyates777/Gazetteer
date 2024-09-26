@@ -1,8 +1,8 @@
 /* Currency 10/09/09
 
-		$$$$$$$$$$$$$$$$$$$$$$$$$$$
-		$   Currency.h - header   $
-		$$$$$$$$$$$$$$$$$$$$$$$$$$$
+        $$$$$$$$$$$$$$$$$$$$$$$$$$$
+        $   Currency.h - header   $
+        $$$$$$$$$$$$$$$$$$$$$$$$$$$
 
    by W.B. Yates    
    Copyright (c) W.B. Yates. All rights reserved 
@@ -28,7 +28,7 @@
    Example 1
 
    Currency ccy1(Currency::USD);
-   std::cout << ccy1 << std::endl;	
+   std::cout << ccy1 << std::endl;    
 
    Currency ccy2("USD");
    std::cout << ccy2 << std::endl;
@@ -37,11 +37,11 @@
    std::cout << ccy3 << std::endl;
 
    Currency ccy4(Currency::SVC);
-   std::cout << ccy4 << std::endl;	
+   std::cout << ccy4 << std::endl;    
 
    Currency ccy5("SVC");
    std::cout << ccy5.name() << std::endl;
-   std::cout << ccy5.toString() << std::endl;
+   std::cout << ccy5.to3Code() << std::endl;
 
    Currency ccy6(Currency::SVC);
    std::cout << short(ccy6) << std::endl;
@@ -72,7 +72,7 @@ class Currency
 {
 public:
 
-	// The value of the enum elements are the ISO numeric code for each currency. 
+    // The value of the enum elements are the ISO numeric code for each currency. 
     // Note NOCURRENCY, MAXCURRENCY, and NUMCURRENCY are not ISO codes.
     enum CurrencyCode : short {
     NOCURRENCY = 0,
@@ -104,58 +104,59 @@ public:
     MAXCURRENCY = 1000, NUMCURRENCY = 242 
     };
     
-	Currency( void ): m_ccy(m_baseCurrency) {}
-	~Currency( void ) { m_ccy = NOCURRENCY; }
-	
-	// non-explicit constructors intentional here
-	Currency( CurrencyCode i ): m_ccy(i) {} // e.g. i = Currency::GBP
-	Currency( const std::string &s ): m_ccy(NOCURRENCY) { setCurrency(s); }
-	Currency( const char *s ): m_ccy(NOCURRENCY) { if (s) setCurrency(s); } 
+    Currency( void ): m_ccy(m_baseCurrency) {}
+    ~Currency( void ) { m_ccy = NOCURRENCY; }
+    
+    // non-explicit constructors intentional here
+    Currency( CurrencyCode i ): m_ccy(i) {} // e.g. i = Currency::GBP
+    Currency( const std::string &s ): m_ccy(NOCURRENCY) { setCurrency(s); }
+    Currency( const char *s ): m_ccy(NOCURRENCY) { if (s) setCurrency(s); } 
 
-	// The ISO numeric code for this currency e.g. Currency::GBP = 826 
-	operator short( void ) const { return m_ccy; }
+    // The ISO numeric code for this currency e.g. Currency::GBP = 826 
+    operator short( void ) const { return m_ccy; }
 
-	// The ISO 3 letter code for this currency e.g. "GBP"
+    // The ISO 3 letter code for this currency e.g. "GBP"
     std::string
-    to3Code( void ) const { return m_ccyCodes[m_fromISO[m_ccy]]; }
-		
-	// e.g. s = "GBP"
-	bool
-	setCurrency( const std::string &s ); 
+    to3Code( void ) const { return m_codes[m_fromISO[m_ccy]]; }
+        
+    // e.g. s = "GBP"
+    bool
+    setCurrency( const std::string &s ); 
 
-	// e.g. s = Currency::GBP
-	void
-	setCurrency( CurrencyCode s ) { m_ccy = s; } 
+    // e.g. s = Currency::GBP
+    void
+    setCurrency( CurrencyCode s ) { m_ccy = s; } 
 
     std::string
-    name( void ) const  { return m_denomNames[m_fromISO[m_ccy]]; }  // e.g. "Pound Sterling"
+    name( void ) const  { return m_fullNames[m_fromISO[m_ccy]]; }  // e.g. "Pound Sterling"
 
-	static Currency
-	baseCurrency( void ) { return m_baseCurrency; }
-	
-	static void // not thread safe
-	baseCurrency( const Currency &c ) { m_baseCurrency = c; }
+    static Currency
+    baseCurrency( void ) { return m_baseCurrency; }
+    
+    static void // not thread safe
+    baseCurrency( const Currency &c ) { m_baseCurrency = c; }
 
-	static Currency
-	index( int i ) { return CurrencyCode(m_toISO[i]); }	
+    static Currency
+    index( int i ) { return CurrencyCode(m_toISO[i]); }    
 
     static int
-	index( const Currency &c ) { return m_fromISO[c]; }
+    index( const Currency &c ) { return m_fromISO[c]; }
     
     bool                
-	valid( void ) const { return m_ccy != NOCURRENCY; }
-	
-private:
-	
-	short m_ccy; 
+    valid( void ) const { return m_ccy != NOCURRENCY; }
     
-	static Currency m_baseCurrency;
-	static const char * const m_ccyCodes[NUMCURRENCY];
-	static const char * const m_denomNames[NUMCURRENCY];
-	static const short        m_toISO[NUMCURRENCY]; 
-	static const short        m_fromISO[MAXCURRENCY]; 
-    static const short        m_searchPoints[27]; 
-    static const short        m_midPoints[26]; 
+private:
+    
+    short m_ccy; 
+    
+    static const short m_search[28]; 
+    static const short m_midPoints[26]; 
+    static const short m_fromISO[MAXCURRENCY]; 
+    static const short m_toISO[NUMCURRENCY]; 
+    static const char * const m_codes[NUMCURRENCY];
+    static const char * const m_fullNames[NUMCURRENCY];
+    
+    static Currency m_baseCurrency;
 };
 
 

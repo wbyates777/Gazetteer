@@ -1,8 +1,8 @@
 /* Currency 10/09/09
 
-		$$$$$$$$$$$$$$$$$$$$$$$$$$$
-		$   Currency.cpp - code   $
-		$$$$$$$$$$$$$$$$$$$$$$$$$$$
+        $$$$$$$$$$$$$$$$$$$$$$$$$$$
+        $   Currency.cpp - code   $
+        $$$$$$$$$$$$$$$$$$$$$$$$$$$
 
    by W.B. Yates    
    Copyright (c) W.B. Yates
@@ -33,60 +33,37 @@
 std::ostream&
 operator<<( std::ostream &ostr, const Currency &c )
 {
-	ostr << c.to3Code();
-	return ostr;
+    ostr << c.to3Code();
+    return ostr;
 }
 
 std::istream&
 operator>>( std::istream &istr, Currency &c )
 {
-	std::string str;
-	istr >> str;
-	c.setCurrency( str );
-	return istr;
+    std::string str;
+    istr >> str;
+    c.setCurrency( str );
+    return istr;
 }
 
 //
 //
 //
-
-// default base currency
-Currency Currency::m_baseCurrency = Currency::USD;
-
-// the binary chop algorithm complexity is log2(N)−1 for the expected number of 
-// probes in an average successful search, and the worst case is log2(N)
-// the search points array means that N is now the size of a (smaller) alphabetic 
-// partiton at the cost of a single probe.
-// also note that the algorithm work efficiently in the presence of singleton currencies such as OMR and QAR
-// note NOCURRENCY is 0
-const short Currency::m_searchPoints[27] = {
-//  A,  B,  C,  D,  E,  F,  G,  H,  I,  J,   K,   L,   M,   N,   O,   P,   Q,   R,   S,   T,   U,   V,   W,   X    Y,   Z,  Z + 1 
-    1, 17, 39, 57, 63, 72, 76, 86, 91, 99, 102, 111, 120, 139, 146, 147, 156, 157, 163, 184, 197, 207, 213, 214, 231, 235, 242, 
-};
-
-
-// this speeds up setCurrency quite a bit as E leads to EUR, G leads to GBP, J leads to JPY, and U to USD 
-// in practice these are heavily used currencies
-const short Currency::m_midPoints[26] =
-{
-//  A,  B,  C,  D,  E,  F,  G,  H,  I,  J,   K,   L,   M,   N,   O,   P,   Q,   R,   S,   T,   U,   V,   W,   X    Y,   Z
-    8, 27, 47, 59, 71, 73, 76, 88, 94, 101, 106, 115, 129, 142, 146, 151, 156, 159, 173, 190, 200, 209, 213, 222, 232, 238,
-};
 
 
 
 bool
 Currency::setCurrency( const std::string &str )
 // https://en.wikipedia.org/wiki/Binary_search_algorithm
-{	
+{    
     // assert(str.size() == 3);
     if (str.size() != 3)
     {
         m_ccy = Currency::XXX; // NOCURRENCY
         return false;
     }
-	
-    int index = str[0] - 'A'; // 'A' = 65;
+    
+    const int index = str[0] - 'A'; // 'A' = 65;
     // assert(index > -1 && index < 26);
     if (index < 0 || index > 25)
     {
@@ -94,14 +71,14 @@ Currency::setCurrency( const std::string &str )
         return false;
     }
     
-	int low   = m_searchPoints[index]; 
-	int high  = m_searchPoints[index + 1]; 
+    int low   = m_search[index]; 
+    int high  = m_search[index + 1]; 
     int mid   = m_midPoints[index];
     int i;
     
-	while (low < high)  
-	{
-        const char * const ccy = m_ccyCodes[mid];
+    while (low < high)  
+    {
+        const char * const ccy = m_codes[mid];
 
         for (i = 1; i < 3; ++i)
         {
@@ -124,11 +101,11 @@ Currency::setCurrency( const std::string &str )
         if (i == 3)
         {
             m_ccy = m_toISO[mid]; 
-			return true;
+            return true;
         }
         
-        mid = low + ((high - low) >> 1);
-	} 
+        mid = ((high + low) >> 1);
+    } 
 
     m_ccy = Currency::XXX; // NOCURRENCY
     return false;
@@ -136,35 +113,27 @@ Currency::setCurrency( const std::string &str )
 
 // tables generated automatically
 
-
-
-const short Currency::m_toISO[NUMCURRENCY] = { NOCURRENCY,
-    ADP, AED, AFA, AFN, ALL, AMD, ANG, AOA, AON, AOR, 
-    ARS, ATS, AUD, AWG, AZM, AZN, BAD, BAM, BBD, BDT, 
-    BEC, BEF, BEL, BGL, BGN, BHD, BIF, BMD, BND, BOB, 
-    BOV, BRL, BSD, BTN, BWP, BYN, BYR, BZD, CAD, CDF, 
-    CHC, CHE, CHF, CHW, CLF, CLP, CNY, COP, COU, CRC, 
-    CSK, CUC, CUP, CVE, CYP, CZK, DDM, DEM, DJF, DKK, 
-    DOP, DZD, ECS, EEK, EGP, ERN, ESA, ESB, ESP, ETB, 
-    EUR, FIM, FJD, FKP, FRF, GBP, GEL, GHS, GIP, GMD, 
-    GNF, GRD, GTQ, GWP, GYD, HKD, HNL, HRK, HTG, HUF, 
-    IDR, IEP, ILS, INR, IQD, IRR, ISK, ITL, JMD, JOD, 
-    JPY, KES, KGS, KHR, KMF, KPW, KRW, KWD, KYD, KZT, 
-    LAK, LBP, LKR, LRD, LSL, LTL, LUF, LVL, LYD, MAD, 
-    MDL, MGA, MGF, MKD, MMK, MNT, MOP, MRO, MRU, MTL, 
-    MUR, MVR, MWK, MXN, MXV, MYR, MZM, MZN, NAD, NGN, 
-    NIO, NLG, NOK, NPR, NZD, OMR, PAB, PEN, PGK, PHP, 
-    PKR, PLN, PLZ, PTE, PYG, QAR, ROL, RON, RSD, RUB, 
-    RUR, RWF, SAR, SBD, SCR, SDD, SDG, SEK, SGD, SHP, 
-    SIT, SKK, SLE, SLL, SOS, SRD, SRG, SSP, STD, STN, 
-    SVC, SYP, SZL, THB, TJR, TJS, TMM, TMT, TND, TOP, 
-    TPE, TRL, TRY, TTD, TWD, TZS, UAH, UAK, UGX, USD, 
-    USN, USS, UYI, UYU, UYW, UZS, VEB, VED, VEF, VES, 
-    VND, VUV, WST, XAF, XAG, XAU, XBA, XBB, XBC, XBD, 
-    XCD, XDR, XOF, XPD, XPF, XPT, XSU, XTS, XUA, XXX, 
-    YDD, YER, YUD, YUM, ZAL, ZAR, ZMK, ZMW, ZRN, ZWD, 
-    ZWL
+// the binary chop algorithm complexity is log2(N)−1 for the expected number of 
+// probes in an average successful search, and the worst case is log2(N)
+// the search points array means that N is now the size of a (smaller) alphabetic 
+// partiton at the cost of a single probe.
+// also note that the algorithm work efficiently in the presence of singleton currencies such as OMR and QAR
+// note NOCURRENCY is 0
+const short Currency::m_search[28] = {
+//  A,  B,  C,  D,  E,  F,  G,  H,  I,  J,   K,   L,   M,   N,   O,   P,   Q,   R,   S,   T,   U,   V,   W,   X    Y,   Z,  Z + 1 
+    1, 17, 39, 57, 63, 72, 76, 86, 91, 99, 102, 111, 120, 139, 146, 147, 156, 157, 163, 184, 197, 207, 213, 214, 231, 235, 242, -1
 };
+
+
+// this speeds up setCurrency quite a bit as E leads to EUR, G leads to GBP, J leads to JPY, and U to USD 
+// in practice these are heavily used currencies 
+const short Currency::m_midPoints[26] =
+{
+//  A,  B,  C,  D,  E,  F,  G,  H,  I,  J,   K,   L,   M,   N,   O,   P,   Q,   R,   S,   T,   U,   V,   W,   X    Y,   Z
+    8, 27, 47, 59, 71, 73, 76, 88, 94, 101, 106, 115, 129, 142, 146, 151, 156, 159, 173, 190, 200, 209, 213, 222, 232, 238,
+};
+
+
 
 const short Currency::m_fromISO[MAXCURRENCY] = {
     0, 0, 0, 0, 3, 0, 0, 0, 5, 0, 
@@ -269,8 +238,35 @@ const short Currency::m_fromISO[MAXCURRENCY] = {
     45, 235, 23, 21, 227, 68, 67, 201, 202, 230
 };
 
+const short Currency::m_toISO[NUMCURRENCY] = { NOCURRENCY,
+    ADP, AED, AFA, AFN, ALL, AMD, ANG, AOA, AON, AOR, 
+    ARS, ATS, AUD, AWG, AZM, AZN, BAD, BAM, BBD, BDT, 
+    BEC, BEF, BEL, BGL, BGN, BHD, BIF, BMD, BND, BOB, 
+    BOV, BRL, BSD, BTN, BWP, BYN, BYR, BZD, CAD, CDF, 
+    CHC, CHE, CHF, CHW, CLF, CLP, CNY, COP, COU, CRC, 
+    CSK, CUC, CUP, CVE, CYP, CZK, DDM, DEM, DJF, DKK, 
+    DOP, DZD, ECS, EEK, EGP, ERN, ESA, ESB, ESP, ETB, 
+    EUR, FIM, FJD, FKP, FRF, GBP, GEL, GHS, GIP, GMD, 
+    GNF, GRD, GTQ, GWP, GYD, HKD, HNL, HRK, HTG, HUF, 
+    IDR, IEP, ILS, INR, IQD, IRR, ISK, ITL, JMD, JOD, 
+    JPY, KES, KGS, KHR, KMF, KPW, KRW, KWD, KYD, KZT, 
+    LAK, LBP, LKR, LRD, LSL, LTL, LUF, LVL, LYD, MAD, 
+    MDL, MGA, MGF, MKD, MMK, MNT, MOP, MRO, MRU, MTL, 
+    MUR, MVR, MWK, MXN, MXV, MYR, MZM, MZN, NAD, NGN, 
+    NIO, NLG, NOK, NPR, NZD, OMR, PAB, PEN, PGK, PHP, 
+    PKR, PLN, PLZ, PTE, PYG, QAR, ROL, RON, RSD, RUB, 
+    RUR, RWF, SAR, SBD, SCR, SDD, SDG, SEK, SGD, SHP, 
+    SIT, SKK, SLE, SLL, SOS, SRD, SRG, SSP, STD, STN, 
+    SVC, SYP, SZL, THB, TJR, TJS, TMM, TMT, TND, TOP, 
+    TPE, TRL, TRY, TTD, TWD, TZS, UAH, UAK, UGX, USD, 
+    USN, USS, UYI, UYU, UYW, UZS, VEB, VED, VEF, VES, 
+    VND, VUV, WST, XAF, XAG, XAU, XBA, XBB, XBC, XBD, 
+    XCD, XDR, XOF, XPD, XPF, XPT, XSU, XTS, XUA, XXX, 
+    YDD, YER, YUD, YUM, ZAL, ZAR, ZMK, ZMW, ZRN, ZWD, 
+    ZWL
+};
 
-const char * const Currency::m_ccyCodes[NUMCURRENCY] = { "NOCURRENCY", 
+const char * const Currency::m_codes[NUMCURRENCY] = { "NOCURRENCY", 
     "ADP", "AED", "AFA", "AFN", "ALL", "AMD", "ANG", "AOA", "AON", "AOR", 
     "ARS", "ATS", "AUD", "AWG", "AZM", "AZN", "BAD", "BAM", "BBD", "BDT", 
     "BEC", "BEF", "BEL", "BGL", "BGN", "BHD", "BIF", "BMD", "BND", "BOB", 
@@ -298,7 +294,7 @@ const char * const Currency::m_ccyCodes[NUMCURRENCY] = { "NOCURRENCY",
     "ZWL"
 };
 
-const char * const Currency::m_denomNames[NUMCURRENCY] = { "No Currency",
+const char * const Currency::m_fullNames[NUMCURRENCY] = { "No Currency",
     "Andorran Peseta (1:1 peg to the Spanish Peseta)", "UAE Dirham", "Afghani", "Afghani", "Lek", "Armenian Dram", "Netherlands Antillian Guilder", "Kwanza", "Angolan New Kwanza", "Angolan Kwanza Readjustado", 
     "Argentine Peso", "Austrian Schilling", "Australian Dollar", "Aruban Guilder", "Azerbaijani Manat", "Azerbaijanian Manat", "Bosnia and Herzegovina Dinar", "Convertible Marks", "Barbados Dollar", "Taka", 
     "Belgian Franc (convertible)", "Belgian Franc (currency union with LUF)", "Belgian Franc (financial)", "Bulgarian Lev A/99", "Bulgarian Lev", "Bahraini Dinar", "Burundi Franc", "Bermudian Dollar", "Brunei Dollar", "Boliviano", 
@@ -325,10 +321,13 @@ const char * const Currency::m_denomNames[NUMCURRENCY] = { "No Currency",
     "South Yemeni Dinar", "Yemeni Rial", "Yugoslav Dinar", "Yugoslav Dinar", "South African Financial Rand (funds code)", "Rand", "Zambian Kwacha", "Zambian Kwacha", "Zairean New Zaire", "Zimbabwe Dollar", 
     "Zimbabwe Dollar"
 };
-//
-//
-//	
 
 
+// default base currency
+Currency Currency::m_baseCurrency = Currency::USD;
+
+//
+//
+//    
 
 

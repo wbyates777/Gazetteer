@@ -10,7 +10,6 @@
  
  ISO 2 and 3 letter codes supported.
  
- 
  Notes 
  
  (i)   User-assigned code elements are codes at the disposal of users who need to add further names of countries, 
@@ -26,15 +25,14 @@
  https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
  
  
- TODO: could add 'UNK' - identifies Kosovo residents issued travel documents by United Nations Interim Administration in Kosovo (UNMIK)
- 
- 
  Example 
  
  Country w;
  w.setCountry( Country::US );
  std::cout << w << std::endl;
  std::cout << w.name() << std::endl;
+ std::cout << w.to2Code() << std::endl;
+ std::cout << w.to3Code() << std::endl;
  std::cout << short(w) << std::endl; 
  std::cout << std::endl;
  
@@ -42,6 +40,8 @@
  x.setCountry( "GH3" );
  std::cout << x << std::endl;
  std::cout << x.name() << std::endl;
+ std::cout << x.to2Code() << std::endl;
+ std::cout << x.to3Code() << std::endl;
  std::cout << short(x) << std::endl;
  std::cout << std::endl;
  
@@ -49,6 +49,7 @@
  y.setCountry( "TF" );
  std::cout << y << std::endl;
  std::cout << y.name() << std::endl;
+ std::cout << y.to2Code() << std::endl;
  std::cout << y.to3Code() << std::endl;
  std::cout << short(y) << std::endl; 
  std::cout << std::endl;
@@ -58,6 +59,7 @@
  std::cout << z << std::endl;
  std::cout << z.name() << std::endl;
  std::cout << z.to2Code() << std::endl;
+ std::cout << z.to3Code() << std::endl;
  std::cout << short(z) << std::endl;
  std::cout << std::endl;
  
@@ -80,7 +82,7 @@ public:
     // The value of the enum elements are the ISO numeric code for each country. 
     // Note NOCOUNTRY, XXX, EUR, XAF, XCD, XOF, XPF, NUMCOUNTRY, and MAXCOUNTRY are not ISO country codes.
     // The non-ISO codes EUR, XAF, XCD, XOF, XPF represent currency unions between countries.
-    enum CountryCode  : short {
+    enum CountryCode  : short { 
         NOCOUNTRY = 0,
         AW = 533, ABW = 533, AF = 4, AFG = 4, AO = 24, AGO = 24, AI = 660, AIA = 660, AX = 248, ALA = 248, AL = 8, ALB = 8, AD = 20, AND = 20, AE = 784, ARE = 784, AR = 32, ARG = 32, AM = 51, ARM = 51, 
         AS = 16, ASM = 16, AQ = 10, ATA = 10, TF = 260, ATF = 260, AG = 28, ATG = 28, AU = 36, AUS = 36, AT = 40, AUT = 40, AZ = 31, AZE = 31, BI = 108, BDI = 108, BE = 56, BEL = 56, BJ = 204, BEN = 204, 
@@ -107,9 +109,9 @@ public:
         TJ = 762, TJK = 762, TK = 772, TKL = 772, TM = 795, TKM = 795, TL = 626, TLS = 626, TO = 776, TON = 776, TT = 780, TTO = 780, TN = 788, TUN = 788, TR = 792, TUR = 792, TV = 798, TUV = 798, TW = 158, TWN = 158, 
         TZ = 834, TZA = 834, UG = 800, UGA = 800, UA = 804, UKR = 804, UM = 581, UMI = 581, UY = 858, URY = 858, US = 840, USA = 840, UZ = 860, UZB = 860, VA = 336, VAT = 336, VC = 670, VCT = 670, VE = 862, VEN = 862, 
         VG = 92, VGB = 92, VI = 850, VIR = 850, VN = 704, VNM = 704, VU = 548, VUT = 548, WF = 876, WLF = 876, WS = 882, WSM = 882, XA = 1002, XAF = 1002, XC = 1003, XCD = 1003, XO = 1004, XOF = 1004, XP = 1005, XPF = 1005, 
-        XX = 1006, XXX = 1006, YE = 887, YEM = 887, ZA = 710, ZAF = 710, ZM = 894, ZMB = 894, ZW = 716, ZWE = 716,		
+        XX = 1006, XXX = 1006, YE = 887, YEM = 887, ZA = 710, ZAF = 710, ZM = 894, ZMB = 894, ZW = 716, ZWE = 716,        
         MAXCOUNTRY = 1010, NUMCOUNTRY = 256
-    };	
+    };    
     
     Country( void ): m_country(NOCOUNTRY) {}
     ~Country( void ) { m_country = NOCOUNTRY; }
@@ -121,27 +123,33 @@ public:
     
     // The ISO numeric code for this country e.g. Country::GBR = 826
     operator short( void ) const { return m_country; }
+        
+    // The ISO 2 letter code for this country e.g. "GB"
+    std::string
+    to2Code( void ) const { return m_codes2Print[m_fromISO[m_country]]; } 
     
     // The ISO 3 letter code for this country e.g. "GBR"
     std::string
-    to3Code( void ) const { return m_country3Codes[m_fromISO[m_country]]; } 
-    
-    // The ISO 2 letter code for this country e.g. "GB"
+    to3Code( void ) const { return m_codes3[m_fromISO[m_country]]; } 
+
     std::string
-    to2Code( void ) const { return m_country2Codes[m_fromISO[m_country]]; } 
-    
-    std::string
-    name( void ) const { return m_fullCountryNames[m_fromISO[m_country]]; } // i.e "United Kingdom"
+    name( void ) const { return m_fullNames[m_fromISO[m_country]]; } // i.e "United Kingdom"
     
     bool
-    setCountry( const std::string &s ); // ISO 3 letter codes e.g. s = "GBR" 
+    setCountry( const std::string &s );  // ISO 2 or 3 letter codes e.g. s = "GBR" or "GB"
+
+    bool
+    set2Country( const std::string &s ); // ISO 2 letter codes e.g. s =  "GB"
+    
+    bool
+    set3Country( const std::string &s ); // ISO 3 letter codes e.g. s = "GBR"
     
     void
-    setCountry( CountryCode s ) { m_country = s; } // e.g. s = Country::GBR
+    setCountry( CountryCode s ) { m_country = s; } // e.g. s = Country::GBR or s = Country::GB
     
     // Countries are ordered according to the 3 code alphabetical ordering
     static Country
-    index( int i ) { return CountryCode(m_toISO[i]); }
+    index( int i ) { return CountryCode(m_toISO3[i]); }
     
     static int
     index( const Country &c ) { return m_fromISO[c]; }
@@ -153,13 +161,16 @@ private:
     
     short m_country; 
     
-    static const char * const m_country2Codes[NUMCOUNTRY];
-    static const char * const m_country3Codes[NUMCOUNTRY];
-    static const char * const m_fullCountryNames[NUMCOUNTRY];
-    static const short        m_fromISO[MAXCOUNTRY]; 
-    static const short        m_toISO[NUMCOUNTRY];
+    static const short m_search2[28]; 
+    static const short m_search3[28];
+    static const short m_fromISO[MAXCOUNTRY]; 
+    static const short m_toISO2[NUMCOUNTRY];
+    static const short m_toISO3[NUMCOUNTRY];
+    static const char * const m_codes2[NUMCOUNTRY];
+    static const char * const m_codes2Print[NUMCOUNTRY];
+    static const char * const m_codes3[NUMCOUNTRY];
+    static const char * const m_fullNames[NUMCOUNTRY];
 
-    static const short        m_searchPoints[27]; 
 };
 
 
@@ -171,9 +182,6 @@ operator>>( std::istream &istr, Country &c );
 
 
 #endif
-
-
-
 
 
 

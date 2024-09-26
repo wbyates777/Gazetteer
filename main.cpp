@@ -88,20 +88,22 @@ void
 demoCity(void)
 {
     City xx;
-    xx.setCity( "LGW" );
+    xx.setCity( "LON" );
     std::cout << xx << std::endl;
     std::cout << xx.name() << std::endl;
-    std::cout << xx.locode() << std::endl;
+    std::cout << xx.to3Code() << std::endl;
+    std::cout << xx.to5Code() << std::endl;
     std::cout << short(xx) << std::endl;
     std::cout << xx.capital() << std::endl;
     std::cout << "latitude = " << xx.lat() << std::endl;
     std::cout << "longitude = " << xx.lon() << std::endl << std::endl;
     
     City yy;
-    yy.setCity( "JFK" );
+    yy.setCity( "USNYC" );
     std::cout << yy << std::endl;
     std::cout << yy.name() << std::endl;
-    std::cout << yy.locode() << std::endl;
+    std::cout << yy.to3Code() << std::endl;
+    std::cout << yy.to5Code() << std::endl;
     std::cout << short(yy) << std::endl;
     std::cout << yy.capital() << std::endl;
     std::cout << "latitude = " << yy.lat() << std::endl;
@@ -113,7 +115,8 @@ demoCity(void)
     zz.setCity( "SCQ" );
     std::cout << zz << std::endl;
     std::cout << zz.name() << std::endl;
-    std::cout << zz.locode() << std::endl;
+    std::cout << zz.to3Code() << std::endl;
+    std::cout << zz.to5Code() << std::endl;
     std::cout << short(zz) << std::endl;
     std::cout << zz.capital() << std::endl;
     std::cout << "latitude = " << zz.lat() << std::endl;
@@ -224,7 +227,7 @@ demoMarket(void)
     std::cout << "latitude  : " << g.city(market).lat() << std::endl;
     std::cout << "longitude : " << g.city(market).lon() << std::endl << std::endl;
     
-    market.setMarketId( "A3579" ); 
+    market.setMarketId( "3579" ); 
     std::cout << "market    : " << market << std::endl;
     std::cout << "name      : " << market.name() << std::endl;
     std::cout << "id        : " << short(market) << std::endl; 
@@ -236,10 +239,10 @@ demoMarket(void)
     std::cout << "latitude  : " << g.city(market).lat() << std::endl;
     std::cout << "longitude : " << g.city(market).lon() << std::endl << std::endl;
     
-    market.setMarketId( "A360X" ); 
-    std::cout << market << std::endl;
-    std::cout << market.name() << std::endl;
-    std::cout << short(market) << std::endl;
+    market.setMarketId( "360X" ); 
+    std::cout << "market    : " << market << std::endl;
+    std::cout << "name      : " << market.name() << std::endl;
+    std::cout << "id        : " << short(market) << std::endl; 
     std::cout << "currency  : " << g.ccy(market).name() << " (" << g.ccy(market) << ")" << std::endl;
     std::cout << "city      : " << g.city(market).name() << " (" << g.city(market) << ")" << std::endl; 
     std::cout << "country   : " << g.country(market).name() << " (" << g.country(market) << ")" << std::endl;

@@ -17,7 +17,7 @@
   Countries with alphabets that employ diacritic signs include:
   AT, BO, BR, CH, CL, CR, DE, DK, FI, FO, FR, HU, IS, KR, MX, NO, PA, PE, PT, SE, SJ, TR and VN.  
  
-  Escape characters
+  Escape characters:
  
   \a = \x07 = alert (bell)
   \b = \x08 = backspace
@@ -26,6 +26,15 @@
   \v = \x0B = vertical tab
   \f = \x0C = form feed
   \r = \x0D = carriage return
+  \e = \x1B = escape (non-standard GCC extension)
+ 
+ 
+ Punctuation characters:
+
+  \" = quotation mark (backslash not required for '"')
+  \' = apostrophe (backslash not required for "'")
+  \? = question mark (used to avoid trigraphs)
+  \\ = backslash
  
   Character literals for 'A'
 
@@ -74,6 +83,27 @@ Name::deaccent( std::string str )
     
     return str;
 }
+
+bool
+Name::isRoman( const std::string &str )
+// https://en.wikipedia.org/wiki/ASCII
+// std::isalpha depends/varies on locale
+{
+    //  ASCII values
+    // 32      = ' '  // space
+    // 48-57   = [0-9]
+    // 65-90   = [A-Z]
+    // 97-122  = [a-z]
+    // 126     = '~'
+    // 128 = 
+    for (char c : str)
+    {
+        if (!((c >= 32 && c <= 126) || std::isspace(c)))
+            return false;
+    }
+    return true;
+}
+
 
 std::string
 Name::escape( const std::string &str )
@@ -140,6 +170,34 @@ Name::split( std::string str, const std::regex &delim )
     return retVal;
 }
 
+// removes any trailing string that corresponds to the value of sym (typically newline "\n")
+// when sym = "" remove all trailing newlines - returns the total number of symbols removed 
+int
+Name::chomp( std::string &str, const std::string &sym )
+{
+    std::regex exp = (sym.empty()) ? std::regex("\n+$") : std::regex(Name::escape(sym) + "$");
+    
+    std::smatch match;
+    if (std::regex_search(str, match, exp)) 
+    {
+        str =  match.prefix();
+        return (int) match.length() / std::max(1, (int) sym.size());
+    }
+    
+    return 0;
+}
+
+// returns the total number of symbols removed from all its arguments.
+int
+Name::chomp( std::vector<std::string> &strvec, const std::string &sym )
+{
+    int count = 0;
+    for (std::string &s : strvec)
+        count += chomp(s, sym);
+ 
+    return count;
+}
+
 std::string 
 Name::capitalise( const std::string &str )
 {
@@ -156,13 +214,15 @@ Name::capitalise( const std::string &str )
 }
 
 
+
 void
 Name::setup( void )
 // countires with alphabets that employ diacritic signs include:
 // AT, BO, BR, CH, CL, CR, DE, DK, FI, FO, FR, HU, IS, KR, MX, NO, PA, PE, PT, SE, SJ, TR and VN. 
 // https://service.unece.org/trade/locode/2024-1%20UNLOCODE%20SecretariatNotes.pdf
-// https://www.fileformat.info/info/charset/UTF-16/list.htm
 // https://www.codetable.net/unicodecharacters
+// https://www.fileformat.info/info/charset/UTF-16/list.htm
+// https://www.fileformat.info/info/unicode/block/latin_extended_additional/images.htm
 {
     //
     // std::regex special characters
@@ -260,11 +320,22 @@ Name::setup( void )
     m_diacritic["Ŧ"] = "T";
     m_diacritic["Ƭ"] = "T";
     m_diacritic["Ʈ"] = "T";
+    m_diacritic["Ṭ"] = "T";
     
     m_diacritic["Ú"] = "U";
     m_diacritic["Ù"] = "U";
     m_diacritic["Û"] = "U";
     m_diacritic["Ü"] = "U";
+    m_diacritic["Ŭ"] = "U";
+    m_diacritic["Ũ"] = "U";
+    m_diacritic["Ů"] = "U";
+    m_diacritic["Ū"] = "U";
+    
+    
+    m_diacritic["Ỳ"] = "Y"; 
+    m_diacritic["Ÿ"] = "Y"; 
+    m_diacritic["Ý"] = "Y"; 
+    
     
     m_diacritic["Ż"] = "Z";  
     m_diacritic["Z̧"] = "Z"; 
@@ -377,10 +448,12 @@ Name::setup( void )
     
     m_diacritic["ţ"] = "t"; 
     m_diacritic["ț"] = "t";
+    m_diacritic["ṭ"] = "t";
     
     m_diacritic["ů"] = "u";
     m_diacritic["ừ"] = "u"; 
     m_diacritic["ú"] = "u";
+    m_diacritic["ù"] = "u"; 
     m_diacritic["ū"] = "u";   
     m_diacritic["ü"] = "u";
     m_diacritic["ŭ"] = "u";
@@ -389,6 +462,7 @@ Name::setup( void )
     m_diacritic["ư"] = "u";
     
     m_diacritic["ý"] = "y";
+    m_diacritic["ỳ"] = "y"; 
     m_diacritic["ÿ"] = "y";
     
     m_diacritic["ż"] = "z"; 
