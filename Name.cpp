@@ -71,6 +71,8 @@ std::string
 Name::deaccent( std::string str )
 // substitute characters with accents -- slow
 {
+    assert(!m_diacritic.empty()); // call setup()
+ 
     // const std::map<std::string, std::string>::value_type& c
     for (auto &c : m_diacritic)
     {
