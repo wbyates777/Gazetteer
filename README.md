@@ -6,7 +6,7 @@ It allows the identification and location of exchanges, trading platforms, regul
 Gazetteer provides four lightweight, standalone identification classes: Country, Currency, MarketId and City.
 Country, Currency, and MarketId implement the ISO standards: ISO 3166-1 for country identification, ISO 4217 for currencies, and
 ISO 10383 for market identification. The City class employs IATA and UN/LOCODE codes for city identification,
-and latitude and longtitude for geolocation and distance.
+and latitude and longtitude for geolocation and distance. The City class also implements the public domain geocode system 'Geohash' for encoding and decoding geograpical positions.
  
 See: 
 
@@ -15,6 +15,7 @@ See:
     MICs       - https://en.wikipedia.org/wiki/Market_Identifier_Code 
     Cities     - https://en.wikipedia.org/wiki/IATA_airport_code, and
                  https://en.wikipedia.org/wiki/UN/LOCODE 
+                 https://en.wikipedia.org/wiki/Geohash
 
 The code depends soley on the standard template library STL
 
@@ -40,8 +41,9 @@ The following code:
     x.setCity( "LON" );
     y.setCity( "NYC" );
 
-    std::cout << "The distance between " << x.name() << " and " << y.name() << " is " << City::dist(x,y) / 1000.0 << " km" << std::endl << std::endl;
-
+    std::cout << "The distance between " << x.name() << " and " << y.name() << " is " << City::dist(x,y) / 1000.0 << " km" << std::endl;
+    std::cout << "The Geohash for position (57.64911, 10.40744) is " << City::geohash(57.64911, 10.40744, 11) << std::endl << std::endl;
+    
 produces the output:
 
     market    : XNYS
@@ -55,6 +57,7 @@ produces the output:
     LOCODE    : USNYC
 
     The distance between London and New York is 5579.86 km
+    The Geohash for position (57.64911, 10.40744) is u4pruydqqvj 
 
 
 Please report any errors, omissions, or suggested extensions to the email above.
