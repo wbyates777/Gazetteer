@@ -17,6 +17,7 @@
  
  Latitude and longitude of cities (not airports) is provided for geograpical positioning and the calculation of distances between cities.
  Geodetic distances (in metres) between points specified by latitude/longitude are calculated using the Vincenty method.
+ This class also supports geohash encoding and decoding of geograpical positions ( see https://en.wikipedia.org/wiki/Geohash )
  
  This class supports the 5 digit UN/LOCODE for most cities. For the 8 cities without a UN/LOCODE we have 
  used XXXXX or [country2code][mycity3code]. The city 'No City' has been assigned the code XXXXX. 
@@ -124,6 +125,8 @@ as it doesn't clash with an existing IATA code). These are:
 
 #include <string>
 #include <iostream>
+
+typedef std::pair<double, double> GeoPoint; // (latitude, longitude)
 
 #undef NAN // There is a CityCode 'NAN'
 
@@ -369,21 +372,43 @@ public:
     capital( void ) const { return m_capital[m_fromISO[m_city]]; }
     
     
+
     // latitude
-    float 
+    double 
     lat( void ) const { return m_position[m_fromISO[m_city]][0]; }
     
     // longitude
-    float 
+    double 
     lon( void ) const { return m_position[m_fromISO[m_city]][1]; }
     
-    // distance (in metres) calculated using Vincenty inverse solution
-    static float
-    dist( const City &c1, const City &c2 ) { return City::dist(c1.lat(), c1.lon(), c2.lat(), c2.lon()); };
+    GeoPoint // (lat, lon)
+    pos( void ) const { return GeoPoint(m_position[m_fromISO[m_city]][0], m_position[m_fromISO[m_city]][1]); }
     
-    static float
-    dist( float lat1, float lon1, float lat2, float lon2 );
+    
+    // distance (in metres) calculated using Vincenty inverse solution
+    static double
+    dist( const City &c1, const City &c2 ) { return City::dist(c1.pos(), c2.pos()); };
+    
+    static double
+    dist( const GeoPoint &p1, const GeoPoint &p2 ) { return dist(p1.first, p1.second, p2.first, p2.second); }
 
+    static double
+    dist( double lat1, double lon1, double lat2, double lon2 );
+    
+    
+    // public domain geocode standard which encodes a geographic location into a short string of letters and digits
+    static GeoPoint
+    geohash( const std::string &hashvalue );
+
+    static std::string
+    geohash( const City &city, int precision = 12 ) { return geohash(city.pos(), precision); }
+    
+    static std::string
+    geohash( const GeoPoint &pos, int precision = 12 ) { return geohash(pos.first, pos.second, precision); }
+    
+    static std::string
+    geohash( double lat, double lon, int precision = 12 );
+    
     
     static City
     index( int i ) { return CityCode(m_toISO3[i]); }
@@ -396,8 +421,13 @@ public:
     
 private:
     
+    static unsigned int 
+    index_for_char(char c);
+    
     short m_city; 
 
+    static const char  m_char_map[33];
+    
     static const short         m_search3[28]; 
     static const short         m_search5[28]; 
     static const short         m_fromISO[MAXCITY]; 

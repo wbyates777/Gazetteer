@@ -44,9 +44,6 @@ operator>>( std::istream &istr, City &c )
 //
 //
 
-
-// we could accelerate access to 'important' cities i.e. NYC, LON, TYO see Currency
-
 bool
 City::set3City( const std::string &str )
 // https://en.wikipedia.org/wiki/Binary_search_algorithm
@@ -158,7 +155,6 @@ City::set5City( const std::string &str )
 
 bool
 City::setCity( const std::string &str )
-// https://en.wikipedia.org/wiki/Binary_search_algorithm
 {    
     //assert(str.size() == 3 || str.size() == 5);
 
@@ -199,8 +195,8 @@ City::setCity( const std::string &str )
 // { "GRS_80",      1980,  6378137.0,  6356752.31414036, 1.0/298.257222101 },
 // { "Hughes_1980", 1980,  6378273.0,  6356889.44820259, 1.0/298.2794 },
 
-float
-City::dist( float lat1, float lon1, float lat2, float lon2 ) 
+double
+City::dist( double lat1, double lon1, double lat2, double lon2 ) 
 /**
 * Calculates geodetic distance in metres between two points specified by latitude/longitude using 
 * Vincenty inverse formula for ellipsoids
@@ -276,6 +272,179 @@ City::dist( float lat1, float lon1, float lat2, float lon2 )
    // double revAz = std::atan2(cosU1 * sinLambda, -sinU1 * cosU2 + cosU1 * sinU2 * cosLambda);
    // return std::pair<double,double>( fwdAz * R2D, revAz * R2D );
 }
+
+
+// A c++ rewrite of  libgeohash see https://github.com/simplegeo/libgeohash
+
+/*
+ *  geohash.c
+ *  libgeohash
+ *
+ *  Created by Derek Smith on 10/6/09.
+ *  Copyright (c) 2010, SimpleGeo
+ *      All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without 
+ *  modification, are permitted provided that the following conditions are met:
+
+ *  Redistributions of source code must retain the above copyright notice, this list
+ *  of conditions and the following disclaimer. Redistributions in binary form must 
+ *  reproduce the above copyright notice, this list of conditions and the following 
+ *  disclaimer in the documentation and/or other materials provided with the distribution.
+ *  Neither the name of the SimpleGeo nor the names of its contributors may be used
+ *  to endorse or promote products derived from this software without specific prior 
+ *  written permission. 
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+ *  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL 
+ *  THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ *  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE 
+ *  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED 
+ *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+ *  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+ *  OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ */
+
+/* Normal 32 characer map used for geohashing */
+const char City::m_char_map[33] =  "0123456789bcdefghjkmnpqrstuvwxyz"; 
+
+
+typedef struct IntervalStruct 
+{
+    double high;
+    double low;
+} Interval;
+
+
+unsigned int 
+City::index_for_char(char c) 
+{
+    int index = -1;
+ 
+    for (int i = 0; i < 33; ++i) 
+    {
+        if (c == m_char_map[i]) 
+        {
+            index = i; 
+            break;
+        }
+    }
+    
+    return index;
+}
+
+std::string
+City::geohash( double lat, double lng, int precision ) 
+{
+    
+    if (precision < 1 || precision > 12)
+        precision = 6;
+    
+    std::string hash;
+    
+    if (lat <= 90.0 && lat >= -90.0 && lng <= 180.0 && lng >= -180.0) 
+    {
+
+        hash.resize(precision);
+        
+        precision *= 5;
+        
+        Interval lat_interval = {90.0, -90.0}; 
+        Interval lng_interval = {180.0, -180.0};
+
+   
+        int is_even = 1;
+        unsigned int hashChar = 0;
+    
+        for ( int i = 1; i <= precision; ++i ) 
+        {
+            Interval *interval;
+            double coord;
+            
+            if (is_even) 
+            {
+                interval = &lng_interval;
+                coord = lng;                
+            } 
+            else 
+            {
+                interval = &lat_interval;
+                coord = lat;   
+            }
+            
+            double mid = (interval->low + interval->high) * 0.5;
+            hashChar = hashChar << 1;
+            
+            if (coord > mid)
+            {
+                interval->low = mid;
+                hashChar |= 0x01;
+            } 
+            else 
+            {
+                interval->high = mid;
+            }
+            
+            if (!(i % 5))
+            {
+                hash[(i - 1) / 5] = m_char_map[hashChar];
+                hashChar = 0;
+            }
+            
+            is_even = !is_even;
+        }
+    }
+    
+    return hash;
+}
+
+GeoPoint 
+City::geohash(const std::string &hash) 
+{
+    GeoPoint coord = {0.0, 0.0};
+    
+    if (hash.empty())
+        return coord;
+    
+    Interval lat_interval = {90.0, -90.0}; 
+    Interval lng_interval = {180.0, -180.0};
+
+    int is_even = 1;
+
+    for (int i = 0; i < hash.size(); ++i) 
+    {
+        unsigned int char_mapIndex = index_for_char(hash[i]);
+        
+        if (char_mapIndex < 0)
+            break;
+        
+        // interpret the last 5 bits of the integer
+        for (int j = 0; j < 5; ++j) 
+        {
+            Interval *interval = is_even ? &lng_interval : &lat_interval;
+            
+            double delta = (interval->high - interval->low) * 0.5;
+            
+            if ((char_mapIndex << j) & 0x0010)
+                interval->low += delta;
+            else interval->high -= delta;
+            
+            is_even = !is_even;
+        }
+    }
+    coord.first  = lat_interval.high - ((lat_interval.high - lat_interval.low) * 0.5); 
+    coord.second = lng_interval.high - ((lng_interval.high - lng_interval.low) * 0.5); 
+    
+   // coord.north = lat_interval.high;
+   // coord.east  = lng_interval.high;
+   // coord.south = lat_interval.low;
+   // coord.west  = lng_interval.low;
+
+    return coord;
+}
+
 
 //
 //
@@ -2171,4 +2340,9 @@ const char * const City::m_fullNames[NUMCITY] = { "No City",
     "Zaragoza", "Bowen", "Zacatecas", "Ixtapa", "Kashechewan", "Manzanillo", "Zinder", "Newman", "Queenstown", "Zurich", 
     "San Salvador Island", "Sassandra", "Zakynthos", "Shamattawa", "Sylhet"
 };
+
+
+//
+
+
 
