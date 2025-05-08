@@ -420,13 +420,18 @@ public:
     valid( void ) const { return m_city != NOCITY; }
     
 private:
-    
-    static unsigned int 
-    index_for_char(char c);
+
     
     short m_city; 
 
-    static const char  m_char_map[33];
+    typedef struct IntervalStruct 
+    {
+        double high;
+        double low;
+    } Interval;
+    
+    static const char m_char_map[33]; 
+    static const int  m_char_index[75];
     
     static const short         m_search3[28]; 
     static const short         m_search5[28]; 

@@ -311,80 +311,67 @@ City::dist( double lat1, double lon1, double lat2, double lon2 )
 const char City::m_char_map[33] =  "0123456789bcdefghjkmnpqrstuvwxyz"; 
 
 
-typedef struct IntervalStruct 
-{
-    double high;
-    double low;
-} Interval;
+// the index for each char in m_char_map
+const int City::m_char_index[75] = 
+{ 
+     0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+    10, 11, 12, 13, 14, 15, 16, -1, 17, 18, 
+    -1, 19, 20, -1, 21, 22, 23, 24, 25, 26, 
+    27, 28, 29, 30, 31 
+}; 
 
-
-unsigned int 
-City::index_for_char(char c) 
-{
-    int index = -1;
- 
-    for (int i = 0; i < 33; ++i) 
-    {
-        if (c == m_char_map[i]) 
-        {
-            index = i; 
-            break;
-        }
-    }
-    
-    return index;
-}
 
 std::string
-City::geohash( double lat, double lng, int precision ) 
+City::geohash( double lat, double lon, int precision ) 
 {
-    
-    if (precision < 1 || precision > 12)
+    if (precision < 1 || precision > 16)
         precision = 6;
     
     std::string hash;
     
-    if (lat <= 90.0 && lat >= -90.0 && lng <= 180.0 && lng >= -180.0) 
+    if (lat >= -90.0 && lat <= 90.0  &&  lon >= -180.0 && lon <= 180.0) 
     {
-
         hash.resize(precision);
         
-        precision *= 5;
-        
-        Interval lat_interval = {90.0, -90.0}; 
-        Interval lng_interval = {180.0, -180.0};
+        Interval lat_val = {90.0, -90.0}; 
+        Interval lon_val = {180.0, -180.0};
 
-   
-        int is_even = 1;
         unsigned int hashChar = 0;
-    
-        for ( int i = 1; i <= precision; ++i ) 
+        bool is_even = true;
+        precision *= 5;
+   
+        for (int i = 1; i <= precision; ++i) 
         {
-            Interval *interval;
+            Interval *val;
             double coord;
             
             if (is_even) 
             {
-                interval = &lng_interval;
-                coord = lng;                
+                val = &lon_val;
+                coord = lon;                
             } 
             else 
             {
-                interval = &lat_interval;
+                val = &lat_val;
                 coord = lat;   
             }
             
-            double mid = (interval->low + interval->high) * 0.5;
-            hashChar = hashChar << 1;
+            double mid = (val->low + val->high) * 0.5;
+            
+            hashChar <<= 1;
             
             if (coord > mid)
             {
-                interval->low = mid;
+                val->low = mid;
                 hashChar |= 0x01;
             } 
             else 
             {
-                interval->high = mid;
+                val->high = mid;
             }
             
             if (!(i % 5))
@@ -403,46 +390,47 @@ City::geohash( double lat, double lng, int precision )
 GeoPoint 
 City::geohash(const std::string &hash) 
 {
-    GeoPoint coord = {0.0, 0.0};
-    
     if (hash.empty())
-        return coord;
+        return GeoPoint();
     
-    Interval lat_interval = {90.0, -90.0}; 
-    Interval lng_interval = {180.0, -180.0};
+    Interval lat_val = {90.0, -90.0}; 
+    Interval lon_val = {180.0, -180.0};
 
-    int is_even = 1;
+    bool is_even = true;
 
     for (int i = 0; i < hash.size(); ++i) 
     {
-        unsigned int char_mapIndex = index_for_char(hash[i]);
+        // find the char_index for the hash character c
+        char c = hash[i];
+        assert(c >= '0' || c <= 'z');
         
-        if (char_mapIndex < 0)
-            break;
-        
+        int char_index = m_char_index[c - '0'];
+        assert(char_index >= 0);
+
         // interpret the last 5 bits of the integer
         for (int j = 0; j < 5; ++j) 
         {
-            Interval *interval = is_even ? &lng_interval : &lat_interval;
+            Interval *val = (is_even) ? &lon_val : &lat_val;
             
-            double delta = (interval->high - interval->low) * 0.5;
+            double delta = (val->high - val->low) * 0.5;
             
-            if ((char_mapIndex << j) & 0x0010)
-                interval->low += delta;
-            else interval->high -= delta;
+            if ( (char_index << j) & 0x0010 )
+                val->low += delta;
+            else val->high -= delta;
             
             is_even = !is_even;
         }
     }
-    coord.first  = lat_interval.high - ((lat_interval.high - lat_interval.low) * 0.5); 
-    coord.second = lng_interval.high - ((lng_interval.high - lng_interval.low) * 0.5); 
+    
+    double lat = lat_val.high - ((lat_val.high - lat_val.low) * 0.5); 
+    double lon = lon_val.high - ((lon_val.high - lon_val.low) * 0.5); 
     
    // coord.north = lat_interval.high;
-   // coord.east  = lng_interval.high;
+   // coord.east  = lon_interval.high;
    // coord.south = lat_interval.low;
-   // coord.west  = lng_interval.low;
+   // coord.west  = lon_interval.low;
 
-    return coord;
+    return GeoPoint(lat, lon);
 }
 
 
