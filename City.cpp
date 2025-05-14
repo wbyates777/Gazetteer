@@ -312,7 +312,7 @@ const char City::m_char_map[33] =  "0123456789bcdefghjkmnpqrstuvwxyz";
 
 
 // the index for each char in m_char_map - 100 indicates 'no index'
-const char GeoPoint::m_char_index[75] = 
+const char City::m_char_index[75] = 
 { 
      0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 
     100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 
