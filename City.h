@@ -431,7 +431,7 @@ private:
     } Interval;
     
     static const char m_char_map[33]; 
-    static const int  m_char_index[75];
+    static const char m_char_index[75];
     
     static const short         m_search3[28]; 
     static const short         m_search5[28]; 
