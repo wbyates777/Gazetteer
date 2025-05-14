@@ -401,7 +401,7 @@ City::geohash(const std::string &hash)
     for (char c : hash) 
     {
         // find the char_index for the hash character c
-        assert(c >= '0' || c <= 'z');
+        assert(c >= '0' && c <= 'z');
         unsigned int char_index = m_char_index[c - '0'];
         assert(char_index >= 0 && char_index <= 31);
      
