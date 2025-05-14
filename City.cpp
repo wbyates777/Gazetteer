@@ -311,18 +311,18 @@ City::dist( double lat1, double lon1, double lat2, double lon2 )
 const char City::m_char_map[33] =  "0123456789bcdefghjkmnpqrstuvwxyz"; 
 
 
-// the index for each char in m_char_map
-const int City::m_char_index[75] = 
+// the index for each char in m_char_map - 100 indicates 'no index'
+const char GeoPoint::m_char_index[75] = 
 { 
      0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-    10, 11, 12, 13, 14, 15, 16, -1, 17, 18, 
-    -1, 19, 20, -1, 21, 22, 23, 24, 25, 26, 
+    100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 
+    100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+    100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 
+    100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 
+    10, 11, 12, 13, 14, 15, 16, 100, 17, 18, 
+    100, 19, 20, 100, 21, 22, 23, 24, 25, 26, 
     27, 28, 29, 30, 31 
-}; 
+};  
 
 
 std::string
@@ -402,9 +402,8 @@ City::geohash(const std::string &hash)
     {
         // find the char_index for the hash character c
         assert(c >= '0' || c <= 'z');
-        int index = m_char_index[c - '0'];
-        assert(index >= 0);
-        unsigned int char_index = index;
+        unsigned int char_index = m_char_index[c - '0'];
+        assert(char_index >= 0 && char_index <= 31);
      
         // interpret the last 5 bits of the integer
         for (int j = 0; j < 5; ++j) 
