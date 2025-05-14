@@ -87,7 +87,7 @@ Name::deaccent( std::string str )
 }
 
 bool
-Name::isRoman( const std::string &str )
+Name::isroman( const std::string &str )
 // https://en.wikipedia.org/wiki/ASCII
 // std::isalpha depends/varies on locale
 {
