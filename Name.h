@@ -93,7 +93,7 @@ public:
     
     // return false if str contains non-ASCII characters
     static bool
-    isRoman( const std::string &str ); 
+    isroman( const std::string &str ); 
     
     // remove newline [\n] and carriage return [\r] also escape single quote ['] -> [\']
     static std::string
