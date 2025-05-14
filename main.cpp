@@ -252,6 +252,28 @@ demoMarket(void)
     std::cout << "longitude : " << g.city(market).lon() << std::endl << std::endl;
 }
 
+void
+demoGeohash(void)
+{
+    std::cout << "Geohash "  << std::endl << std::endl;
+    {  double lat = 68.80092998;
+        double lon = 171.91227751;
+        std::string code = City::geohash(lat,lon,12);
+        std::cout << "The geohash for (" << lat << ", " << lon << ") is " << code << " and has length " << code.size() << std::endl;
+        std::pair<double,double> out = City::geohash(code);
+        std::cout << "Position from geohash is " << out.first << " " << out.second << std::endl << std::endl;
+    }
+
+    {
+        double lat = -66.19907004;
+        double lon = -143.08772234;
+        std::string code = City::geohash(lat,lon,12);
+        std::cout << "The geohash for (" << lat << ", " << lon << ") is " << code << " and has length " << code.size() << std::endl;
+        std::pair<double,double> out = City::geohash(code);
+        std::cout << "Position from geohash is " << out.first << " " << out.second << std::endl << std::endl;
+    }
+}
+
 int 
 main(int argc, const char * argv[]) 
 {
@@ -283,6 +305,10 @@ main(int argc, const char * argv[])
     demoMarket();
     demoCountry();
     demoName();
+    demoGeohash();
+    
+   
+
 }
 
 //
