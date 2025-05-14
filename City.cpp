@@ -398,15 +398,14 @@ City::geohash(const std::string &hash)
 
     bool is_even = true;
 
-    for (int i = 0; i < hash.size(); ++i) 
+    for (char c : hash) 
     {
         // find the char_index for the hash character c
-        char c = hash[i];
         assert(c >= '0' || c <= 'z');
-        
-        int char_index = m_char_index[c - '0'];
-        assert(char_index >= 0);
-
+        int index = m_char_index[c - '0'];
+        assert(index >= 0);
+        unsigned int char_index = index;
+     
         // interpret the last 5 bits of the integer
         for (int j = 0; j < 5; ++j) 
         {
