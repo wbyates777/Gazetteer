@@ -77,7 +77,7 @@ Country::set2Country( const std::string &str )
 
     int low  = m_search2[index]; 
     int high = m_search2[index + 1]; 
-    int mid = ((high + low) >> 1);
+    int mid = ((high + low) >> 1); // divide by 2 (quickly)
     int i;
     
     while (low < high) 
@@ -130,7 +130,7 @@ Country::set3Country( const std::string &str )
 
     int low  = m_search3[index]; 
     int high = m_search3[index + 1]; 
-    int mid = ((high + low) >> 1);
+    int mid = ((high + low) >> 1); // divide by 2 (quickly)
     int i;
     
     while (low < high) 
@@ -186,16 +186,16 @@ Country::setCountry( const std::string &str )
 
 
 // these speed up setCountry a bit
-const short Country::m_search2[28] = {
+constexpr short Country::m_search2[28] = {
     1, 17, 38, 57, 63, 71, 77, 96, 102, 112, 116, 127, 138, 161, 173, 174, 188, 189, 194, 215, 231, 237, 244, 246, 251, 253, 256, -1 
 };
 
-const short Country::m_search3[28] = {
+constexpr short Country::m_search3[28] = {
     1, 18, 39, 60, 66, 74, 80, 98, 104, 114, 118, 126, 137, 161, 173, 174, 188, 189, 193, 217, 232, 238, 245, 247, 252, 253, 256, -1
 };
 
 // country3code alpha order index
-const short Country::m_fromISO[MAXCOUNTRY] = 
+constexpr short Country::m_fromISO[MAXCOUNTRY] = 
 {
     0, 0, 0, 0, 2, 0, 0, 0, 6, 0, 
     12, 0, 65, 0, 0, 0, 11, 0, 0, 0, 
@@ -301,7 +301,7 @@ const short Country::m_fromISO[MAXCOUNTRY] =
 };
 
 // in country2code alpha order
-const short Country::m_toISO2[NUMCOUNTRY] = { NOCOUNTRY,
+constexpr short Country::m_toISO2[NUMCOUNTRY] = { NOCOUNTRY,
     AD, AE, AF, AG, AI, AL, AM, AO, AQ, AR, 
     AS, AT, AU, AW, AX, AZ, BA, BB, BD, BE, 
     BF, BG, BH, BI, BJ, BL, BM, BN, BO, BQ, 
@@ -331,7 +331,7 @@ const short Country::m_toISO2[NUMCOUNTRY] = { NOCOUNTRY,
 };
 
 // in country3code alpha order
-const short Country::m_toISO3[NUMCOUNTRY] = {  NOCOUNTRY, 
+constexpr short Country::m_toISO3[NUMCOUNTRY] = {  NOCOUNTRY, 
     ABW, AFG, AGO, AIA, ALA, ALB, AND, ARE, ARG, ARM,
     ASM, ATA, ATF, ATG, AUS, AUT, AZE, BDI, BEL, BEN,
     BES, BFA, BGD, BGR, BHR, BHS, BIH, BLM, BLR, BLZ,
@@ -362,7 +362,7 @@ const short Country::m_toISO3[NUMCOUNTRY] = {  NOCOUNTRY,
 
 
 // these are in country2code alpha order for binary chop search
-const char * const Country::m_codes2[NUMCOUNTRY] = { "NOCOUNTRY", 
+constexpr const char * const Country::m_codes2[NUMCOUNTRY] = { "NOCOUNTRY", 
     "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AO", "AQ", "AR", 
     "AS", "AT", "AU", "AW", "AX", "AZ", "BA", "BB", "BD", "BE", 
     "BF", "BG", "BH", "BI", "BJ", "BL", "BM", "BN", "BO", "BQ", 
@@ -392,7 +392,7 @@ const char * const Country::m_codes2[NUMCOUNTRY] = { "NOCOUNTRY",
 };
 
 // Note country2codes here in country3code order for printing i.e TF/ATF or  GS/SGS
-const char * const Country::m_codes2Print[NUMCOUNTRY] = { "NOCOUNTRY", 
+constexpr const char * const Country::m_codes2Print[NUMCOUNTRY] = { "NOCOUNTRY", 
     "AW", "AF", "AO", "AI", "AX", "AL", "AD", "AE", "AR", "AM", 
     "AS", "AQ", "TF", "AG", "AU", "AT", "AZ", "BI", "BE", "BJ", 
     "BQ", "BF", "BD", "BG", "BH", "BS", "BA", "BL", "BY", "BZ", 
@@ -423,7 +423,7 @@ const char * const Country::m_codes2Print[NUMCOUNTRY] = { "NOCOUNTRY",
 
 // if you add countries make sure you add the names in the correct alphabetic order position
 // or else the binary chop search in setCountry(std::string) won't work
-const char * const Country::m_codes3[NUMCOUNTRY] = { "NOCOUNTRY", 
+constexpr const char * const Country::m_codes3[NUMCOUNTRY] = { "NOCOUNTRY", 
     "ABW", "AFG", "AGO", "AIA", "ALA", "ALB", "AND", "ARE", "ARG", "ARM", 
     "ASM", "ATA", "ATF", "ATG", "AUS", "AUT", "AZE", "BDI", "BEL", "BEN", 
     "BES", "BFA", "BGD", "BGR", "BHR", "BHS", "BIH", "BLM", "BLR", "BLZ", 
@@ -454,7 +454,7 @@ const char * const Country::m_codes3[NUMCOUNTRY] = { "NOCOUNTRY",
 
 
 // country3code order
-const char * const Country::m_fullNames[NUMCOUNTRY] = { "No Country",
+constexpr const char * const Country::m_fullNames[NUMCOUNTRY] = { "No Country",
     "Aruba", "Afghanistan", "Angola", "Anguilla", "Aland Islands", "Albania", "Andorra", "United Arab Emirates", "Argentina", "Armenia", 
     "American Samoa", "Antarctica", "French Southern Territories", "Antigua and Barbuda", "Australia", "Austria", "Azerbaijan", "Burundi", "Belgium", "Benin", 
     "Bonaire, Saint Eustatius and Saba", "Burkina Faso", "Bangladesh", "Bulgaria", "Bahrain", "Bahamas", "Bosnia and Herzegovina", "Saint Barthelemy", "Belarus", "Belize", 

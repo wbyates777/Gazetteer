@@ -66,7 +66,7 @@ MarketId::setMarketId( const std::string &str )
     
     int low   = m_search[index];
     int high  = m_search[index + 1]; 
-    int mid = ((high + low) >> 1);
+    int mid = ((high + low) >> 1); // divide by 2 (quickly)
     int i;
     
     while (low < high) 
@@ -105,12 +105,12 @@ MarketId::setMarketId( const std::string &str )
 } 
 
 // this speeds up setMarketId quite a bit
-const short MarketId::m_search[28] = { 
+constexpr short MarketId::m_search[28] = { 
     1, 7, 130, 365, 583, 662, 802, 875, 974, 1026, 1187, 1223, 1256, 1326, 1506, 1621, 1666, 1740, 1745, 1800, 1975, 2164, 2212, 2257, 2291, 2923, 2926, 2937 
 };
 
 
-const short MarketId::m_fromISO[MAXMARKETID] = {
+constexpr short MarketId::m_fromISO[MAXMARKETID] = {
     0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 
     20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 
@@ -408,7 +408,7 @@ const short MarketId::m_fromISO[MAXMARKETID] = {
 };
 
 
-const short MarketId::m_toISO[NUMMARKETID] = { NOMARKETID,
+constexpr short MarketId::m_toISO[NUMMARKETID] = { NOMARKETID,
     _21XX, _24EX, _3579, _360T, _360X, _4AXE, A2XX, AACA, AAPA, AATS, 
     ABAN, ABFI, ABNA, ABNC, ABSI, ABUL, ABW0, ABXX, ACCX, ACEX, 
     ACKF, ACXC, ACXL, ADRK, ADVT, AFDL, AFET, AFEX, AFG0, AFSA, 
@@ -705,7 +705,7 @@ const short MarketId::m_toISO[NUMMARKETID] = { NOMARKETID,
     ZFXM, ZKBX, ZMB0, ZOBX, ZODM, ZWE0
 };
 
-const char * const MarketId::m_codes[NUMMARKETID] = { "NOMARKET", 
+constexpr const char * const MarketId::m_codes[NUMMARKETID] = { "NOMARKET", 
     "21XX", "24EX", "3579", "360T", "360X", "4AXE", "A2XX", "AACA", "AAPA", "AATS", 
     "ABAN", "ABFI", "ABNA", "ABNC", "ABSI", "ABUL", "ABW0", "ABXX", "ACCX", "ACEX", 
     "ACKF", "ACXC", "ACXL", "ADRK", "ADVT", "AFDL", "AFET", "AFEX", "AFG0", "AFSA", 
@@ -1002,7 +1002,7 @@ const char * const MarketId::m_codes[NUMMARKETID] = { "NOMARKET",
     "ZFXM", "ZKBX", "ZMB0", "ZOBX", "ZODM", "ZWE0"
 };
 
-const char * const MarketId::m_fullNames[NUMMARKETID] = { "No Market (Unlisted)",
+constexpr const char * const MarketId::m_fullNames[NUMMARKETID] = { "No Market (Unlisted)",
     "21X", "24 EXCHANGE", "SSY FUTURES LTD - FREIGHT SCREEN", "360T", "360X", "4 AFRICA EXCHANGE (PTY) LTD", "A2X", "CREDIT AGRICOLE CIB", "ATHENS EXCHANGE - APA", "ASSENT ATS", 
     "ABANCA", "ALPHA BANK", "ABN AMRO BANK NV", "ABN AMRO CLEARING BANK", "ALM. BRAND BANK", "BULGARIAN STOCK EXCHANGE - ALTERNATIVE MARKET", "General purpose market for Aruba", "VENOMEX LIMITED (EX. YOSHI MARKETS)", "ACCX", "ACE DERIVATIVES AND COMMODITY EXCHANGE LTD", 
     "KCG ACKNOWLEDGE FI", "ACX CLEARING CORPORATION LTD.", "ACX", "ALPHA DRK", "ADVISE TECHNOLOGIES - APA TRANSPARENCY REPORTING", "ABIDE FINANCIAL DRSP LIMITED APA", "AGRICULTURAL FUTURES EXCHANGE OF THAILAND", "AFRINEX LIMITED", "General purpose market for Afghanistan", "AFS - OTF", 

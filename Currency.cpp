@@ -104,7 +104,7 @@ Currency::setCurrency( const std::string &str )
             return true;
         }
         
-        mid = ((high + low) >> 1);
+        mid = ((high + low) >> 1); // divide by 2 (quickly)
     } 
 
     m_ccy = Currency::XXX; // NOCURRENCY
@@ -119,7 +119,7 @@ Currency::setCurrency( const std::string &str )
 // partiton at the cost of a single probe.
 // also note that the algorithm work efficiently in the presence of singleton currencies such as OMR and QAR
 // note NOCURRENCY is 0
-const short Currency::m_search[28] = {
+constexpr short Currency::m_search[28] = {
 //  A,  B,  C,  D,  E,  F,  G,  H,  I,  J,   K,   L,   M,   N,   O,   P,   Q,   R,   S,   T,   U,   V,   W,   X    Y,   Z,  Z + 1 
     1, 17, 39, 57, 63, 72, 76, 86, 91, 99, 102, 111, 120, 139, 146, 147, 156, 157, 163, 184, 197, 207, 213, 214, 231, 235, 242, -1
 };
@@ -127,7 +127,7 @@ const short Currency::m_search[28] = {
 
 // this speeds up setCurrency quite a bit as E leads to EUR, G leads to GBP, J leads to JPY, and U to USD 
 // in practice these are heavily used currencies 
-const short Currency::m_midPoints[26] =
+constexpr short Currency::m_midPoints[26] =
 {
 //  A,  B,  C,  D,  E,  F,  G,  H,  I,  J,   K,   L,   M,   N,   O,   P,   Q,   R,   S,   T,   U,   V,   W,   X    Y,   Z
     8, 27, 47, 59, 71, 73, 76, 88, 94, 101, 106, 115, 129, 142, 146, 151, 156, 159, 173, 190, 200, 209, 213, 222, 232, 238,
@@ -135,7 +135,7 @@ const short Currency::m_midPoints[26] =
 
 
 
-const short Currency::m_fromISO[MAXCURRENCY] = {
+constexpr short Currency::m_fromISO[MAXCURRENCY] = {
     0, 0, 0, 0, 3, 0, 0, 0, 5, 0, 
     0, 0, 62, 0, 0, 0, 0, 0, 0, 0, 
     1, 0, 0, 0, 9, 0, 0, 0, 0, 0, 
@@ -238,7 +238,7 @@ const short Currency::m_fromISO[MAXCURRENCY] = {
     45, 235, 23, 21, 227, 68, 67, 201, 202, 230
 };
 
-const short Currency::m_toISO[NUMCURRENCY] = { NOCURRENCY,
+constexpr short Currency::m_toISO[NUMCURRENCY] = { NOCURRENCY,
     ADP, AED, AFA, AFN, ALL, AMD, ANG, AOA, AON, AOR, 
     ARS, ATS, AUD, AWG, AZM, AZN, BAD, BAM, BBD, BDT, 
     BEC, BEF, BEL, BGL, BGN, BHD, BIF, BMD, BND, BOB, 
@@ -266,7 +266,7 @@ const short Currency::m_toISO[NUMCURRENCY] = { NOCURRENCY,
     ZWL
 };
 
-const char * const Currency::m_codes[NUMCURRENCY] = { "NOCURRENCY", 
+constexpr const char * const Currency::m_codes[NUMCURRENCY] = { "NOCURRENCY", 
     "ADP", "AED", "AFA", "AFN", "ALL", "AMD", "ANG", "AOA", "AON", "AOR", 
     "ARS", "ATS", "AUD", "AWG", "AZM", "AZN", "BAD", "BAM", "BBD", "BDT", 
     "BEC", "BEF", "BEL", "BGL", "BGN", "BHD", "BIF", "BMD", "BND", "BOB", 
@@ -294,7 +294,7 @@ const char * const Currency::m_codes[NUMCURRENCY] = { "NOCURRENCY",
     "ZWL"
 };
 
-const char * const Currency::m_fullNames[NUMCURRENCY] = { "No Currency",
+constexpr const char * const Currency::m_fullNames[NUMCURRENCY] = { "No Currency",
     "Andorran Peseta (1:1 peg to the Spanish Peseta)", "UAE Dirham", "Afghani", "Afghani", "Lek", "Armenian Dram", "Netherlands Antillian Guilder", "Kwanza", "Angolan New Kwanza", "Angolan Kwanza Readjustado", 
     "Argentine Peso", "Austrian Schilling", "Australian Dollar", "Aruban Guilder", "Azerbaijani Manat", "Azerbaijanian Manat", "Bosnia and Herzegovina Dinar", "Convertible Marks", "Barbados Dollar", "Taka", 
     "Belgian Franc (convertible)", "Belgian Franc (currency union with LUF)", "Belgian Franc (financial)", "Bulgarian Lev A/99", "Bulgarian Lev", "Bahraini Dinar", "Burundi Franc", "Bermudian Dollar", "Brunei Dollar", "Boliviano", 

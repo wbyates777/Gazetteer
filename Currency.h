@@ -105,12 +105,12 @@ public:
     };
     
     Currency( void ): m_ccy(m_baseCurrency) {}
-    ~Currency( void ) { m_ccy = NOCURRENCY; }
+    ~Currency( void ) { m_ccy = NOCURRENCY; } 
     
     // non-explicit constructors intentional here
     Currency( CurrencyCode i ): m_ccy(i) {} // e.g. i = Currency::GBP
-    Currency( const std::string &s ): m_ccy(NOCURRENCY) { setCurrency(s); }
-    Currency( const char *s ): m_ccy(NOCURRENCY) { if (s) setCurrency(s); } 
+    Currency( const std::string &s ): m_ccy(NOCURRENCY) { setCurrency(s); } 
+    Currency( const char *s ): m_ccy(NOCURRENCY) { if (s) setCurrency(s); }  
 
     // The ISO numeric code for this currency e.g. Currency::GBP = 826 
     operator short( void ) const { return m_ccy; }
