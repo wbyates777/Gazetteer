@@ -5,7 +5,7 @@ It allows the identification and location of exchanges, trading platforms, regul
 
 Gazetteer provides four lightweight, standalone identification classes: Country, Currency, MarketId and City.
 Country, Currency, and MarketId implement the ISO standards: ISO 3166-1 for country identification, ISO 4217 for currencies, and
-ISO 10383 for market identification. The City class employs IATA and UN/LOCODE codes for city identification, IANA timezones for local time calculation, 
+ISO 10383 for market identification. The City class employs IATA and UN/LOCODE codes for city identification, IANA time zones for local time calculation, 
 and latitude and longtitude for geolocation. A helper GeoCoord class implements the public domain geocode system 'Geohash' for encoding and decoding geograpical positions as strings, and the Vincenty metric for calculating distances (in metres) between geographical points.
  
 See: 
