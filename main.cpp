@@ -22,6 +22,10 @@
 #include "Name.h"
 #endif
 
+#ifndef __GEOCOORD_H__
+#include "GeoCoord.h"
+#endif
+
 template <typename T>
 std::ostream&
 operator<<( std::ostream& ostr, const std::vector<T>& v )
@@ -87,12 +91,15 @@ demoName(void)
 void
 demoCity(void)
 {
+    std::cout << "\nCity\n" << std::endl;
+    
     City xx;
     xx.setCity( "LON" );
     std::cout << xx << std::endl;
     std::cout << xx.name() << std::endl;
     std::cout << xx.to3Code() << std::endl;
     std::cout << xx.to5Code() << std::endl;
+    std::cout << xx.timezone() << std::endl;
     std::cout << short(xx) << std::endl;
     std::cout << xx.capital() << std::endl;
     std::cout << "latitude = " << xx.lat() << std::endl;
@@ -104,12 +111,13 @@ demoCity(void)
     std::cout << yy.name() << std::endl;
     std::cout << yy.to3Code() << std::endl;
     std::cout << yy.to5Code() << std::endl;
+    std::cout << yy.timezone() << std::endl;
     std::cout << short(yy) << std::endl;
     std::cout << yy.capital() << std::endl;
     std::cout << "latitude = " << yy.lat() << std::endl;
     std::cout << "longitude = " << yy.lon() << std::endl << std::endl;
     
-    std::cout << "The distance between " << xx.name() << " and " << yy.name() << " is " << City::dist(xx,yy) / 1000.0 << " km" << std::endl << std::endl;
+    std::cout << "The distance between " << xx.name() << " and " << yy.name() << " is " << GeoCoord::dist(xx.pos(),yy.pos()) / 1000.0 << " km" << std::endl << std::endl;
     
     City zz;
     zz.setCity( "SCQ" );
@@ -117,6 +125,7 @@ demoCity(void)
     std::cout << zz.name() << std::endl;
     std::cout << zz.to3Code() << std::endl;
     std::cout << zz.to5Code() << std::endl;
+    std::cout << zz.timezone() << std::endl;
     std::cout << short(zz) << std::endl;
     std::cout << zz.capital() << std::endl;
     std::cout << "latitude = " << zz.lat() << std::endl;
@@ -210,6 +219,7 @@ demoMarket(void)
     std::cout << "currency  : " << g.ccy(market).name() << " (" << g.ccy(market) << ")" << std::endl;
     std::cout << "city      : " << g.city(market).name() << " (" << g.city(market) << ")" << std::endl; 
     std::cout << "country   : " << g.country(market).name() << " (" << g.country(market) << ")" << std::endl;
+    std::cout << "timezone  : " << g.city(market).timezone() << std::endl;
     std::cout << "region    : " << g.regionName(g.region(market)) << std::endl; 
     std::cout << "subregion : " << g.subregionName(g.subregion(market)) << std::endl;
     std::cout << "latitude  : " << g.city(market).lat() << std::endl;
@@ -222,6 +232,7 @@ demoMarket(void)
     std::cout << "currency  : " << g.ccy(market).name() << " (" << g.ccy(market) << ")" << std::endl;
     std::cout << "city      : " << g.city(market).name() << " (" << g.city(market) << ")" << std::endl; 
     std::cout << "country   : " << g.country(market).name() << " (" << g.country(market) << ")" << std::endl;
+    std::cout << "timezone  : " << g.city(market).timezone() << std::endl;
     std::cout << "region    : " << g.regionName(g.region(market)) << std::endl; 
     std::cout << "subregion : " << g.subregionName(g.subregion(market)) << std::endl;
     std::cout << "latitude  : " << g.city(market).lat() << std::endl;
@@ -234,18 +245,20 @@ demoMarket(void)
     std::cout << "currency  : " << g.ccy(market).name() << " (" << g.ccy(market) << ")" << std::endl;
     std::cout << "city      : " << g.city(market).name() << " (" << g.city(market) << ")" << std::endl; 
     std::cout << "country   : " << g.country(market).name() << " (" << g.country(market) << ")" << std::endl;
+    std::cout << "timezone  : " << g.city(market).timezone() << std::endl;
     std::cout << "region    : " << g.regionName(g.region(market)) << std::endl; 
     std::cout << "subregion : " << g.subregionName(g.subregion(market)) << std::endl;
     std::cout << "latitude  : " << g.city(market).lat() << std::endl;
     std::cout << "longitude : " << g.city(market).lon() << std::endl << std::endl;
     
-    market.setMarketId( "360X" ); 
+    market.setMarketId( "XSEB" ); 
     std::cout << "market    : " << market << std::endl;
     std::cout << "name      : " << market.name() << std::endl;
     std::cout << "id        : " << short(market) << std::endl; 
     std::cout << "currency  : " << g.ccy(market).name() << " (" << g.ccy(market) << ")" << std::endl;
     std::cout << "city      : " << g.city(market).name() << " (" << g.city(market) << ")" << std::endl; 
     std::cout << "country   : " << g.country(market).name() << " (" << g.country(market) << ")" << std::endl;
+    std::cout << "timezone  : " << g.city(market).timezone() << std::endl;
     std::cout << "region    : " << g.regionName(g.region(market)) << std::endl; 
     std::cout << "subregion : " << g.subregionName(g.subregion(market)) << std::endl;
     std::cout << "latitude  : " << g.city(market).lat() << std::endl;
@@ -256,22 +269,20 @@ void
 demoGeohash(void)
 {
     std::cout << "Geohash "  << std::endl << std::endl;
-    {  double lat = 68.80092998;
-        double lon = 171.91227751;
-        std::string code = City::geohash(lat,lon,12);
-        std::cout << "The geohash for (" << lat << ", " << lon << ") is " << code << " and has length " << code.size() << std::endl;
-        std::pair<double,double> out = City::geohash(code);
-        std::cout << "Position from geohash is " << out.first << " " << out.second << std::endl << std::endl;
-    }
 
-    {
-        double lat = -66.19907004;
-        double lon = -143.08772234;
-        std::string code = City::geohash(lat,lon,12);
-        std::cout << "The geohash for (" << lat << ", " << lon << ") is " << code << " and has length " << code.size() << std::endl;
-        std::pair<double,double> out = City::geohash(code);
-        std::cout << "Position from geohash is " << out.first << " " << out.second << std::endl << std::endl;
-    }
+    double lat1 = 68.80092998;
+    double lon1 = 171.91227751;
+    std::string code1 = GeoCoord::geohash(lat1,lon1,12);
+    std::cout << "The geohash for (" << lat1 << ", " << lon1 << ") is " << code1 << " and has length " << code1.size() << std::endl;
+    std::pair<double,double> out1 = GeoCoord::geohash(code1);
+    std::cout << "Position from geohash is " << out1.first << " " << out1.second << std::endl << std::endl;
+
+    double lat2 = -66.19907004;
+    double lon2 = -143.08772234;
+    std::string code2 = GeoCoord::geohash(lat2,lon2,12);
+    std::cout << "The geohash for (" << lat2 << ", " << lon2 << ") is " << code2 << " and has length " << code2.size() << std::endl;
+    std::pair<double,double> out2 = GeoCoord::geohash(code2);
+    std::cout << "Position from geohash is " << out2.first << " " << out2.second << std::endl << std::endl;
 }
 
 int 
@@ -280,6 +291,7 @@ main(int argc, const char * argv[])
     std::cout << "Gazetteer\n" << std::endl;
   
     Gazetteer g;
+    
     
     std::cout << "The countries of  Subregion::SouthAmerica" << std::endl;
     std::vector<Country> southam = g.subregion(  Gazetteer::Subregion::SOUTH_AMERICA );
