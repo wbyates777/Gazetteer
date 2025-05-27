@@ -413,10 +413,7 @@ public:
     valid( void ) const { return m_city != NOCITY; }
     
 private:
-    
-    static unsigned int 
-    index_for_char(char c);
-    
+
     short m_city; 
 
     
