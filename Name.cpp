@@ -36,13 +36,24 @@
   \? = question mark (used to avoid trigraphs)
   \\ = backslash
  
-  Character literals for 'A'
+ Character literals for 'A'
 
    char     c0 =  'A'; 
    char     c1 =  u8'A'; 
    wchar_t  c2 =  L'A'; 
    char16_t c3 =  u'A'; 
    char32_t c4 =  U'A'; 
+ 
+ 
+ ASCII 'printable character' values [32,126] - https://en.wikipedia.org/wiki/ASCII
+ 
+  32      = ' '  // space
+  39      = [']  // apostraphe
+  45      = '-'  // hyphen
+  48-57   = [0-9]
+  65-90   = [A-Z]
+  97-122  = [a-z]
+  126     = '~'
  
 */
 
@@ -57,10 +68,11 @@
 
 // https://www.regular-expressions.info
 // https://www.regexlib.com/Default.aspx
-const std::regex Name::m_left_whitespace  = std::regex( R"(^\s*)" );      // WHITESPACE
+const std::regex Name::m_left_whitespace  = std::regex( R"(^\s*)" );      
 const std::regex Name::m_right_whitespace = std::regex( R"(\s*$)" );
-const std::regex Name::m_left_quotes      = std::regex( R"(^\s*['"])" );  // QUOTES
+const std::regex Name::m_left_quotes      = std::regex( R"(^\s*['"])" );  
 const std::regex Name::m_right_quotes     = std::regex( R"(['"]\s*$)" );
+const std::regex Name::m_trail_newlines   = std::regex( R"(\n+$)" );      // trailing newlines '\n'
 
 std::map<std::string, std::string> Name::m_diacritic;
 std::map<std::string, std::string> Name::m_escape;
@@ -71,8 +83,8 @@ std::string
 Name::deaccent( std::string str )
 // substitute characters with accents -- slow
 {
-    assert(!m_diacritic.empty()); // call setup()
- 
+    assert(!m_diacritic.empty());
+    
     // const std::map<std::string, std::string>::value_type& c
     for (auto &c : m_diacritic)
     {
@@ -91,13 +103,6 @@ Name::isroman( const std::string &str )
 // https://en.wikipedia.org/wiki/ASCII
 // std::isalpha depends/varies on locale
 {
-    //  ASCII values
-    // 32      = ' '  // space
-    // 48-57   = [0-9]
-    // 65-90   = [A-Z]
-    // 97-122  = [a-z]
-    // 126     = '~'
-    // 128 = 
     for (char c : str)
     {
         if (!((c >= 32 && c <= 126) || std::isspace(c)))
@@ -172,12 +177,25 @@ Name::split( std::string str, const std::regex &delim )
     return retVal;
 }
 
+std::string
+Name::concat( const std::vector<std::string> &strvec, const std::string &delim)
+{
+    assert(!strvec.empty());
+    
+    std::string retVal;
+    for (int i = 0; i < strvec.size() - 1; ++i)
+        retVal += strvec[i] + delim;
+    retVal += strvec.back();
+    
+    return retVal;
+}
+
 // removes any trailing string that corresponds to the value of sym (typically newline "\n")
 // when sym = "" remove all trailing newlines - returns the total number of symbols removed 
 int
 Name::chomp( std::string &str, const std::string &sym )
 {
-    std::regex exp = (sym.empty()) ? std::regex("\n+$") : std::regex(Name::escape(sym) + "$");
+    std::regex exp = (sym.empty()) ? m_trail_newlines : std::regex(Name::escape(sym) + "$");
     
     std::smatch match;
     if (std::regex_search(str, match, exp)) 
@@ -219,7 +237,7 @@ Name::capitalise( const std::string &str )
 
 void
 Name::setup( void )
-// countires with alphabets that employ diacritic signs include:
+// countries with alphabets that employ diacritic signs include:
 // AT, BO, BR, CH, CL, CR, DE, DK, FI, FO, FR, HU, IS, KR, MX, NO, PA, PE, PT, SE, SJ, TR and VN. 
 // https://service.unece.org/trade/locode/2024-1%20UNLOCODE%20SecretariatNotes.pdf
 // https://www.codetable.net/unicodecharacters
@@ -255,9 +273,18 @@ Name::setup( void )
     // accents and their replacements
     //
     
+    
     // never use the same character in the accent key and the ascii value
     // i.e m_diacritic["'"] = R"(\')";
     // this will loop forever as "'" is matched again and again
+    
+    //
+    // for latitudes/longitudes of the form DD°MM′SS″DIR or DDD°MM′SS″DIR
+    //
+    m_diacritic["°"]  = ":";
+    m_diacritic["′"]  = ":";
+    m_diacritic["″"]  = ":";
+    //
     
     m_diacritic["Æ"] = "A"; // "AE";
     m_diacritic["æ"] = "a"; // "ae";

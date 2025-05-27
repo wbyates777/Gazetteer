@@ -8,15 +8,17 @@
  Copyright (c) W.B. Yates. All rights reserved.
  History:
 
- Helper class used to process the names in MarketId, Currency, Country and City.
+ Helper class
  
- Provides methods for removing newlines, escaping single character apostraphe ['] (but not [`]) 
+ Provides functions for removing newlines, escaping single character apostraphe ['] (but not [`]) 
  and mappimg characters with diacritic signs to ASCII characters i.e. [à] => [a] and [á] => [a]. 
  Also provides methods to remove leading and trailing white space, quotes, or brackets, 
  and to split strings by an arbitrary delimeter. 
  
  Countries with alphabets that employ diacritic signs include:
  AT, BO, BR, CH, CL, CR, DE, DK, FI, FO, FR, HU, IS, KR, MX, NO, PA, PE, PT, SE, SJ, TR and VN. 
+
+ I have used static methods so as to avoid introducing 'yet another string' class.
  
  See
  
@@ -91,7 +93,7 @@ public:
     static std::string
     deaccent( std::string str );
     
-    // return false if str contains non-ASCII characters
+    // return true if str only contains Roman characters
     static bool
     isroman( const std::string &str ); 
     
@@ -125,6 +127,8 @@ public:
     static std::vector<std::string>
     split( std::string str, const std::regex &delim );
 
+    static std::string
+    concat( const std::vector<std::string> &strvec, const std::string &delim = "");
     
     // removes any trailing string that equals the value of sym (typically newline "\n")
     // when sym = "" remove all trailing newlines - returns number of symbols removed
@@ -147,7 +151,7 @@ public:
     rtrim( const std::string &str ) { return rclip(str, m_right_whitespace); }
 
     
-    // add/remove  quote characters ["] [']
+    // add/remove quote characters ["] ['] -- for more a sophisticated approach see std::quoted
     static std::string 
     quote( const std::string &str, const std::string &sym = "'" ) { return sym + str + sym; }
     
@@ -217,6 +221,7 @@ private:
     static const std::regex m_right_whitespace;
     static const std::regex m_left_quotes;
     static const std::regex m_right_quotes;
+    static const std::regex m_trail_newlines;
 
     static std::map<std::string, std::string> m_escape;
     static std::map<std::string, std::string> m_diacritic;
