@@ -6,7 +6,7 @@ It allows the identification and location of exchanges, trading platforms, regul
 Gazetteer provides four lightweight, standalone identification classes: Country, Currency, MarketId and City.
 Country, Currency, and MarketId implement the ISO standards: ISO 3166-1 for country identification, ISO 4217 for currencies, and
 ISO 10383 for market identification. The City class employs IATA and UN/LOCODE codes for city identification, IANA time zones for local time calculation, 
-and latitude and longtitude for geolocation. A helper GeoCoord class implements the public domain geocode system 'Geohash' for encoding and decoding geograpical positions as strings, and the Vincenty metric for calculating distances (in metres) between geographical points.
+and latitude and longtitude for geolocation. The helper class GeoCoord implements the public domain geocode system 'Geohash' for encoding and decoding geograpical positions as strings, and the Vincenty metric for calculating distances (in metres) between geographical points.
  
 See: 
 
@@ -36,15 +36,15 @@ The following code:
     std::cout << "timezone  : " << g.city(market).timezone()  << std::endl; 
     std::cout << "region    : " << g.regionName(g.region(m)) << std::endl; 
     std::cout << "subregion : " << g.subRegionName(g.subRegion(m)) << std::endl << std::endl;
-    std::cout << "LOCODE    : " << g.city(m).locode() << std::endl << std::endl;
+    std::cout << "LOCODE    : " << g.city(m).to5Code() << std::endl << std::endl;
 
     City x, y;
 
     x.setCity( "LON" );
     y.setCity( "NYC" );
 
-    std::cout << "The distance between " << x.name() << " and " << y.name() << " is " << City::dist(x.pos(),y.pos()) / 1000.0 << " km" << std::endl;
-    std::cout << "The Geohash for position (57.64911, 10.40744) is " << City::geohash(57.64911, 10.40744, 11) << std::endl << std::endl;
+    std::cout << "The distance between " << x.name() << " and " << y.name() << " is " << GeoCoord::dist(x.pos(),y.pos()) / 1000.0 << " km" << std::endl;
+    std::cout << "The Geohash for position (57.64911, 10.40744) is " << GeoCoord::geohash(57.64911, 10.40744, 11) << std::endl << std::endl;
     
 produces the output:
 
