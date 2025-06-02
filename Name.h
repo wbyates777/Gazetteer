@@ -20,14 +20,14 @@
  
  
  Countries with alphabets that employ diacritic signs include:
- AT, BO, BR, CH, CL, CR, DE, DK, FI, FO, FR, HU, IS, KR, MX, NO, PA, PE, PT, SE, SJ, TR and VN.  
- 
+ AT, BO, BR, CH, CL, CR, DE, DK, FI, FO, FR, HU, IS, KR, MX, NO, PA, PE, PT, SE, SJ, TR and VN. 
+
  The Damerau–Levenshtein distance measures the similarity between strings. 
  It is typically used to measure distance between typographic errors or 'human misspellings'.
  Usefull for matching names with alternate or erroneous spellings.
  see https://en.wikipedia.org/wiki/Damerau–Levenshtein_distance
  
- I have used static methods so as to avoid introducing 'yet another string' class.
+ I have used static methods so as to avoid introducing yet another string class.
  
  See
  
@@ -79,8 +79,8 @@
 
  Example 4
  
- std::cout << "Name::dist(\"London\",\"Lomdon\") is " <<  Name::dist("London","Lomdon") << std::endl;
- std::cout << "Name::dist(\"London\",\"Londna\") is " <<  Name::dist("London","Londna") << std::endl;
+ std::cout << "Name::dist(\"London\",\"Lomdon\") is" <<  Name::dist("London","Lomdon") << std::endl;
+ std::cout << "Name::dist(\"London\",\"Londno\") is" <<  Name::dist("London","Lomdon") << std::endl;
  
 */
 
@@ -115,6 +115,7 @@ public:
     static std::string
     denewln( std::string str );
 
+  
     // convert the first character in each word to upper case
     static std::string 
     capitalise( const std::string &str );
@@ -148,6 +149,7 @@ public:
     static std::string
     concat( const std::vector<std::string> &strvec, const std::string &delim = "");
     
+  
     // removes any trailing string that equals the value of sym (typically newline "\n")
     // when sym = "" remove all trailing newlines - returns number of symbols removed
     static int

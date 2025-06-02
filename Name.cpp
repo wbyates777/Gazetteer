@@ -8,8 +8,6 @@
  Copyright (c) W.B. Yates. All rights reserved.
  History:
 
- Helper class
- 
  Provides functions on std::strings for:
 
  1)  removing newlines, escaping single character apostraphe ['] (but not [`]),
@@ -20,14 +18,11 @@
  
  
  Countries with alphabets that employ diacritic signs include:
- AT, BO, BR, CH, CL, CR, DE, DK, FI, FO, FR, HU, IS, KR, MX, NO, PA, PE, PT, SE, SJ, TR and VN.  
- 
+ AT, BO, BR, CH, CL, CR, DE, DK, FI, FO, FR, HU, IS, KR, MX, NO, PA, PE, PT, SE, SJ, TR and VN. 
+
  The Damerau–Levenshtein distance measures the similarity between strings. 
- It is typically used to measure distance between typographic errors or 'human misspellings'.
- Usefull for matching names with alternate or erroneous spellings.
+ It is typically used to measure distance between 'human misspellings'.  
  see https://en.wikipedia.org/wiki/Damerau–Levenshtein_distance
- 
- I have used static methods so as to avoid introducing 'yet another string' class.
  
   Escape characters:
  
@@ -149,11 +144,12 @@ Name::denewln( std::string str )
         if (str[i] == '\'')
             str.insert(i++, 1, '\\');
         else if (str[i] == '\n' || str[i] == '\r')
-            str.erase(i);
+            str.erase(i,1);
     }
     
     return str;
 }
+
 
 
 std::vector<std::string> 
@@ -230,7 +226,6 @@ Name::chomp( std::vector<std::string> &strvec, const std::string &sym )
     return count;
 }
 
-
 std::vector<std::string> 
 Name::trim( const std::vector<std::string> &strvec )
 {
@@ -239,7 +234,6 @@ Name::trim( const std::vector<std::string> &strvec )
         retVal[i] = trim(strvec[i]); 
     return retVal;
 }
-
 
 std::string 
 Name::capitalise( const std::string &str )
@@ -285,7 +279,7 @@ Name::dist(const std::string &str1, const std::string &str2)
             
             if ((i > 1) && (j > 1) && (str1[i-1] == str2[j-2]) && (str1[i-2] == str2[j-1]))
             {
-                d[i][j] = std::min( d[i][j], d[i-2][j-2] + cost); // transposition
+                d[i][j] = std::min( d[i][j], (d[i-2][j-2] + cost)); // transposition
             }
         }
     }
