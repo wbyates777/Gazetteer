@@ -10,14 +10,23 @@
 
  Helper class
  
- Provides functions for removing newlines, escaping single character apostraphe ['] (but not [`]) 
- and mappimg characters with diacritic signs to ASCII characters i.e. [à] => [a] and [á] => [a]. 
- Also provides methods to remove leading and trailing white space, quotes, or brackets, 
- and to split strings by an arbitrary delimeter. 
+ Provides functions on std::strings for:
+
+ 1)  removing newlines, escaping single character apostraphe ['] (but not [`]),
+ 2)  mappimg characters with diacritic signs to ASCII characters i.e. [à] => [a] and [á] => [a], 
+ 3)  removing leading and trailing white space, quotes, or brackets, 
+ 4)  splitting strings by an arbitrary delimeter. 
+ 5)  calculation of the Damerau–Levenshtein distance between strings.
+ 
  
  Countries with alphabets that employ diacritic signs include:
- AT, BO, BR, CH, CL, CR, DE, DK, FI, FO, FR, HU, IS, KR, MX, NO, PA, PE, PT, SE, SJ, TR and VN. 
-
+ AT, BO, BR, CH, CL, CR, DE, DK, FI, FO, FR, HU, IS, KR, MX, NO, PA, PE, PT, SE, SJ, TR and VN.  
+ 
+ The Damerau–Levenshtein distance measures the similarity between strings. 
+ It is typically used to measure distance between typographic errors or 'human misspellings'.
+ Usefull for matching names with alternate or erroneous spellings.
+ see https://en.wikipedia.org/wiki/Damerau–Levenshtein_distance
+ 
  I have used static methods so as to avoid introducing 'yet another string' class.
  
  See
@@ -68,6 +77,11 @@
  std::cout << "[" << test5 << "] --> [" <<  Name::clip(test5, "\'")        << "]" << std::endl;
  std::cout << "[" << test6 << "] --> [" <<  Name::clip(test6, "$$", "^^")  << "]" << std::endl;
 
+ Example 4
+ 
+ std::cout << "Name::dist(\"London\",\"Lomdon\") is " <<  Name::dist("London","Lomdon") << std::endl;
+ std::cout << "Name::dist(\"London\",\"Londna\") is " <<  Name::dist("London","Londna") << std::endl;
+ 
 */
 
 
@@ -119,6 +133,10 @@ public:
         return str;
     }
     
+    // Damerau–Levenshtein distance - measures the similarity between two strings - between 'human misspellings'
+    // see https://en.wikipedia.org/wiki/Damerau–Levenshtein_distance
+    static int
+    dist(const std::string &str1, const std::string &str2);
     
     // split the string by delimiter 
     static std::vector<std::string> 
@@ -143,6 +161,9 @@ public:
     // remove whitespace 
     static std::string 
     trim( const std::string &str ) { return rtrim(ltrim(str)); }
+    
+    static std::vector<std::string> 
+    trim( const std::vector<std::string> &strvec );
     
     static std::string 
     ltrim( const std::string &str ) { return lclip(str, m_left_whitespace); }
