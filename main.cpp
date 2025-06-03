@@ -26,9 +26,6 @@
 #include "GeoCoord.h"
 #endif
 
-#ifndef __LOCODE_H__
-#include "Locode.h"
-#endif
 
 template <typename T>
 std::ostream&
@@ -290,113 +287,6 @@ demoGeohash(void)
 }
 
 
-void
-search_pos( Locode city, Locode::Function criteria, double radius )
-// radius in km
-{
-    int count = 0;
-    for( int i = 1; i < LOCODE::MAXLOCODE; ++i)
-    {
-        Locode code(i);
-       
-        if (code.valid_pos() && code.has(criteria)) // quick check; could use city.country() == code.country();
-        {
-            count++;
-            if (GeoCoord::dist(city.pos(), code.pos()) < radius * 1000.0)
-            {
-                std::cout << code.locode() << " " << code.name() << " has " << Locode::toString(criteria)<< std::endl;
-            }
-        }
-    }
-}
-
-
-std::vector<std::string>
-match_name( const std::string &name, int error = 3 )
-{
-    std::vector<std::string> retVal;
-    
-    for( int i = 1; i < LOCODE::MAXLOCODE; ++i)
-    {
-        Locode code(i);
-        
-        if (name == code.name()) 
-        {
-            retVal.push_back(code.name());
-        }
-        else if (error > 0 && code.name().size() > name.size() / 2) // filter out short matches....
-        {
-            int dist = Name::dist(code.name(), name);
-            
-            if (dist <= error)
-            {
-                retVal.push_back(code.name());
-                std::cout << name <<  " - " << code.name() << " - " << dist << std::endl;
-            }
-        }
-    }
-    return retVal;
-}
-
-
-void
-demoLOCODE( void )
-{
-    Locode nyc(LOCODE::USNYC);
-    std::cout << nyc.locode() << " " << (int) nyc << " "  << nyc.name() << " " << nyc.lat() << " " << nyc.lon() << std::endl;
-    
-    City city("LON");
-    
-    // all cities are locodes; not all locodes are cities though -- check for City::XXX
-    Locode lon(city.to5Code());
-    
-    std::cout << lon.locode() << " " << (int) lon << " "  << lon.name() << " " << lon.lat() << " " << lon.lon() << std::endl;
-   
-    Country cid(lon.country());
-    std::cout << lon.name() << " is in " << cid.name() << std::endl; 
-
-    Locode::Function feature  = Locode::AIRPORT;
-    std::string feature_str = Locode::toString(feature);
-    if (lon.has(feature) )
-        std::cout  << lon.name() << " has " << feature_str << std::endl;
-    else std::cout  << lon.name() << " does not have " << feature_str << std::endl;
-    
-    double radius = 50.0;
-    std::cout << "\nSearch for " << feature_str << " that are "   << radius << " km from " << lon.name() << std::endl;
-    search_pos(lon, feature, radius);
-    
-    std::string misspelling = "Hustone";
-    std::cout << "\nMatch a location  called " << misspelling << std::endl;
-    match_name(misspelling, 2);
-
-    
-    std::cout << "\n UN/LOCODE Composition" << std::endl;
-    std::vector<int> status(Locode::MAXSTATUS, 0);
-    std::vector<int> coords(Locode::MAXSTATUS, 0);
-    int  total = 0;
-    int sum = 0;
-    for( int i = 0; i < LOCODE::MAXLOCODE; ++i)
-    {
-        Locode code(i);
-        ++status[code.status()]; 
-        sum++;
-        if (code.valid_pos()) 
-        {
-            ++coords[code.status()];
-            ++total;
-        }
-    }
-   
-    for( int i = 0; i < Locode::MAXSTATUS; ++i)
-    {
-        std::string stat = Locode::toString(Locode::Status(i));
-        std::cout << stat << ", " << status[i] << ", " << coords[i] << std::endl;
-    }
-    std::cout  << sum << ", " << total << std::endl;
-    std::cout << "Position coverage of " << 100.0 * total / double(sum) << "%" << std::endl;
-
-}
-
 
 int 
 main(int argc, const char * argv[]) 
@@ -431,8 +321,7 @@ main(int argc, const char * argv[])
     demoCountry();
     demoName();
     demoGeohash();
-    demoLOCODE();
-   
+
 }
 
 //
