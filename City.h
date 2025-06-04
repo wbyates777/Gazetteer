@@ -433,6 +433,7 @@ private:
     static const char * const  m_codes5Print[NUMCITY];
     static const char * const  m_fullNames[NUMCITY];
     static const char * const  m_timezones[NUMCITY];
+    static const char * const  m_subdiv[NUMCITY];
 };
 
 
