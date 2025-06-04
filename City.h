@@ -366,7 +366,11 @@ public:
     
     std::string 
     name( void ) const { return m_fullNames[m_fromISO[m_city]]; } // i.e "London" 
-    
+
+    // the 3 letter subdivison code for this location e.g. LDN
+    std::string
+    subdiv( void ) const { return (m_subdiv[m_city]) ? m_subdiv[m_city] : "XXX"; }
+
     //  IANA time zone for this city  i.e "Europe/London"
     std::string 
     timezone( void ) const { return m_timezones[m_fromISO[m_city]]; } 
