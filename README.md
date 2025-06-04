@@ -48,19 +48,19 @@ The following code:
     
 produces the output:
 
-  market    : XNYS
-  name      : NEW YORK STOCK EXCHANGE, INC.
-  id        : 2717
-  currency  : US Dollar (USD)
-  city      : New York, NYC (NY)
-  country   : United States (USA)
-  timezone  : America/New_York
-  region    : Americas
-  subregion : Northern America
-  LOCODE    : USNYC
-
-  The distance between London and New York is 5579.86 km
-  The Geohash for position (57.64911, 10.40744) is u4pruydqqvj 
+    market    : XNYS
+    name      : NEW YORK STOCK EXCHANGE, INC.
+    id        : 2717
+    currency  : US Dollar (USD)
+    city      : New York, NYC (NY)
+    country   : United States (USA)
+    timezone  : America/New_York
+    region    : Americas
+    subregion : Northern America
+    LOCODE    : USNYC
+    
+    The distance between London and New York is 5579.86 km
+    The Geohash for position (57.64911, 10.40744) is u4pruydqqvj 
 
 
 Please report any errors, omissions, or suggested extensions to the email above.
