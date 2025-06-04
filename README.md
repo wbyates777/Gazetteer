@@ -31,11 +31,11 @@ The following code:
     std::cout << "name      : " << m.name() << std::endl;
     std::cout << "id        : " << short(m) << std::endl; 
     std::cout << "currency  : " << g.ccy(m).name() << " (" << g.ccy(m) << ")" << std::endl;
-    std::cout << "city      : " << g.city(m).name() << " (" << g.city(m) << ")" << std::endl; 
+    std::cout << "city      : " << g.city(m).name() << ", " << g.city(m) << " (" << g.city(m).subdiv() << ")" << std::endl; 
     std::cout << "country   : " << g.country(m).name() << " (" << g.country(m) << ")" << std::endl;
-    std::cout << "timezone  : " << g.city(market).timezone()  << std::endl; 
+    std::cout << "timezone  : " << g.city(m).timezone()  << std::endl; 
     std::cout << "region    : " << g.regionName(g.region(m)) << std::endl; 
-    std::cout << "subregion : " << g.subRegionName(g.subRegion(m)) << std::endl << std::endl;
+    std::cout << "subregion : " << g.subregionName(g.subregion(m)) << std::endl;
     std::cout << "LOCODE    : " << g.city(m).to5Code() << std::endl << std::endl;
 
     City x, y;
@@ -48,19 +48,19 @@ The following code:
     
 produces the output:
 
-    market    : XNYS
-    name      : NEW YORK STOCK EXCHANGE, INC.
-    id        : 2639
-    currency  : US Dollar (USD)
-    city      : New York (NYC)
-    country   : United States (USA)
-    timezone  : America/New_York
-    region    : Americas
-    subregion : Northern America
-    LOCODE    : USNYC
+  market    : XNYS
+  name      : NEW YORK STOCK EXCHANGE, INC.
+  id        : 2717
+  currency  : US Dollar (USD)
+  city      : New York, NYC (NY)
+  country   : United States (USA)
+  timezone  : America/New_York
+  region    : Americas
+  subregion : Northern America
+  LOCODE    : USNYC
 
-    The distance between London and New York is 5579.86 km
-    The Geohash for position (57.64911, 10.40744) is u4pruydqqvj 
+  The distance between London and New York is 5579.86 km
+  The Geohash for position (57.64911, 10.40744) is u4pruydqqvj 
 
 
 Please report any errors, omissions, or suggested extensions to the email above.
