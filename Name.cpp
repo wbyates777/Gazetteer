@@ -8,21 +8,26 @@
  Copyright (c) W.B. Yates. All rights reserved.
  History:
 
- Provides functions on std::strings for:
+ Provide a number of useful functions for std::string, in one place, with a simple syntax. 
+ Specifically Name provides functions for:
 
  1)  removing newlines, escaping single character apostraphe ['] (but not [`]),
- 2)  mappimg characters with diacritic signs to ASCII characters i.e. [à] => [a] and [á] => [a], 
- 3)  removing leading and trailing white space, quotes, or brackets, 
- 4)  splitting strings by an arbitrary delimeter. 
- 5)  calculation of the Damerau–Levenshtein distance between strings.
+ 2)  mappimg characters with diacritic signs to ASCII characters i.e. [à] => [a] and [á] => [a],
+ 3)  removing or replacing characters or substrings, 
+ 4)  removing leading and trailing white space, quotes, or brackets, 
+ 5)  splitting strings by an arbitrary delimeter. 
+ 6)  calculation of the Damerau–Levenshtein distance between strings.
  
  
  Countries with alphabets that employ diacritic signs include:
  AT, BO, BR, CH, CL, CR, DE, DK, FI, FO, FR, HU, IS, KR, MX, NO, PA, PE, PT, SE, SJ, TR and VN. 
 
  The Damerau–Levenshtein distance measures the similarity between strings. 
- It is typically used to measure distance between 'human misspellings'.  
+ It is typically used to measure distance between typographic errors or 'human misspellings'.
+ Usefull for matching names with alternate or erroneous spellings.
  see https://en.wikipedia.org/wiki/Damerau–Levenshtein_distance
+ 
+ 
  
   Escape characters:
  
@@ -112,12 +117,11 @@ Name::isroman( const std::string &str )
 {
     for (char c : str)
     {
-        if (!((c >= 32 && c <= 126) || std::isspace(c)))
+        if (!(c >= 32 && c <= 126))
             return false;
     }
     return true;
 }
-
 
 std::string
 Name::escape( const std::string &str )
@@ -150,7 +154,43 @@ Name::denewln( std::string str )
     return str;
 }
 
+std::string 
+Name::replace(std::string str, const std::string &match, const std::string &with, bool first) 
+// replace all or first occurence of pattern 'match' in string 'str' with string 'with'
+{ 
+    size_t pos = 0;
+    
+    while ((pos = str.find(match, pos)) != std::string::npos)
+    {
+        str.replace(pos, match.size(), with);
+        if (first)
+            break;
+    }
 
+    return str;
+}
+
+std::string 
+Name::replace(std::string str, const std::regex &match, const std::string &with, bool first)
+// replace all or first occurence of pattern 'match' in string 'str' with string 'with'
+{
+    std::regex_constants::match_flag_type flag = (first) ? std::regex_constants::format_first_only : std::regex_constants::match_default;
+    return std::regex_replace(str, match, with,  flag); 
+}
+
+std::string 
+Name::toupper( std::string str ) 
+{ 
+    std::transform(str.begin(), str.end(), str.begin(), [](char c){ return std::toupper(c); });
+    return str;
+}
+
+std::string 
+Name::tolower( std::string str ) 
+{
+    std::transform(str.begin(), str.end(), str.begin(), [](char c){ return std::tolower(c); });
+    return str;
+}
 
 std::vector<std::string> 
 Name::split( const std::string &str, const std::string &delim ) 
@@ -205,11 +245,13 @@ Name::chomp( std::string &str, const std::string &sym )
 {
     std::regex exp = (sym.empty()) ? m_trail_newlines : std::regex(Name::escape(sym) + "$");
     
+    const int factor = std::max(1, (int) sym.size());
+    
     std::smatch match;
     if (std::regex_search(str, match, exp)) 
     {
         str =  match.prefix();
-        return (int) match.length() / std::max(1, (int) sym.size());
+        return (int) match.length() / factor;
     }
     
     return 0;
@@ -219,19 +261,48 @@ Name::chomp( std::string &str, const std::string &sym )
 int
 Name::chomp( std::vector<std::string> &strvec, const std::string &sym )
 {
+    assert(!strvec.empty());
+    
     int count = 0;
     for (std::string &s : strvec)
         count += chomp(s, sym);
- 
+    
     return count;
 }
 
 std::vector<std::string> 
 Name::trim( const std::vector<std::string> &strvec )
 {
+    assert(!strvec.empty());
+    
     std::vector<std::string> retVal(strvec.size());
     for (int i = 0; i < strvec.size(); ++i)
         retVal[i] = trim(strvec[i]); 
+    
+    return retVal;
+}
+
+std::vector<std::string> 
+Name::quote( const std::vector<std::string> &strvec, const std::string &sym)
+{
+    assert(!strvec.empty());
+    
+    std::vector<std::string> retVal(strvec.size());
+    for (int i = 0; i < strvec.size(); ++i)
+        retVal[i] = quote(strvec[i]); 
+    
+    return retVal;
+}
+
+std::vector<std::string> 
+Name::unquote( const std::vector<std::string> &strvec, const std::string &sym )
+{
+    assert(!strvec.empty());
+    
+    std::vector<std::string> retVal(strvec.size());
+    for (int i = 0; i < strvec.size(); ++i)
+        retVal[i] = unquote(strvec[i]); 
+    
     return retVal;
 }
 
@@ -330,6 +401,11 @@ Name::setup( void )
     // i.e m_diacritic["'"] = R"(\')";
     // this will loop forever as "'" is matched again and again
     
+    
+    //   NO-BREAK SPACE
+    m_diacritic["\xc2\xa0"]  = " ";
+    
+ 
     //
     // for latitudes/longitudes of the form DD°MM′SS″DIR or DDD°MM′SS″DIR
     //

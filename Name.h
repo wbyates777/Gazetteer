@@ -10,14 +10,17 @@
 
  Helper class
  
- Provides functions on std::strings for:
+ Provide a number of useful functions for std::string, in one place, with a simple, consistent syntax. 
+ Specifically Name provides functions for:
 
  1)  removing newlines, escaping single character apostraphe ['] (but not [`]),
- 2)  mappimg characters with diacritic signs to ASCII characters i.e. [à] => [a] and [á] => [a], 
- 3)  removing leading and trailing white space, quotes, or brackets, 
- 4)  splitting strings by an arbitrary delimeter. 
- 5)  calculation of the Damerau–Levenshtein distance between strings.
+ 2)  mappimg characters with diacritic signs to ASCII characters i.e. [à] => [a] and [á] => [a],
+ 3)  removing or replacing characters or substrings, 
+ 4)  removing leading and trailing white space, quotes, or brackets, 
+ 5)  splitting strings by an arbitrary delimeter. 
+ 6)  calculation of the Damerau–Levenshtein distance between strings.
  
+ All are implemented using standard library types/functions.
  
  Countries with alphabets that employ diacritic signs include:
  AT, BO, BR, CH, CL, CR, DE, DK, FI, FO, FR, HU, IS, KR, MX, NO, PA, PE, PT, SE, SJ, TR and VN. 
@@ -107,7 +110,7 @@ public:
     static std::string
     deaccent( std::string str );
     
-    // return true if str only contains Roman characters
+    // return true if str only contains Roman characters; ASCII values [32, 126]
     static bool
     isroman( const std::string &str ); 
     
@@ -115,29 +118,37 @@ public:
     static std::string
     denewln( std::string str );
 
+    // Damerau–Levenshtein distance - measures the similarity between two strings - between 'human misspellings'
+    // see https://en.wikipedia.org/wiki/Damerau–Levenshtein_distance
+    static int
+    dist(const std::string &str1, const std::string &str2);
+   
+    
+    // remove all or first occurence of symbol 'match' 
+    static std::string 
+    strip(std::string str, const std::string &match, bool first = false) { return replace(str, match, "", first); }  
+    
+    static std::string 
+    strip(std::string str, const std::regex &match, bool first = false) { return replace(str, match, "", first); }
   
+    // replace all or first occurence of string 'match' with string 'with' 
+    static std::string 
+    replace(std::string str, const std::string &match, const std::string &with, bool first = false); 
+    
+    static std::string 
+    replace(std::string str, const std::regex &match, const std::string &with, bool first = false);
+    
+    
     // convert the first character in each word to upper case
     static std::string 
     capitalise( const std::string &str );
     
     static std::string 
-    toUpper( std::string str ) 
-    { 
-        std::transform(str.begin(), str.end(), str.begin(), [](char c){ return std::toupper(c); });
-        return str;
-    }
+    toupper( std::string str );
 
     static std::string 
-    toLower( std::string str ) 
-    {
-        std::transform(str.begin(), str.end(), str.begin(), [](char c){ return std::tolower(c); });
-        return str;
-    }
+    tolower( std::string str );
     
-    // Damerau–Levenshtein distance - measures the similarity between two strings - between 'human misspellings'
-    // see https://en.wikipedia.org/wiki/Damerau–Levenshtein_distance
-    static int
-    dist(const std::string &str1, const std::string &str2);
     
     // split the string by delimiter 
     static std::vector<std::string> 
@@ -178,8 +189,14 @@ public:
     static std::string 
     quote( const std::string &str, const std::string &sym = "'" ) { return sym + str + sym; }
     
+    static std::vector<std::string> 
+    quote( const std::vector<std::string> &strvec, const std::string &sym = "'" );
+    
     static std::string 
     unquote( const std::string &str, const std::string &sym ) { return rclip(lclip(str, sym), sym); }
+    
+    static std::vector<std::string> 
+    unquote( const std::vector<std::string> &strvec, const std::string &sym );
     
     static std::string 
     unquote( const std::string &str ) { return rclip( lclip(str, m_left_quotes), m_right_quotes ); }
