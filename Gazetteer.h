@@ -8,7 +8,9 @@
  Copyright (c) W.B. Yates. All rights reserved.
  History:  A geographic dictionary or index 
  
-
+ Modular in that it is (mostly) straight forward to remove, say MarketId, while keeping relationships between
+ Country, Currency and City.
+ 
  Region and subregion codes are taken from:
  "Standard Country or Area Codes for Statistical Use, Revision 4 (United Nations publication, Sales No. 98.XVII.9"
  
@@ -63,6 +65,8 @@
 #ifndef __CURRENCY_H__
 #include "Currency.h"
 #endif
+
+
 
 class Gazetteer 
 {

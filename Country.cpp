@@ -22,8 +22,8 @@
        territories, or other geographical entities to their in-house application of ISO 3166-1, and the ISO 3166/MA 
        will never use these codes in the updating process of the standard. 
        The following alpha-2 codes can be user-assigned: AA, QM to QZ, XA to XZ, and ZZ.
- (ii)  there are no ISO codes for Kosovo at the time of writting
- (iii) there are no ISO codes for Zaire  at the time of writting
+ (ii)  there are no ISO codes for Kosovo at the time of writing
+ (iii) there are no ISO codes for Zaire  at the time of writing
  (vi)  Netherlands Antilles (AN, ANT) is not a country - ceased to exist 10/10/2010 
  
  https://www.iso.org/iso/country_codes
