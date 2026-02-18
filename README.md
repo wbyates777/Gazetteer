@@ -8,15 +8,6 @@ Country, Currency, and MarketId implement the ISO standards: ISO 3166-1 for coun
 ISO 10383 for market identification. The City class employs IATA and UN/LOCODE codes for city identification, IANA time zones for local time calculation, 
 and latitude and longtitude for geolocation. The helper class GeoCoord implements the public domain geocode system 'Geohash' for encoding and decoding geograpical positions as strings, and the Vincenty metric for calculating distances (in metres) between geographical points.
 
-See: 
-
-    Countries  - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
-    Currencies - https://en.wikipedia.org/wiki/ISO_4217 
-    MICs       - https://en.wikipedia.org/wiki/Market_Identifier_Code 
-    Cities     - https://en.wikipedia.org/wiki/IATA_airport_code, and
-                 https://en.wikipedia.org/wiki/UN/LOCODE 
-                 https://www.iana.org/time-zones
-                 https://en.wikipedia.org/wiki/Geohash
 
 The code depends soley on the standard template library STL
 
@@ -36,7 +27,7 @@ The following code:
     std::cout << "timezone  : " << g.city(m).timezone()  << std::endl; 
     std::cout << "region    : " << g.regionName(g.region(m)) << std::endl; 
     std::cout << "subregion : " << g.subregionName(g.subregion(m)) << std::endl;
-    std::cout << "LOCODE    : " << g.city(m).to5Code() << std::endl << std::endl;
+    std::cout << "LOCODE    : " << g.city(m).locode() << std::endl << std::endl;
 
     City x, y;
 
@@ -58,9 +49,22 @@ produces the output:
     region    : Americas
     subregion : Northern America
     LOCODE    : USNYC
-    
+
     The distance between London and New York is 5579.86 km
     The Geohash for position (57.64911, 10.40744) is u4pruydqqvj 
 
 
 Please report any errors, omissions, or suggested extensions to the email above.
+
+## Links
+
+
+Countries   - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3 <br/>
+Currencies  - https://en.wikipedia.org/wiki/ISO_4217 <br/>
+MICs        - https://en.wikipedia.org/wiki/Market_Identifier_Code <br/>
+IATA        - https://en.wikipedia.org/wiki/IATA_airport_code <br/>
+UN/LOCODE   - https://en.wikipedia.org/wiki/UN/LOCODE <br/>
+IANA        - https://www.iana.org/time-zones <br/>
+Geohash     - https://en.wikipedia.org/wiki/Geohash <br/>
+
+            
