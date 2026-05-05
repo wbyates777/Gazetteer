@@ -13,6 +13,7 @@ The code depends soley on the standard template library STL
 
 The following code:
 
+```cpp
     Gazetteer g;
     MarketId m;
     
@@ -36,6 +37,7 @@ The following code:
 
     std::cout << "The distance between " << x.name() << " and " << y.name() << " is " << GeoCoord::dist(x.pos(),y.pos()) / 1000.0 << " km" << std::endl;
     std::cout << "The Geohash for position (57.64911, 10.40744) is " << GeoCoord::geohash(57.64911, 10.40744, 11) << std::endl << std::endl;
+```
     
 produces the output:
 
