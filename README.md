@@ -56,7 +56,6 @@ produces the output:
     The Geohash for position (57.64911, 10.40744) is u4pruydqqvj 
 
 
-Please report any errors, omissions, or suggested extensions to the email above.
 
 ## Links
 
