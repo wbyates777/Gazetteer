@@ -1,5 +1,21 @@
 # Gazetteer
 
+Gazetteer is a lightweight C++20 reference library for financial market and geographic identifiers.
+
+It provides mappings between:
+- Market Identifier Codes (MIC, ISO 10383),
+- Country codes (ISO 3166-1),
+- Currency codes (ISO 4217),
+- City identifiers (IATA / UN/LOCODE),
+- Time zones (IANA), and
+- Geographic coordinates and distance calculations.
+
+Depends soley on STL.
+
+---
+
+## Background 
+
 The Gazetteer class is a geographic dictionary or index for financial markets supporting ISO 4217, ISO 3166-1, and ISO 10383.
 It allows the identification and location of exchanges, trading platforms, regulated or non-regulated markets and trade reporting facilities. 
 
@@ -56,6 +72,20 @@ produces the output:
     The Geohash for position (57.64911, 10.40744) is u4pruydqqvj 
 
 
+ ## Build Instructions
+ 
+
+On a platform that supports cmake you can use the CMakeList.txt file included in this project. Simply cd to the directory where you have saved this project and enter:
+
+  ```mkdir build ; cd build ; cmake .. ; make ```
+
+ Although we have specified C++20, the code will compile under C++17 if you replace std::format with std::snprintf (in GeoCoord.cpp).
+
+## Contributing
+
+Bug reports and corrections to reference data are welcome.
+
+For changes to financial or geographic mappings, please include references.
 
 ## Links
 
@@ -68,4 +98,6 @@ UN/LOCODE   - https://en.wikipedia.org/wiki/UN/LOCODE <br/>
 IANA        - https://www.iana.org/time-zones <br/>
 Geohash     - https://en.wikipedia.org/wiki/Geohash <br/>
 
-            
+Stars welcome. Please click here:  
+ ![GitHub stars](https://img.shields.io/github/stars/wbyates777/Gazetteer?style=social)
+![GitHub stars](https://img.shields.io/github/stars/wbyates777/Gazetteer.svg?style=social)       
