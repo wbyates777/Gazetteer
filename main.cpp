@@ -99,7 +99,7 @@ demoCity(void)
     std::cout << xx << std::endl;
     std::cout << xx.name() << std::endl;
     std::cout << xx.to3Code() << std::endl;
-    std::cout << xx.to5Code() << std::endl;
+    std::cout << xx.locode() << std::endl;
     std::cout << xx.timezone() << std::endl;
     std::cout << short(xx) << std::endl;
     std::cout << xx.capital() << std::endl;
@@ -111,7 +111,7 @@ demoCity(void)
     std::cout << yy << std::endl;
     std::cout << yy.name() << std::endl;
     std::cout << yy.to3Code() << std::endl;
-    std::cout << yy.to5Code() << std::endl;
+    std::cout << yy.locode() << std::endl;
     std::cout << yy.timezone() << std::endl;
     std::cout << short(yy) << std::endl;
     std::cout << yy.capital() << std::endl;
@@ -125,7 +125,7 @@ demoCity(void)
     std::cout << zz << std::endl;
     std::cout << zz.name() << std::endl;
     std::cout << zz.to3Code() << std::endl;
-    std::cout << zz.to5Code() << std::endl;
+    std::cout << zz.locode() << std::endl;
     std::cout << zz.timezone() << std::endl;
     std::cout << short(zz) << std::endl;
     std::cout << zz.capital() << std::endl;
