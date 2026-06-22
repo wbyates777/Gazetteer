@@ -10,7 +10,7 @@ It provides mappings between:
 - Time zones (IANA), and
 - Geographic coordinates and distance calculations.
 
-Depends soley on STL.
+Depends solely on STL.
 
 ---
 
@@ -22,10 +22,10 @@ It allows the identification and location of exchanges, trading platforms, regul
 Gazetteer provides four lightweight, standalone identification classes: Country, Currency, MarketId and City.
 Country, Currency, and MarketId implement the ISO standards: ISO 3166-1 for country identification, ISO 4217 for currencies, and
 ISO 10383 for market identification. The City class employs IATA and UN/LOCODE codes for city identification, IANA time zones for local time calculation, 
-and latitude and longtitude for geolocation. The helper class GeoCoord implements the public domain geocode system 'Geohash' for encoding and decoding geograpical positions as strings, and the Vincenty metric for calculating distances (in metres) between geographical points.
+and latitude and longitude for geolocation. The helper class GeoCoord implements the public domain geocode system 'Geohash' for encoding and decoding geographical positions as strings, and the Vincenty metric for calculating distances (in metres) between geographical points.
 
 
-The code depends soley on the standard template library STL
+The code depends solely on the standard template library STL
 
 The following code:
 
