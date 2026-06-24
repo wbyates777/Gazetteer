@@ -35,42 +35,42 @@ and latitude and longitude for geolocation. The helper class GeoCoord implements
 
 The Gazetteer, Currency, Country, MarketId, and City classes are machine generated; a user is not supposed to edit these classes directly.
 
-The code depends solely on the standard template library STL
+The code depends solely on the standard template library STL.
 
 The following code:
 
 ```cpp
-    #include "Gazetteer.h"
+#include "Gazetteer.h"
+
+int 
+main( void )
+{
+    Gazetteer g;
+    MarketId m;
     
-    int 
-    main( void )
-    {
-        Gazetteer g;
-        MarketId m;
-        
-        m.setMarketId( "XNYS" ); 
+    m.setMarketId( "XNYS" ); 
 
-        std::cout << "market    : " << m << std::endl;
-        std::cout << "name      : " << m.name() << std::endl;
-        std::cout << "id        : " << short(m) << std::endl; 
-        std::cout << "currency  : " << g.ccy(m).name() << " (" << g.ccy(m) << ")" << std::endl;
-        std::cout << "city      : " << g.city(m).name() << ", " << g.city(m) << " (" << g.city(m).subdiv() << ")" << std::endl; 
-        std::cout << "country   : " << g.country(m).name() << " (" << g.country(m) << ")" << std::endl;
-        std::cout << "timezone  : " << g.city(m).timezone()  << std::endl; 
-        std::cout << "region    : " << g.regionName(g.region(m)) << std::endl; 
-        std::cout << "subregion : " << g.subregionName(g.subregion(m)) << std::endl;
-        std::cout << "LOCODE    : " << g.city(m).locode() << std::endl << std::endl;
+    std::cout << "market    : " << m << std::endl;
+    std::cout << "name      : " << m.name() << std::endl;
+    std::cout << "id        : " << short(m) << std::endl; 
+    std::cout << "currency  : " << g.ccy(m).name() << " (" << g.ccy(m) << ")" << std::endl;
+    std::cout << "city      : " << g.city(m).name() << ", " << g.city(m) << " (" << g.city(m).subdiv() << ")" << std::endl; 
+    std::cout << "country   : " << g.country(m).name() << " (" << g.country(m) << ")" << std::endl;
+    std::cout << "timezone  : " << g.city(m).timezone()  << std::endl; 
+    std::cout << "region    : " << g.regionName(g.region(m)) << std::endl; 
+    std::cout << "subregion : " << g.subregionName(g.subregion(m)) << std::endl;
+    std::cout << "LOCODE    : " << g.city(m).locode() << std::endl << std::endl;
 
-        City x, y;
+    City x, y;
 
-        x.setCity( "LON" );
-        y.setCity( "NYC" );
+    x.setCity( "LON" );
+    y.setCity( "NYC" );
 
-        std::cout << "The distance between " << x.name() << " and " << y.name() << " is " << GeoCoord::dist(x.pos(),y.pos()) / 1000.0 << " km" << std::endl;
-        std::cout << "The Geohash for position (57.64911, 10.40744) is " << GeoCoord::geohash(57.64911, 10.40744, 11) << std::endl << std::endl;
-        
-        return EXIT_SUCCESS;
-    }
+    std::cout << "The distance between " << x.name() << " and " << y.name() << " is " << GeoCoord::dist(x.pos(),y.pos()) / 1000.0 << " km" << std::endl;
+    std::cout << "The Geohash for position (57.64911, 10.40744) is " << GeoCoord::geohash(57.64911, 10.40744, 11) << std::endl << std::endl;
+    
+    return EXIT_SUCCESS;
+}
 ```
     
 produces the output:
