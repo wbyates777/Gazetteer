@@ -6,7 +6,7 @@
 
    by W.B. Yates    
    Copyright (c) W.B. Yates. All rights reserved 
-   History: Supports most of the ISO 4217 currency code list as of 22/12/2025  
+   History: Supports most of the ISO 4217 currency code list as of 23/06/2026  
 
    
    Notes
@@ -15,8 +15,10 @@
           which ceased to exist in 1997 (see Democratic Republic of the Congo).
        
      ii)  El Salvadore currency number 316 ommited beacuse its 3 letter code (SVC) clashes with new code
-       
-     iii) The following are not ISO codes and therefore have no ISO currency number, although they are used commercially:
+    
+     iii) Expired Swiss currency CHC, currency number 948 ommited beacuse it has the same number as CHW
+ 
+     iv) The following are not ISO codes and therefore have no ISO currency number, although they are used commercially:
               IMP - Isle of Man Pound; we treat this as GBP 
               JEP - Jersey Pound; we treat this as GBP 
               GGP - Gurnsey Pound; we treat this as GBP
@@ -80,38 +82,38 @@ public:
         ARS = 32, ATS = 40, AUD = 36, AWG = 533, AZM = 31, AZN = 944, BAD = 70, BAM = 977, BBD = 52, BDT = 50, 
         BEC = 993, BEF = 56, BEL = 992, BGL = 100, BGN = 975, BHD = 48, BIF = 108, BMD = 60, BND = 96, BOB = 68, 
         BOV = 984, BRL = 986, BSD = 44, BTN = 64, BWP = 72, BYB = 112, BYN = 933, BYR = 974, BZD = 84, CAD = 124, 
-        CDF = 976, CHC = 948, CHE = 947, CHF = 756, CHW = 948, CLF = 990, CLP = 152, CNY = 156, COP = 170, COU = 970, 
-        CRC = 188, CSK = 200, CUC = 931, CUP = 192, CVE = 132, CYP = 196, CZK = 203, DDM = 278, DEM = 276, DJF = 262, 
-        DKK = 208, DOP = 214, DZD = 12, ECS = 218, EEK = 233, EGP = 818, ERN = 232, ESA = 996, ESB = 995, ESP = 724, 
-        ETB = 230, EUR = 978, FIM = 246, FJD = 242, FKP = 238, FRF = 250, GBP = 826, GEL = 981, GHS = 936, GIP = 292, 
-        GMD = 270, GNF = 324, GRD = 300, GTQ = 320, GWP = 624, GYD = 328, HKD = 344, HNL = 340, HRK = 191, HTG = 332, 
-        HUF = 348, IDR = 360, IEP = 372, ILS = 376, INR = 356, IQD = 368, IRR = 364, ISK = 352, ITL = 380, JMD = 388, 
-        JOD = 400, JPY = 392, KES = 404, KGS = 417, KHR = 116, KMF = 174, KPW = 408, KRW = 410, KWD = 414, KYD = 136, 
-        KZT = 398, LAK = 418, LBP = 422, LKR = 144, LRD = 430, LSL = 426, LTL = 440, LUF = 442, LVL = 428, LYD = 434, 
-        MAD = 504, MDL = 498, MGA = 969, MGF = 450, MKD = 807, MMK = 104, MNT = 496, MOP = 446, MRO = 478, MRU = 929, 
-        MTL = 470, MUR = 480, MVR = 462, MWK = 454, MXN = 484, MXV = 979, MYR = 458, MZM = 508, MZN = 943, NAD = 516, 
-        NGN = 566, NIO = 558, NLG = 528, NOK = 578, NPR = 524, NZD = 554, OMR = 512, PAB = 590, PEN = 604, PGK = 598, 
-        PHP = 608, PKR = 586, PLN = 985, PLZ = 616, PTE = 620, PYG = 600, QAR = 634, ROL = 642, RON = 946, RSD = 941, 
-        RUB = 643, RUR = 810, RWF = 646, SAR = 682, SBD = 90, SCR = 690, SDD = 736, SDG = 938, SEK = 752, SGD = 702, 
-        SHP = 654, SIT = 705, SKK = 703, SLE = 925, SLL = 694, SOS = 706, SRD = 968, SRG = 740, SSP = 728, STD = 678, 
-        STN = 930, SVC = 222, SYP = 760, SZL = 748, THB = 764, TJR = 762, TJS = 972, TMM = 795, TMT = 934, TND = 788, 
-        TOP = 776, TPE = 626, TRL = 792, TRY = 949, TTD = 780, TWD = 901, TZS = 834, UAH = 980, UAK = 804, UGX = 800, 
-        USD = 840, USN = 997, USS = 998, UYI = 940, UYU = 858, UYW = 927, UZS = 860, VEB = 862, VED = 926, VEF = 937, 
-        VES = 928, VND = 704, VUV = 548, WST = 882, XAF = 950, XAG = 961, XAU = 959, XBA = 955, XBB = 956, XBC = 957, 
-        XBD = 958, XCD = 951, XCG = 532, XDR = 960, XOF = 952, XPD = 964, XPF = 953, XPT = 962, XSU = 994, XTS = 963, 
-        XUA = 965, XXX = 999, YDD = 720, YER = 886, YUD = 890, YUM = 891, ZAL = 991, ZAR = 710, ZMK = 894, ZMW = 967, 
-        ZRN = 180, ZWC = 716, ZWD = 716, ZWG = 924, ZWL = 932, ZWN = 942, ZWR = 935, 
-        MAXCURRENCY = 1000, NUMCURRENCY = 248
+        CDF = 976, CHE = 947, CHF = 756, CHW = 948, CLF = 990, CLP = 152, CNY = 156, COP = 170, COU = 970, CRC = 188, 
+        CSK = 200, CUC = 931, CUP = 192, CVE = 132, CYP = 196, CZK = 203, DDM = 278, DEM = 276, DJF = 262, DKK = 208, 
+        DOP = 214, DZD = 12, ECS = 218, EEK = 233, EGP = 818, ERN = 232, ESA = 996, ESB = 995, ESP = 724, ETB = 230, 
+        EUR = 978, FIM = 246, FJD = 242, FKP = 238, FRF = 250, GBP = 826, GEL = 981, GHS = 936, GIP = 292, GMD = 270, 
+        GNF = 324, GRD = 300, GTQ = 320, GWP = 624, GYD = 328, HKD = 344, HNL = 340, HRK = 191, HTG = 332, HUF = 348, 
+        IDR = 360, IEP = 372, ILS = 376, INR = 356, IQD = 368, IRR = 364, ISK = 352, ITL = 380, JMD = 388, JOD = 400, 
+        JPY = 392, KES = 404, KGS = 417, KHR = 116, KMF = 174, KPW = 408, KRW = 410, KWD = 414, KYD = 136, KZT = 398, 
+        LAK = 418, LBP = 422, LKR = 144, LRD = 430, LSL = 426, LTL = 440, LUF = 442, LVL = 428, LYD = 434, MAD = 504, 
+        MDL = 498, MGA = 969, MGF = 450, MKD = 807, MMK = 104, MNT = 496, MOP = 446, MRO = 478, MRU = 929, MTL = 470, 
+        MUR = 480, MVR = 462, MWK = 454, MXN = 484, MXV = 979, MYR = 458, MZM = 508, MZN = 943, NAD = 516, NGN = 566, 
+        NIO = 558, NLG = 528, NOK = 578, NPR = 524, NZD = 554, OMR = 512, PAB = 590, PEN = 604, PGK = 598, PHP = 608, 
+        PKR = 586, PLN = 985, PLZ = 616, PTE = 620, PYG = 600, QAR = 634, ROL = 642, RON = 946, RSD = 941, RUB = 643, 
+        RUR = 810, RWF = 646, SAR = 682, SBD = 90, SCR = 690, SDD = 736, SDG = 938, SEK = 752, SGD = 702, SHP = 654, 
+        SIT = 705, SKK = 703, SLE = 925, SLL = 694, SOS = 706, SRD = 968, SRG = 740, SSP = 728, STD = 678, STN = 930, 
+        SVC = 222, SYP = 760, SZL = 748, THB = 764, TJR = 762, TJS = 972, TMM = 795, TMT = 934, TND = 788, TOP = 776, 
+        TPE = 626, TRL = 792, TRY = 949, TTD = 780, TWD = 901, TZS = 834, UAH = 980, UAK = 804, UGX = 800, USD = 840, 
+        USN = 997, USS = 998, UYI = 940, UYU = 858, UYW = 927, UZS = 860, VEB = 862, VED = 926, VEF = 937, VES = 928, 
+        VND = 704, VUV = 548, WST = 882, XAF = 950, XAG = 961, XAU = 959, XBA = 955, XBB = 956, XBC = 957, XBD = 958, 
+        XCD = 951, XCG = 532, XDR = 960, XOF = 952, XPD = 964, XPF = 953, XPT = 962, XSU = 994, XTS = 963, XUA = 965, 
+        XXX = 999, YDD = 720, YER = 886, YUD = 890, YUM = 891, ZAL = 991, ZAR = 710, ZMK = 894, ZMW = 967, ZRN = 180, 
+        ZWC = 716, ZWD = 716, ZWG = 924, ZWL = 932, ZWN = 942, ZWR = 935, 
+        MAXCURRENCY = 1000, NUMCURRENCY = 247
     };
 
     
     Currency( void ): m_ccy(m_baseCurrency) {}
-    ~Currency( void ) { m_ccy = NOCURRENCY; } 
+    ~Currency( void )=default; 
     
     // non-explicit constructors intentional here
     Currency( CurrencyCode i ): m_ccy(i) {} // e.g. i = Currency::GBP
-    Currency( const std::string &s ): m_ccy(NOCURRENCY) { setCurrency(s); } 
-    Currency( const char *s ): m_ccy(NOCURRENCY) { if (s) setCurrency(s); }  
+    Currency( const std::string &str ): m_ccy(NOCURRENCY) { setCurrency(str); } 
+    Currency( const char *str ): m_ccy(NOCURRENCY) { if (str) setCurrency(str); }  
 
     // The ISO numeric code for this currency e.g. Currency::GBP = 826 
     operator short( void ) const { return m_ccy; }
@@ -122,11 +124,11 @@ public:
         
     // e.g. s = "GBP"
     bool
-    setCurrency( const std::string &s ); 
+    setCurrency( const std::string &str ); 
 
     // e.g. s = Currency::GBP
     void
-    setCurrency( CurrencyCode s ) { m_ccy = s; } 
+    setCurrency( CurrencyCode c ) { m_ccy = c; } 
 
     std::string
     name( void ) const  { return m_fullNames[m_fromISO[m_ccy]]; }  // e.g. "Pound Sterling"

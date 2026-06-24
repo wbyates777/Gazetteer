@@ -30,8 +30,7 @@
  https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
  https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
  
- TODO: could add 'UNK' - identifies Kosovo residents issued travel documents 
- TODO: by United Nations Interim Administration in Kosovo (UNMIK)
+ TODO: could add 'UNK' - identifies Kosovo residents issued travel documents by United Nations Interim Administration in Kosovo (UNMIK)
  */
 
 
@@ -53,8 +52,8 @@ std::istream&
 operator>>( std::istream &istr, Country &c )
 {
     std::string str;
-    istr >> str;
-    c.setCountry( str );
+    if (istr >> str)
+        c.setCountry( str );
     return istr;
 }
 
@@ -67,16 +66,16 @@ Country::set2Country( const std::string &str )
 {
     assert(str.size() == 2);
   
-    const int index = str[0] - 'A'; // 'A' = 65;
+    const int idx = str[0] - 'A'; // 'A' = 65;
     //assert(index > -1 && index < 26);
-    if (index < 0 || index > 25)
+    if (idx < 0 || idx > 25)
     {
         m_country = Country::XXX;
         return false;
     }
 
-    int low  = m_search2[index]; 
-    int high = m_search2[index + 1]; 
+    int low  = m_search2[idx]; 
+    int high = m_search2[idx + 1]; 
     int mid = ((high + low) >> 1); // divide by 2 (quickly)
     int i;
     
@@ -120,16 +119,16 @@ Country::set3Country( const std::string &str )
 {
     assert(str.size() == 3);
 
-    const int index = str[0] - 'A'; // 'A' = 65;
+    const int idx = str[0] - 'A'; // 'A' = 65;
     //assert(index > -1 && index < 26);
-    if (index < 0 || index > 25)
+    if (idx < 0 || idx > 25)
     {
         m_country = Country::XXX;
         return false;
     }
 
-    int low  = m_search3[index]; 
-    int high = m_search3[index + 1]; 
+    int low  = m_search3[idx]; 
+    int high = m_search3[idx + 1]; 
     int mid = ((high + low) >> 1); // divide by 2 (quickly)
     int i;
     
@@ -460,7 +459,7 @@ constexpr const char * const Country::m_fullNames[NUMCOUNTRY] = { "No Country",
     "Bonaire, Saint Eustatius and Saba", "Burkina Faso", "Bangladesh", "Bulgaria", "Bahrain", "Bahamas", "Bosnia and Herzegovina", "Saint Barthelemy", "Belarus", "Belize", 
     "Bermuda", "Bolivia", "Brazil", "Barbados", "Brunei Darussalam", "Bhutan", "Bouvet Island", "Botswana", "Central African Republic", "Canada", 
     "Cocos Islands", "Switzerland", "Chile", "China", "Ivory Coast", "Cameroon", "Democratic Republic of the Congo", "Republic of the Congo", "Cook Islands", "Colombia", 
-    "Comoros", "Cape Verde", "Costa Rica", "Cuba", "Curacao", "Christmas Island", "Cayman Islands", "Cyprus", "Czech Republic", "Germany", 
+    "Comoros", "Cape Verde", "Costa Rica", "Cuba", "Curacao", "Christmas Island", "Cayman Islands", "Cyprus", "Czechia", "Germany", 
     "Djibouti", "Dominica", "Denmark", "Dominican Republic", "Algeria", "Ecuador", "Egypt", "Eritrea", "Western Sahara", "Spain", 
     "Estonia", "Ethiopia", "Euro Zone", "Finland", "Fiji", "Falkland Islands", "France", "Faroe Islands", "Federated States of Micronesia", "Gabon", 
     "United Kingdom", "Georgia", "Guernsey", "Ghana", "Gibraltar", "Guinea", "Guadeloupe", "Gambia", "Guinea-Bissau", "Equatorial Guinea", 
@@ -476,8 +475,8 @@ constexpr const char * const Country::m_fullNames[NUMCOUNTRY] = { "No Country",
     "Poland", "Puerto Rico", "North Korea", "Portugal", "Paraguay", "Palestinian Occupied Territory", "French Polynesia", "Qatar", "Reunion", "Romania", 
     "Russian Federation", "Rwanda", "Saudi Arabia", "Sudan", "Senegal", "Singapore", "South Georgia and the South Sandwich Islands", "Saint Helena, Ascension and Tristan da Cunha", "Svalbard and Jan Mayen", "Solomon Islands", 
     "Sierra Leone", "El Salvador", "San Marino", "Somalia", "Saint Pierre and Miquelon", "Serbia", "South Sudan", "Sao Tome and Principe", "Suriname", "Slovakia", 
-    "Slovenia", "Sweden", "Swaziland", "Sint Maarten", "Seychelles", "Syria", "Turks and Caicos Islands", "Chad", "Togo", "Thailand", 
-    "Tajikistan", "Tokelau", "Turkmenistan", "East Timor", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Tuvalu", "Taiwan", 
+    "Slovenia", "Sweden", "Eswatini", "Sint Maarten", "Seychelles", "Syria", "Turks and Caicos Islands", "Chad", "Togo", "Thailand", 
+    "Tajikistan", "Tokelau", "Turkmenistan", "Timor-Leste", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Tuvalu", "Taiwan", 
     "Tanzania", "Uganda", "Ukraine", "United States Minor Outlying Islands", "Uruguay", "United States", "Uzbekistan", "Vatican City", "Saint Vincent and the Grenadines", "Venezuela", 
     "British Virgin Islands", "United States Virgin Islands", "Viet Nam", "Vanuatu", "Wallis and Futuna", "Samoa", "Communaute Financiere Africaine (BEAC)", "East Caribbean", "Communaute Financiere Africaine (BCEAO)", "Comptoirs Francais du Pacifique", 
     "No Country", "Yemen", "South Africa", "Zambia", "Zimbabwe"

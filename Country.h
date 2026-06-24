@@ -114,12 +114,12 @@ public:
     };    
     
     Country( void ): m_country(NOCOUNTRY) {}
-    ~Country( void ) { m_country = NOCOUNTRY; }
+    ~Country( void )=default; 
     
     // non-explicit constructors intentional here
     Country( CountryCode i ): m_country(i) {} // e.g. i = Country::GBR
-    Country( const std::string &s ): m_country(NOCOUNTRY) { setCountry(s); }
-    Country( const char *s ): m_country(NOCOUNTRY) { if (s) setCountry(s); } 
+    Country( const std::string &str ): m_country(NOCOUNTRY) { setCountry(str); }
+    Country( const char *str ): m_country(NOCOUNTRY) { if (str) setCountry(str); } 
     
     // The ISO numeric code for this country e.g. Country::GBR = 826
     operator short( void ) const { return m_country; }
@@ -136,16 +136,16 @@ public:
     name( void ) const { return m_fullNames[m_fromISO[m_country]]; } // i.e "United Kingdom"
     
     bool
-    setCountry( const std::string &s );  // ISO 2 or 3 letter codes e.g. s = "GBR" or "GB"
+    setCountry( const std::string &str );  // ISO 2 or 3 letter codes e.g. s = "GBR" or "GB"
 
     bool
-    set2Country( const std::string &s ); // ISO 2 letter codes e.g. s =  "GB"
+    set2Country( const std::string &str ); // ISO 2 letter codes e.g. s =  "GB"
     
     bool
-    set3Country( const std::string &s ); // ISO 3 letter codes e.g. s = "GBR"
+    set3Country( const std::string &str ); // ISO 3 letter codes e.g. s = "GBR"
     
     void
-    setCountry( CountryCode s ) { m_country = s; } // e.g. s = Country::GBR or s = Country::GB
+    setCountry( CountryCode c ) { m_country = c; } // e.g. s = Country::GBR or s = Country::GB
     
     // Countries are ordered according to the 3 code alphabetical ordering
     static Country
