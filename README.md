@@ -33,6 +33,7 @@ Country, Currency, and MarketId implement the ISO standards: ISO 3166-1 for coun
 ISO 10383 for market identification. The City class employs IATA and UN/LOCODE codes for city identification, IANA time zones for local time calculation, 
 and latitude and longitude for geolocation. The helper class GeoCoord implements the public domain geocode system 'Geohash' for encoding and decoding geographical positions as strings, and the Vincenty metric for calculating distances (in metres) between geographical points.
 
+The Gazetteer, Currency, Country, MarketId, and City classes are machine generated; a user is not supposed to edit these classes directly.
 
 The code depends solely on the standard template library STL
 
