@@ -41,6 +41,7 @@ The following code:
 
 ```cpp
 #include "Gazetteer.h"
+#include <iostream>
 
 int 
 main( void )
