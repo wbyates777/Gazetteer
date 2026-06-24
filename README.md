@@ -3,14 +3,23 @@
 Gazetteer is a lightweight C++20 reference library for financial market and geographic identifiers.
 
 It provides mappings between:
-- Market Identifier Codes (MIC, ISO 10383),
-- Country codes (ISO 3166-1),
-- Currency codes (ISO 4217),
-- City identifiers (IATA / UN/LOCODE),
-- Time zones (IANA), and
+- 3103 Market Identifier Codes (MIC, ISO 10383),
+- 256 Country codes (ISO 3166-1),
+- 247 Currency codes (ISO 4217),
+- 1981 City identifiers (IATA / UN/LOCODE),
+- 599 Time zones (IANA), and
 - Geographic coordinates and distance calculations.
 
-Depends solely on STL.
+Gazetteer uses compile-time static lookup tables making it suitable for latency-sensitive financial systems.
+
+### Key Features
+- no heap allocations,
+- no hashing,
+- no static initialisation order issues,
+- predictable memory layout,
+- excellent cache locality,
+- constant binary size, and
+- depends solely on STL.
 
 ---
 
@@ -30,29 +39,37 @@ The code depends solely on the standard template library STL
 The following code:
 
 ```cpp
-    Gazetteer g;
-    MarketId m;
+    #include "Gazetteer.h"
     
-    m.setMarketId( "XNYS" ); 
+    int 
+    main( void )
+    {
+        Gazetteer g;
+        MarketId m;
+        
+        m.setMarketId( "XNYS" ); 
 
-    std::cout << "market    : " << m << std::endl;
-    std::cout << "name      : " << m.name() << std::endl;
-    std::cout << "id        : " << short(m) << std::endl; 
-    std::cout << "currency  : " << g.ccy(m).name() << " (" << g.ccy(m) << ")" << std::endl;
-    std::cout << "city      : " << g.city(m).name() << ", " << g.city(m) << " (" << g.city(m).subdiv() << ")" << std::endl; 
-    std::cout << "country   : " << g.country(m).name() << " (" << g.country(m) << ")" << std::endl;
-    std::cout << "timezone  : " << g.city(m).timezone()  << std::endl; 
-    std::cout << "region    : " << g.regionName(g.region(m)) << std::endl; 
-    std::cout << "subregion : " << g.subregionName(g.subregion(m)) << std::endl;
-    std::cout << "LOCODE    : " << g.city(m).locode() << std::endl << std::endl;
+        std::cout << "market    : " << m << std::endl;
+        std::cout << "name      : " << m.name() << std::endl;
+        std::cout << "id        : " << short(m) << std::endl; 
+        std::cout << "currency  : " << g.ccy(m).name() << " (" << g.ccy(m) << ")" << std::endl;
+        std::cout << "city      : " << g.city(m).name() << ", " << g.city(m) << " (" << g.city(m).subdiv() << ")" << std::endl; 
+        std::cout << "country   : " << g.country(m).name() << " (" << g.country(m) << ")" << std::endl;
+        std::cout << "timezone  : " << g.city(m).timezone()  << std::endl; 
+        std::cout << "region    : " << g.regionName(g.region(m)) << std::endl; 
+        std::cout << "subregion : " << g.subregionName(g.subregion(m)) << std::endl;
+        std::cout << "LOCODE    : " << g.city(m).locode() << std::endl << std::endl;
 
-    City x, y;
+        City x, y;
 
-    x.setCity( "LON" );
-    y.setCity( "NYC" );
+        x.setCity( "LON" );
+        y.setCity( "NYC" );
 
-    std::cout << "The distance between " << x.name() << " and " << y.name() << " is " << GeoCoord::dist(x.pos(),y.pos()) / 1000.0 << " km" << std::endl;
-    std::cout << "The Geohash for position (57.64911, 10.40744) is " << GeoCoord::geohash(57.64911, 10.40744, 11) << std::endl << std::endl;
+        std::cout << "The distance between " << x.name() << " and " << y.name() << " is " << GeoCoord::dist(x.pos(),y.pos()) / 1000.0 << " km" << std::endl;
+        std::cout << "The Geohash for position (57.64911, 10.40744) is " << GeoCoord::geohash(57.64911, 10.40744, 11) << std::endl << std::endl;
+        
+        return EXIT_SUCCESS;
+    }
 ```
     
 produces the output:
@@ -80,6 +97,16 @@ On a platform that supports cmake you can use the CMakeList.txt file included in
   ```mkdir build ; cd build ; cmake .. ; make ```
 
  Although we have specified C++20, the code will compile under C++17 if you replace std::format with std::snprintf (in GeoCoord.cpp).
+
+## Copyright and Usage
+
+Copyright © W.B. Yates. All rights reserved.
+
+This repository is provided without an open-source license. You are welcome to view, download, and use the source code for personal, educational, and academic purposes.
+
+Commercial use, redistribution, modification for redistribution, or incorporation into other software projects without prior written permission from the copyright holder is not permitted.
+
+If you would like to use this software beyond the terms described above, please contact the copyright holder to discuss obtaining permission.
 
 ## Contributing
 
