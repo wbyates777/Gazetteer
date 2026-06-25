@@ -10,7 +10,10 @@ It provides mappings between:
 - 599 Time zones (IANA), and
 - Geographic coordinates and distance calculations.
 
-Gazetteer uses compile-time static lookup tables making it suitable for latency-sensitive financial systems.
+This data was last updated on 24/06/26.
+
+Gazetteer uses compile-time static lookup tables making it suitable for latency-sensitive financial systems. 
+The primary design goals were  performance, simplicity, modularity, and maintainability.
 
 ### Key Features
 - no heap allocations,
@@ -18,8 +21,8 @@ Gazetteer uses compile-time static lookup tables making it suitable for latency-
 - no static initialisation order issues,
 - predictable memory layout,
 - excellent cache locality,
-- constant binary size, and
-- depends solely on STL.
+- fixed size compile-time lookup, and
+- depends solely on Standard Library.
 
 ---
 
@@ -29,13 +32,13 @@ The Gazetteer class is a geographic dictionary or index for financial markets su
 It allows the identification and location of exchanges, trading platforms, regulated or non-regulated markets and trade reporting facilities. 
 
 Gazetteer provides four lightweight, standalone identification classes: Country, Currency, MarketId and City.
-Country, Currency, and MarketId implement the ISO standards: ISO 3166-1 for country identification, ISO 4217 for currencies, and
-ISO 10383 for market identification. The City class employs IATA and UN/LOCODE codes for city identification, IANA time zones for local time calculation, 
+Country, Currency, and MarketId implement the ISO standards: ISO 3166-1 for countries, ISO 4217 for currencies, and
+ISO 10383 for markets. The City class employs IATA and UN/LOCODE codes for city identification, IANA time zones for local time calculation, 
 and latitude and longitude for geolocation. The helper class GeoCoord implements the public domain geocode system 'Geohash' for encoding and decoding geographical positions as strings, and the Vincenty metric for calculating distances (in metres) between geographical points.
 
-The Gazetteer, Currency, Country, MarketId, and City classes are machine generated; a user is not supposed to edit these classes directly.
+The Gazetteer, Currency, Country, MarketId, and City classes are machine generated from reference data sets and should not normally be edited directly.
 
-The code depends solely on the standard template library STL.
+The code depends solely on the Standard Library.
 
 The following code:
 
