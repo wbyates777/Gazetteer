@@ -350,7 +350,7 @@ Name::dist(const std::string &str1, const std::string &str2)
             
             if ((i > 1) && (j > 1) && (str1[i-1] == str2[j-2]) && (str1[i-2] == str2[j-1]))
             {
-                d[i][j] = std::min( d[i][j], (d[i-2][j-2] + cost)); // transposition
+                d[i][j] = std::min( d[i][j], (d[i-2][j-2] + 1)); // transposition
             }
         }
     }
