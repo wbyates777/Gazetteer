@@ -172,7 +172,7 @@ City::setCity( const std::string &str )
 
 // this speeds up setCity a bit
 // we could accelerate access to key cities i.e. NYC, LON, LCG - see Currency
-constexpr short City::m_search3[28] = {
+alignas(64) constexpr short City::m_search3[28] = {
     1, 129, 273, 397, 458, 510, 565, 645, 718, 772, 862, 943, 1048, 1215, 1260, 1318, 1429, 1439, 1506, 1662, 1755, 1810, 1854, 1883, 1891, 1963, 1982, -1 
 };
 
