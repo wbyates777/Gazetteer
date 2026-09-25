@@ -105,7 +105,7 @@ MarketId::setMarketId( const std::string &str )
 } 
 
 // this speeds up setMarketId quite a bit
-constexpr short MarketId::m_search[28] = { 1, 
+alignas(64) constexpr short MarketId::m_search[28] = { 1, 
     12, 142, 393, 627, 709, 851, 929, 1033, 1088, 1256, 1294, 1329, 1405, 1590, 1708, 1765, 1849, 1856, 1914, 2100, 2300, 2350, 2397, 2438, 3087, 3090, 3103 
 };
 
