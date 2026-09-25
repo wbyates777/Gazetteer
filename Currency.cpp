@@ -124,7 +124,7 @@ Currency::setCurrency( const std::string &str )
 // partiton at the cost of a single probe.
 // also note that the algorithm work efficiently in the presence of singleton currencies such as OMR and QAR
 // note NOCURRENCY is 0
-constexpr short Currency::m_search[28] = {
+alignas(64) constexpr short Currency::m_search[28] = {
     //  A,  B,  C,  D,  E,  F,  G,  H,  I,  J,   K,   L,   M,   N,   O,   P,   Q,   R,   S,   T,   U,   V,   W,   X    Y,   Z,  Z + 1 
     1, 17, 40, 57, 63, 72, 76, 86, 91, 99, 102, 111, 120, 139, 146, 147, 156, 157, 163, 184, 197, 207, 213, 214, 232, 236, 247, -1 
 };
