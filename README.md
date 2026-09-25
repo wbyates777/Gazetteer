@@ -130,6 +130,5 @@ UN/LOCODE   - https://en.wikipedia.org/wiki/UN/LOCODE <br/>
 IANA        - https://www.iana.org/time-zones <br/>
 Geohash     - https://en.wikipedia.org/wiki/Geohash <br/>
 
-Stars welcome. Please click here:  
- ![GitHub stars](https://img.shields.io/github/stars/wbyates777/Gazetteer?style=social)
-![GitHub stars](https://img.shields.io/github/stars/wbyates777/Gazetteer.svg?style=social)       
+Stars welcome. It aids project visibility. 
+      
